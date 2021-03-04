@@ -22,7 +22,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/xplorfin/lndmock v0.2.0
+	github.com/xplorfin/lndmock v0.3.0
 	github.com/xplorfin/netutils v0.21.0
 	github.com/xplorfin/ozzo-validators v0.20.0
 	github.com/xplorfin/tlsutils v0.14.0
