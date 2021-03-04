@@ -1,0 +1,57 @@
+project_name: moneysocket-go
+builds:
+  -
+    id: main
+    main: ./main.go
+    binary: main
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 6
+      - 7
+  -
+    env:
+      - CGO_ENABLED=0
+dockers:
+  - binaries:
+      - main
+    image_templates:
+      - "ghcr.io/xplorfin/moneysocket-go/moneysocket-go:{{ .Tag }}"
+      - "ghcr.io/xplorfin/moneysocket-go/moneysocket-go:latest"
+    # extra_files: #any other files you need go in here.
+    goos: linux
+    dockerfile: docker/Dockerfile.deploy
+    goarch: amd64
+    goarm: ''
+
+archives:
+  -
+    replacements:
+      '386': i386
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      amd64: x86_64
+checksum:
+  name_template: checksums.txt
+snapshot:
+  name_template: '{{ .Tag }}-next'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+release:
+  github:
+    owner: xplorfin
+    name: moneysocket-go
+
+# add a source archive at release time
+source:
+  enabled: true
