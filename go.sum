@@ -553,6 +553,8 @@ github.com/xplorfin/ozzo-validators v0.20.0 h1:usflzVLwwHYDZW8OS+jAMvj1Fo3EarE/y
 github.com/xplorfin/ozzo-validators v0.20.0/go.mod h1:9cKfLTIuvoLsAO+4d2xnV+yISgEQ28wHoTDK5OnEPV8=
 github.com/xplorfin/tlsutils v0.13.0 h1:8i6cECtMVXOR1gPrf2af2KHP1SrSnSAgx+5XdTc0fWc=
 github.com/xplorfin/tlsutils v0.13.0/go.mod h1:vCRsmp3jDtWy4o4/vkgOmjINLsXGCZKDymrrDIUC3bk=
+github.com/xplorfin/tlsutils v0.14.0 h1:r+yMx4Wv1G/OGqrlBRzjazr7upL9YhjVxe8dlEAK7VY=
+github.com/xplorfin/tlsutils v0.14.0/go.mod h1:vCRsmp3jDtWy4o4/vkgOmjINLsXGCZKDymrrDIUC3bk=
 github.com/yudai/gojsondiff v1.0.0 h1:27cbfqXLVEJ1o8I6v3y9lg8Ydm53EKqHXAOMxEGlCOA=
 github.com/yudai/gojsondiff v1.0.0/go.mod h1:AY32+k2cwILAkW1fbgxQ5mUmMiZFgLIV+FBNExI05xg=
 github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 h1:BHyfKlQyqbsFN5p3IfnEUduWvb9is428/nNb5L3U01M=
