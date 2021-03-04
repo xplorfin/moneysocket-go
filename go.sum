@@ -101,7 +101,6 @@ github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec/go.mod h1:jMjuTZXRI4dUb/I5gc9Hdhagfvm9+RyrPryS/auMzxE=
-github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
 github.com/cockroachdb/datadriven v0.0.0-20190809214429-80d97fb3cbaa/go.mod h1:zn76sxSg3SzpJ0PPJaLDCu+Bu0Lg3sKTORVIj19EIF8=
 github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd/go.mod h1:sE/e/2PUdi/liOCUjSTXgM1o87ZssimdTWN964YiIeI=
@@ -149,7 +148,6 @@ github.com/eapache/queue v1.1.0/go.mod h1:6eCeP0CKFpHLu8blIFXhExK/dRa7WDZfr6jVFP
 github.com/edsrzf/mmap-go v1.0.0/go.mod h1:YO35OhQPt3KJa3ryjFM5Bs14WD66h8eGKpfaBNrHW5M=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=
 github.com/emicklei/go-restful v0.0.0-20170410110728-ff4f55a20633/go.mod h1:otzb+WCGbkyDHkqmQmT5YD2WR4BBwUdeQoFo8l/7tVs=
-github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/evanphx/json-patch v4.9.0+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQLiYLvXMP4fmwYFNcr97nuDLSk=
@@ -197,7 +195,6 @@ github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfU
 github.com/golang/groupcache v0.0.0-20160516000752-02826c3e7903/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
-github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
@@ -547,15 +544,12 @@ github.com/xplorfin/btcd v0.21.0-hotfix h1:zaab2dksut4t4J9jEMIOjSilMIhSuYVRUitLU
 github.com/xplorfin/btcd v0.21.0-hotfix/go.mod h1:Sv4JPQ3/M+teHz9Bo5jBpkNcP0x6r7rdihlNL/7tTAs=
 github.com/xplorfin/docker-utils v0.4.0 h1:kAEj1UWkkxjgKHuXuFM7T0/A38mxYd2Br0IrgiYLpLE=
 github.com/xplorfin/docker-utils v0.4.0/go.mod h1:HYQRk0GIav9DK7NWY/YLqHjgeCfoJ74eJCSGK5blI54=
-github.com/xplorfin/lndmock v0.2.0 h1:oBtut3mZ2wFZizkfTMPbW7zAtDpI06rF+d4IoJTHyb0=
-github.com/xplorfin/lndmock v0.2.0/go.mod h1:HpXWvImpZAfS11Dp+4cFmv9AJAsK7Qrfy/AC6fmkEKo=
-github.com/xplorfin/lndmock v0.3.0/go.mod h1:HpXWvImpZAfS11Dp+4cFmv9AJAsK7Qrfy/AC6fmkEKo=
+github.com/xplorfin/lndmock v0.4.0 h1:wQOk8wo2gVsrYjO5+ASYe8k7jOfv+au4iD06KOo9r4E=
+github.com/xplorfin/lndmock v0.4.0/go.mod h1:NCgt4RNciIDsFmBKPrIiFtbGRg3ESJmbMNXRf//UGOg=
 github.com/xplorfin/netutils v0.21.0 h1:+UkpoysX+t/aNcY6H6CJGVZMNj6rYf8XdUj2QSmMw5o=
 github.com/xplorfin/netutils v0.21.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/ozzo-validators v0.20.0 h1:usflzVLwwHYDZW8OS+jAMvj1Fo3EarE/yPtdItqA1ds=
 github.com/xplorfin/ozzo-validators v0.20.0/go.mod h1:9cKfLTIuvoLsAO+4d2xnV+yISgEQ28wHoTDK5OnEPV8=
-github.com/xplorfin/tlsutils v0.13.0 h1:8i6cECtMVXOR1gPrf2af2KHP1SrSnSAgx+5XdTc0fWc=
-github.com/xplorfin/tlsutils v0.13.0/go.mod h1:vCRsmp3jDtWy4o4/vkgOmjINLsXGCZKDymrrDIUC3bk=
 github.com/xplorfin/tlsutils v0.14.0 h1:r+yMx4Wv1G/OGqrlBRzjazr7upL9YhjVxe8dlEAK7VY=
 github.com/xplorfin/tlsutils v0.14.0/go.mod h1:vCRsmp3jDtWy4o4/vkgOmjINLsXGCZKDymrrDIUC3bk=
 github.com/yudai/gojsondiff v1.0.0 h1:27cbfqXLVEJ1o8I6v3y9lg8Ydm53EKqHXAOMxEGlCOA=
@@ -741,8 +735,7 @@ google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c/go.mod h1:IbNlFCBr
 google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013/go.mod h1:NbSheEEYHJ7i3ixzK3sjbqSGDJWnxyFXZblF3eUsNvo=
 google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb h1:hcskBH5qZCOa7WpTUFUFvoebnSFZBYpjykLtjIp9DVk=
 google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
-google.golang.org/grpc v1.29.1 h1:EC2SB8S04d2r73uptxphDSUG+kTKVgjRPF+N3xpxRB4=
-google.golang.org/grpc v1.29.1/go.mod h1:itym6AZVZYACWQqET3MqgPpjcuV5QH3BxFS3IjizoKk=
+google.golang.org/grpc v1.36.0 h1:o1bcQ6imQMIOpdrO3SWf2z5RV72WbDwdXuK0MDlc8As=
 google.golang.org/grpc v1.36.0/go.mod h1:qjiiYl8FncCW8feJPdyg3v6XW24KsRHe+dy9BAGRRjU=
 google.golang.org/protobuf v0.0.0-20200109180630-ec00e32a8dfd/go.mod h1:DFci5gLYBciE7Vtevhsrf46CRTquxDuWsQurQQe4oz8=
 google.golang.org/protobuf v0.0.0-20200221191635-4d8936d0db64/go.mod h1:kwYJMbMJ01Woi6D6+Kah6886xMZcty6N08ah7+eCXa0=

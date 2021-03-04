@@ -22,7 +22,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/xplorfin/lndmock v0.3.0
+	github.com/xplorfin/lndmock v0.4.0
 	github.com/xplorfin/netutils v0.21.0
 	github.com/xplorfin/ozzo-validators v0.20.0
 	github.com/xplorfin/tlsutils v0.14.0
@@ -37,7 +37,7 @@ require (
 	k8s.io/apimachinery v0.20.4
 )
 
-replace github.com/btcsuite/btcd v0.21.0-beta.0.20201208033208-6bd4c64a54fa => github.com/xplorfin/btcd v0.21.0-hotfix
+replace github.com/btcsuite/btcd v0.21.0-beta => github.com/xplorfin/btcd v0.21.0-hotfix
 
 replace github.com/coreos/etcd/clientv3 => go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
 
