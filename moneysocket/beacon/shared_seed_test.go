@@ -8,7 +8,6 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/util"
 
 	"github.com/brianvoe/gofakeit/v5"
-	"k8s.io/apimachinery/pkg/util/rand"
 )
 
 // the test cases below were manually verified against the python version
@@ -134,7 +133,7 @@ func TestHexEquality(t *testing.T) {
 func TestInvalidSeed(t *testing.T) {
 	gofakeit.Seed(0)
 	for i := 0; i < 1000; i++ {
-		seed := gofakeit.Sentence(rand.IntnRange(0, 20))
+		seed := gofakeit.Sentence(gofakeit.RandomInt([]int{15, 20}))
 		if len([]byte(seed)) == 16 {
 			continue // seed is correct lenght
 		}
