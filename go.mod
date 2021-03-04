@@ -37,8 +37,6 @@ require (
 	k8s.io/apimachinery v0.20.4
 )
 
-// we don't use this here because so we dont have to update this then gqlgen. This should be used everywhere else
-// replace github.com/Yamashou/gqlgenc => github.com/xplorfin/gqlgenc v0.0.0-20200928023108-347589dedfe3
 replace github.com/btcsuite/btcd v0.21.0-beta.0.20201208033208-6bd4c64a54fa => github.com/xplorfin/btcd v0.21.0-hotfix
 
 replace github.com/coreos/etcd/clientv3 => go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
