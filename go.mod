@@ -41,4 +41,4 @@ replace github.com/btcsuite/btcd v0.21.0-beta.0.20201208033208-6bd4c64a54fa => g
 
 replace github.com/coreos/etcd/clientv3 => go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
 
-replace google.golang.org/grpc => google.golang.org/grpc v1.29.1
+replace google.golang.org/grpc => google.golang.org/grpc v1.36.0
