@@ -1,8 +1,6 @@
 package local
 
 import (
-	"fmt"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
@@ -27,14 +25,10 @@ func (i *IncomingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 func (i *IncomingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, i)
 	// register above nexus
-	belowNexus.SetOnMessage(localNexus.OnMessage)
-	belowNexus.SetOnBinMessage(localNexus.OnBinMessage)
 	i.TrackNexus(&localNexus, belowNexus)
 	i.TrackNexusAnnounced(belowNexus)
 	i.SendLayerEvent(&localNexus, message.NexusAnnounced)
 	if i.OnAnnounce != nil {
 		i.OnAnnounce(&localNexus)
-	} else {
-		fmt.Println("hi")
 	}
 }

@@ -23,12 +23,10 @@ func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) Inco
 	og := IncomingLocalNexus{
 		BaseNexus: &baseNexus,
 	}
+	belowNexus.SetOnBinMessage(og.OnBinMessage)
+	belowNexus.SetOnMessage(og.OnMessage)
 	belowNexus.SetIncomingNexus(&og)
 	return og
-}
-
-func (i *IncomingLocalNexus) RegisterAboveNexus(belowNexus nexus.Nexus) {
-	i.BaseNexus.RegisterAboveNexus(belowNexus)
 }
 
 func (i *IncomingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {

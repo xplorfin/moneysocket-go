@@ -35,6 +35,4 @@ type Nexus interface {
 	SetOnMessage(messageFunc OnMessage)
 	// set a callback for a binary message
 	SetOnBinMessage(messageBinFunc OnBinMessage)
-	// register above nexus (sets callbacks)
-	RegisterAboveNexus(belowNexus Nexus)
 }

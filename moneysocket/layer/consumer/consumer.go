@@ -17,13 +17,13 @@ func NewConsumerLayer() *ConsumerLayer {
 	return &ConsumerLayer{
 		layer.NewBaseLayer(),
 		nil,
-		consumer.NewConsumerNexus(), // gets overwritten
+		consumer.ConsumerNexus{}, // gets overwritten
 	}
 }
 
 // announce the nexus and start the handshake
 func (c *ConsumerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
-	c.SetupConsumerNexus()
+	c.SetupConsumerNexus(belowNexus)
 	c.TrackNexus(&c.consumerNexus, belowNexus)
 	c.consumerNexus.StartHandshake(c.ConsumerFinishedCb)
 }
@@ -33,8 +33,8 @@ func (c *ConsumerLayer) SetOnPing(fn consumer.OnPingFn) {
 }
 
 // initialize consumer nexus and tie the onping event back to this layer
-func (c *ConsumerLayer) SetupConsumerNexus() {
-	c.consumerNexus = consumer.NewConsumerNexus()
+func (c *ConsumerLayer) SetupConsumerNexus(belowNexus nexus.Nexus) {
+	c.consumerNexus = consumer.NewConsumerNexus(belowNexus)
 	c.consumerNexus.SetOnPing(c.OnPing)
 }
 

@@ -24,6 +24,9 @@ type ProviderTransactNexus struct {
 
 func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) ProviderTransactNexus {
 	nx := base.NewBaseNexusFull(ProviderTransactNexusName, belowNexus, layer)
+	belowNexus.SetOnBinMessage(nx.OnBinMessage)
+	belowNexus.SetOnMessage(nx.OnMessage)
+
 	return ProviderTransactNexus{&nx, nil, nil}
 }
 

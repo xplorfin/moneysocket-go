@@ -29,7 +29,7 @@ func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 }
 
 func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
-	websocketNexus := nws.NewWebsocketNexus(belowNexus)
+	websocketNexus := nws.NewWebsocketNexus(belowNexus, o)
 	o.TrackNexus(&websocketNexus, belowNexus)
 	o.TrackNexusAnnounced(&websocketNexus)
 

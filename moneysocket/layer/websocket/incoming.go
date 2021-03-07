@@ -23,26 +23,19 @@ func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 
 func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 	wn := websocket.NewIncomingSocket()
-	wsn := websocket.NewWebsocketNexus(&wn)
 	is := IncomingWebsocketLayer{
 		BaseLayer:      layer.NewBaseLayer(),
 		Config:         config,
 		IncomingSocket: &wn,
 	}
-	wn.Nexus = &wsn
-
 	// set factory ms protocol layer to the current layer
 	is.IncomingSocket.FactoryMsProtocolLayer = &is
 	return &is
 }
 
 func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
-	websocketNexus := websocket.NewWebsocketNexus(belowNexus)
+	websocketNexus := websocket.NewWebsocketNexus(belowNexus, i)
 	i.WebsocketNexus = &websocketNexus
-	i.WebsocketNexus.RegisterAboveNexus(belowNexus)
-	// register above workaround
-	i.WebsocketNexus.SetOnMessage(belowNexus.OnMessage)
-	i.WebsocketNexus.SetOnBinMessage(belowNexus.OnBinMessage)
 
 	i.TrackNexus(i.WebsocketNexus, belowNexus)
 	i.TrackNexusAnnounced(i.WebsocketNexus)
@@ -50,7 +43,6 @@ func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	if i.OnAnnounce != nil {
 		i.OnAnnounce(i.WebsocketNexus)
 	}
-	i.IncomingSocket.Nexus = i.WebsocketNexus
 }
 
 func (i *IncomingWebsocketLayer) StopListening() {

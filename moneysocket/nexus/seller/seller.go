@@ -33,12 +33,15 @@ type SellerInfo struct {
 
 func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) SellerNexus {
 	baseNexus := base.NewBaseNexusFull(SellerNexusName, belowNexus, layer)
-	return SellerNexus{
+	sn := SellerNexus{
 		&baseNexus,
 		nil,
 		nil,
 		nil,
 	}
+	belowNexus.SetOnBinMessage(sn.OnBinMessage)
+	belowNexus.SetOnMessage(sn.OnMessage)
+	return sn
 }
 
 func (s *SellerNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {

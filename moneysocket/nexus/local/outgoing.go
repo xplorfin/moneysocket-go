@@ -25,7 +25,10 @@ func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, shar
 		BaseNexus:  base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer),
 		belowNexus: belowNexus,
 	}
-	og.RegisterAboveNexus(belowNexus)
+	// this needs to be done everywhere
+	belowNexus.SetOnBinMessage(og.OnBinMessage)
+	belowNexus.SetOnMessage(og.OnMessage)
+
 	og.belowNexus.SetOutgoingNexus(&og)
 	og.sharedSeed = sharedSeed
 	return og

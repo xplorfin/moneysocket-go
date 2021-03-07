@@ -6,11 +6,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
+	"log"
 )
 
 // helper function for when youd don't want to pass a handler
 
 type BaseNexus struct {
+	// name of the nexus (stored in base for debugging)
 	name         string
 	uuid         uuid.UUID
 	BelowNexus   *nexus.Nexus
@@ -46,37 +48,40 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 	}
 }
 
-func (b BaseNexus) Uuid() uuid.UUID {
+func (b *BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
+	if b.IsEqual(belowNexus) {
+		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.Uuid(), b.Name(), b.Uuid())
+		log.Print(b.GetDownwardNexusList())
+		panic("crossed nexus?")
+	}
+}
+
+func (b *BaseNexus) Uuid() uuid.UUID {
 	return b.uuid
 }
 
-func (b BaseNexus) Name() string {
+func (b *BaseNexus) Name() string {
 	return b.name
 }
 
-func (b BaseNexus) IsEqual(n nexus.Nexus) bool {
+func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
 	return n.Uuid() == b.Uuid()
 }
 
-func (b BaseNexus) OnMessage(baseNexus nexus.Nexus, msg base.MoneysocketMessage) {
-	// default to onmessage
+func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
+	b.CheckCrossedNexus(belowNexus)
 	if b.onMessage != nil {
-		b.onMessage(baseNexus, msg)
+		b.onMessage(belowNexus, msg)
 		return
-	}
-	if b.BelowNexus != nil {
-		(*b.BelowNexus).OnMessage(baseNexus, msg)
 	}
 }
 
-func (b BaseNexus) OnBinMessage(baseNexus nexus.Nexus, msg []byte) {
+func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+	b.CheckCrossedNexus(belowNexus)
 	// default to onbinmessage
 	if b.onBinMessage != nil {
-		b.onBinMessage(baseNexus, msg)
+		b.onBinMessage(belowNexus, msg)
 		return
-	}
-	if b.BelowNexus != nil {
-		(*b.BelowNexus).OnBinMessage(baseNexus, msg)
 	}
 }
 
@@ -97,7 +102,7 @@ func (b BaseNexus) Send(msg base.MoneysocketMessage) error {
 
 func (b BaseNexus) SendBin(msg []byte) error {
 	if b.BelowNexus != nil {
-		(*b.BelowNexus).Send(base.NewBaseMoneysocketMessage(base.Notification))
+		return (*b.BelowNexus).SendBin(msg)
 	}
 	return nil
 }
@@ -121,9 +126,4 @@ func (b *BaseNexus) SetOnMessage(messageFunc nexus.OnMessage) {
 
 func (b *BaseNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
 	b.onBinMessage = messageBinFunc
-}
-
-func (b *BaseNexus) RegisterAboveNexus(belowNexus nexus.Nexus) {
-	belowNexus.SetOnMessage(b.onMessage)
-	belowNexus.SetOnBinMessage(b.onBinMessage)
 }

@@ -34,6 +34,8 @@ func NewConsumerTransactNexus(belowNexus nexus.Nexus) ConsumerTrackNexus {
 		nil,
 		nil,
 	}
+	belowNexus.SetOnBinMessage(c.OnBinMessage)
+	belowNexus.SetOnMessage(c.OnMessage)
 	return c
 }
 
