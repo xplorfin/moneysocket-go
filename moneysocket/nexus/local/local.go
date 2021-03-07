@@ -15,7 +15,7 @@ type LocalNexus struct {
 
 const LocalNexusName = "LocalNexusName"
 
-func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) LocalNexus {
+func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) *LocalNexus {
 	bnf := base.NewBaseNexusFull(LocalNexusName, belowNexus, layer)
 	ln := LocalNexus{
 		&bnf,
@@ -23,7 +23,7 @@ func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) LocalNexus {
 	belowNexus.SetOnBinMessage(ln.OnBinMessage)
 	belowNexus.SetOnMessage(ln.OnMessage)
 
-	return ln
+	return &ln
 }
 
 func (l *LocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {

@@ -22,7 +22,7 @@ type SellerLayer struct {
 
 	handleSellerInfoRequest func() seller.SellerInfo
 
-	SellerNexus seller.SellerNexus
+	SellerNexus *seller.SellerNexus
 }
 
 func NewSellerLayer() *SellerLayer {
@@ -45,7 +45,7 @@ func (s *SellerLayer) SetHandleSellerInfoRequest(handler func() seller.SellerInf
 	s.handleSellerInfoRequest = handler
 }
 
-func (s *SellerLayer) SetupSellerNexus(belowNexus nexus.Nexus) seller.SellerNexus {
+func (s *SellerLayer) SetupSellerNexus(belowNexus nexus.Nexus) *seller.SellerNexus {
 	n := seller.NewSellerNexus(belowNexus, s)
 	n.SetHandleOpinionInvoiceRequest(func(nx nexus.Nexus, itemId string, requestUuid string) {
 		s.handleOpinionInvoiceRequest(nx, itemId, requestUuid)
@@ -64,9 +64,9 @@ func (s *SellerLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 func (s *SellerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	log.Println("buyer layer got nexus, starting handshake")
 	s.SellerNexus = s.SetupSellerNexus(belowNexus)
-	s.TrackNexus(&s.SellerNexus, belowNexus)
+	s.TrackNexus(s.SellerNexus, belowNexus)
 
-	s.SendLayerEvent(&s.SellerNexus, message.NexusWaiting)
+	s.SendLayerEvent(s.SellerNexus, message.NexusWaiting)
 	s.SellerNexus.WaitForBuyer(s.sellerFinishedCb)
 }
 

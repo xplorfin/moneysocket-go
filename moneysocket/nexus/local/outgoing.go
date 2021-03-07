@@ -20,7 +20,7 @@ type OutgoingLocalNexus struct {
 
 const OutgoingLocalNexusName = "OutgoingLocalNexus"
 
-func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) OutgoingLocalNexus {
+func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
 	bnf := base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer)
 	og := OutgoingLocalNexus{
 		BaseNexus:  &bnf,
@@ -32,7 +32,7 @@ func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, shar
 
 	og.belowNexus.SetOutgoingNexus(&og)
 	og.sharedSeed = sharedSeed
-	return og
+	return &og
 }
 
 func (o *OutgoingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {

@@ -33,8 +33,8 @@ type IncomingSocket struct {
 const IncomingSocketName = "IncomingSocketName"
 
 // create a new incoming websocket nexus (accepts request)
-func NewIncomingSocket() IncomingSocket {
-	return IncomingSocket{
+func NewIncomingSocket() *IncomingSocket {
+	return &IncomingSocket{
 		WebSocketServerProtocol: ws_server.NewBaseWebsocketService(),
 		wasAnnounced:            false,
 		name:                    IncomingSocketName,

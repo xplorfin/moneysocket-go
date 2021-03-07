@@ -68,7 +68,7 @@ func (p *ProviderTransactLayer) setupTransactNexus(belowNexus nexus.Nexus) *prov
 	providerTransactNexus := provider.NewProviderTransactNexus(belowNexus, p)
 	providerTransactNexus.HandleInvoiceRequest = p.handleInvoiceRequest
 	providerTransactNexus.HandlePayRequest = p.handlePayRequest
-	return &providerTransactNexus
+	return providerTransactNexus
 }
 
 func (p *ProviderTransactLayer) RevokeNexus(belowNexus nexus.Nexus) {

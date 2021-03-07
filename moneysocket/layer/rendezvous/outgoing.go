@@ -21,7 +21,7 @@ func (o *OutgoingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 
 func (o *OutgoingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewOutgoingRendezvousNexus(belowNexus, o)
-	o.TrackNexus(&rendezvousNexus, belowNexus)
+	o.TrackNexus(rendezvousNexus, belowNexus)
 	sharedSeed := belowNexus.SharedSeed()
 	rid := hex.EncodeToString(sharedSeed.DeriveRendezvousId())
 	rendezvousNexus.StartRendezvous(rid, o.RendezvousFinishedCb)

@@ -34,8 +34,8 @@ type OutgoingSocket struct {
 }
 
 // create a new incoming websocket nexus (accepts request)
-func NewOutgoingSocket() OutgoingSocket {
-	return OutgoingSocket{
+func NewOutgoingSocket() *OutgoingSocket {
+	return &OutgoingSocket{
 		WebsocketClientProtocol: ws_client.NewBaseWebsocketClient(),
 		wasAnnounced:            false,
 		OutgoingSharedSeed:      nil,

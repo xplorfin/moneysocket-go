@@ -19,7 +19,7 @@ type OutgoingRendezvousNexus struct {
 
 const OutgoingRendezvousNexusName = "OutgoingRendezvousNexus"
 
-func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) OutgoingRendezvousNexus {
+func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) *OutgoingRendezvousNexus {
 	bnf := base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer)
 	og := OutgoingRendezvousNexus{
 		BaseNexus: &bnf,
@@ -27,7 +27,7 @@ func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) Outgo
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
 
-	return og
+	return &og
 }
 
 func (o OutgoingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {

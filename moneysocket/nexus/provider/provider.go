@@ -17,6 +17,14 @@ type ProviderNexus struct {
 	ProviderFinishedCb        func(nx nexus.Nexus)
 }
 
+func NewProviderNexus(belowNexus nexus.Nexus) *ProviderNexus {
+	baseNexus := base.NewBaseNexusBelow(ProviderNexusName, belowNexus)
+	pn := ProviderNexus{baseNexus, "", nil, nil}
+	belowNexus.SetOnBinMessage(pn.OnBinMessage)
+	belowNexus.SetOnMessage(pn.OnMessage)
+	return &pn
+}
+
 func (o *ProviderNexus) IsLayerMessage(message message_base.MoneysocketMessage) bool {
 	if message.MessageClass() == message_base.Request {
 		return false
@@ -80,12 +88,4 @@ func (o *ProviderNexus) NotifyProviderReady() {
 }
 func (o *ProviderNexus) ProviderNowReady() {
 	o.NotifyProviderReady()
-}
-
-func NewProviderNexus(belowNexus nexus.Nexus) ProviderNexus {
-	baseNexus := base.NewBaseNexusBelow(ProviderNexusName, belowNexus)
-	pn := ProviderNexus{baseNexus, "", nil, nil}
-	belowNexus.SetOnBinMessage(pn.OnBinMessage)
-	belowNexus.SetOnMessage(pn.OnMessage)
-	return pn
 }

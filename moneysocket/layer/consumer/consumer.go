@@ -10,21 +10,21 @@ import (
 type ConsumerLayer struct {
 	layer.BaseLayer
 	onPing        consumer.OnPingFn
-	consumerNexus consumer.ConsumerNexus
+	consumerNexus *consumer.ConsumerNexus
 }
 
 func NewConsumerLayer() *ConsumerLayer {
 	return &ConsumerLayer{
 		layer.NewBaseLayer(),
 		nil,
-		consumer.ConsumerNexus{}, // gets overwritten
+		&consumer.ConsumerNexus{}, // gets overwritten
 	}
 }
 
 // announce the nexus and start the handshake
 func (c *ConsumerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	c.SetupConsumerNexus(belowNexus)
-	c.TrackNexus(&c.consumerNexus, belowNexus)
+	c.TrackNexus(c.consumerNexus, belowNexus)
 	c.consumerNexus.StartHandshake(c.ConsumerFinishedCb)
 }
 

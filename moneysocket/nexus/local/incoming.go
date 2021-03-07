@@ -18,7 +18,7 @@ type IncomingLocalNexus struct {
 
 const IncomingLocalNexusName = "IncomingLocalNexus"
 
-func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) IncomingLocalNexus {
+func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) *IncomingLocalNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingLocalNexusName, belowNexus, layer)
 	og := IncomingLocalNexus{
 		BaseNexus: &baseNexus,
@@ -26,7 +26,7 @@ func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) Inco
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
 	belowNexus.SetIncomingNexus(&og)
-	return og
+	return &og
 }
 
 func (i *IncomingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {

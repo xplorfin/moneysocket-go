@@ -27,7 +27,7 @@ type ConsumerTrackNexus struct {
 
 const ConsumerTrackNexusName = "ConsumerTrackNexus"
 
-func NewConsumerTransactNexus(belowNexus nexus.Nexus) ConsumerTrackNexus {
+func NewConsumerTransactNexus(belowNexus nexus.Nexus) *ConsumerTrackNexus {
 	c := ConsumerTrackNexus{
 		base.NewBaseNexusBelow(ConsumerTrackNexusName, belowNexus),
 		nil,
@@ -36,7 +36,7 @@ func NewConsumerTransactNexus(belowNexus nexus.Nexus) ConsumerTrackNexus {
 	}
 	belowNexus.SetOnBinMessage(c.OnBinMessage)
 	belowNexus.SetOnMessage(c.OnMessage)
-	return c
+	return &c
 }
 
 func (c ConsumerTrackNexus) HandleLayerNotification() {

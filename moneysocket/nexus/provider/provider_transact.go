@@ -22,12 +22,14 @@ type ProviderTransactNexus struct {
 	HandlePayRequest     compat.HandlePayRequest
 }
 
-func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) ProviderTransactNexus {
+func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) *ProviderTransactNexus {
 	nx := base.NewBaseNexusFull(ProviderTransactNexusName, belowNexus, layer)
-	belowNexus.SetOnBinMessage(nx.OnBinMessage)
-	belowNexus.SetOnMessage(nx.OnMessage)
+	pn := ProviderTransactNexus{&nx, nil, nil}
 
-	return ProviderTransactNexus{&nx, nil, nil}
+	belowNexus.SetOnBinMessage(pn.OnBinMessage)
+	belowNexus.SetOnMessage(pn.OnMessage)
+
+	return &pn
 }
 
 // handle layer request
