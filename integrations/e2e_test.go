@@ -65,7 +65,7 @@ func TestE2E(t *testing.T) {
 		t.Error(err)
 	}
 
-	// connect to wallet consumer
+	// generate beacon
 	account0Listen := getBeacon(t, terminusClient, "0")
 	walletCon := NewWalletConsumer(account0Listen)
 	err = walletCon.DoConnect(account0Listen)
