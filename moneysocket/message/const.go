@@ -38,6 +38,7 @@ const (
 	Relay              = "RELAY"
 	OutgoingLocal      = "OUTGOING_LOCAL"
 	IncomingWebsocket  = "INCOMING_WEBSOCKET"
+	IncomingLocal      = "INCOMING_LOCAL"
 	OutgoingWebsocket  = "OUTGOING_WEBSOCKET"
 	OutgoingRendezvous = "OUTGOING_RENDEZVOUS"
 	IncomingRendezvous = "INCOMING_RENDEZVOUS"

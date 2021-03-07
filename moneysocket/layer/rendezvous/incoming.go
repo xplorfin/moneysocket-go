@@ -7,6 +7,17 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/rendezvous"
 )
 
+func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
+	baseLayer := layer.NewBaseLayer()
+	il := IncomingRendezvousLayer{
+		BaseLayer: &baseLayer,
+		directory: rendezvous.NewRendezvousDirectory(),
+	}
+	il.SetOnAnnounce(il.AnnounceNexus)
+	il.SetOnRevoke(il.RevokeNexus)
+	return &il
+}
+
 type IncomingRendezvousLayer struct {
 	*layer.BaseLayer
 	directory *rendezvous.RendezvousDirectory
@@ -45,18 +56,7 @@ func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 }
 
 func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) nexus.Nexus {
-	panic("method not yet implemented")
-}
-
-func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
-	baseLayer := layer.NewBaseLayer()
-	il := IncomingRendezvousLayer{
-		BaseLayer: &baseLayer,
-		directory: rendezvous.NewRendezvousDirectory(),
-	}
-	il.SetOnAnnounce(il.AnnounceNexus)
-	il.SetOnRevoke(il.RevokeNexus)
-	return &il
+	return *o.directory.GetPeerNexus(rendezvousNexus.Uuid())
 }
 
 var _ layer.Layer = &IncomingRendezvousLayer{}
