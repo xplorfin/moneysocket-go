@@ -1,8 +1,6 @@
 package local
 
 import (
-	"fmt"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
@@ -32,7 +30,5 @@ func (i *IncomingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	i.SendLayerEvent(&localNexus, message.NexusAnnounced)
 	if i.OnAnnounce != nil {
 		i.OnAnnounce(&localNexus)
-	} else {
-		fmt.Println("hi")
 	}
 }

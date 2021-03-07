@@ -23,6 +23,8 @@ func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) Outgo
 	og := OutgoingRendezvousNexus{
 		BaseNexus: base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer),
 	}
+	belowNexus.SetOnBinMessage(og.OnBinMessage)
+	belowNexus.SetOnMessage(og.OnMessage)
 	return og
 }
 

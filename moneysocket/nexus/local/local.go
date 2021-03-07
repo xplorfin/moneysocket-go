@@ -30,4 +30,9 @@ func (l *LocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.Mone
 	l.BaseNexus.OnMessage(belowNexus, msg)
 }
 
+
+func (l *LocalNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
+	l.BaseNexus.SetOnBinMessage(messageBinFunc)
+}
+
 var _ nexus.Nexus = &LocalNexus{}

@@ -19,9 +19,7 @@ func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 
 func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewIncomingRendezvousNexus(belowNexus, o, o.directory)
-	// register below nexus
-	belowNexus.SetOnMessage(rendezvousNexus.OnMessage)
-	belowNexus.SetOnBinMessage(rendezvousNexus.OnBinMessage)
+
 	o.TrackNexus(&rendezvousNexus, belowNexus)
 	rendezvousNexus.WaitForRendezvous(o.RendezvousFinishedCb)
 }

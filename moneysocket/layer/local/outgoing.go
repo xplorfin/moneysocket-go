@@ -31,8 +31,6 @@ func (o *OutgoingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, o)
 	// todo swap this to register above nexus
-	belowNexus.SetOnBinMessage(localNexus.OnBinMessage)
-	belowNexus.SetOnMessage(localNexus.OnMessage)
 
 	o.TrackNexus(&localNexus, belowNexus)
 	o.TrackNexusAnnounced(&localNexus)
