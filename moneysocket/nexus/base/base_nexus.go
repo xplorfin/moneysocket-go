@@ -70,14 +70,10 @@ func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
 
 func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
 	b.CheckCrossedNexus(belowNexus)
-	// default to onmessage
 	if b.onMessage != nil {
 		b.onMessage(belowNexus, msg)
 		return
 	}
-	//if b.BelowNexus != nil {
-	//	(*b.BelowNexus).OnMessage(belowNexus, msg)
-	//}
 }
 
 func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
@@ -87,9 +83,6 @@ func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 		b.onBinMessage(belowNexus, msg)
 		return
 	}
-	//if b.BelowNexus != nil {
-	//	(*b.BelowNexus).OnBinMessage(belowNexus, msg)
-	//}
 }
 
 func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
