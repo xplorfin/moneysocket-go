@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
-	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/stack"
@@ -14,13 +13,6 @@ import (
 type WalletConsumer struct {
 	*stack.OutgoingConsumerStack
 	ConsumerBeacon beacon.Beacon
-}
-
-func makeConsumerBeacon(host string, useTls bool, port int) beacon.Beacon {
-	res := beacon.NewBeacon()
-	loc := location.NewWebsocketLocationPort(host, false, port)
-	res.AddLocation(loc)
-	return res
 }
 
 func NewWalletConsumer(beacon beacon.Beacon) WalletConsumer {
