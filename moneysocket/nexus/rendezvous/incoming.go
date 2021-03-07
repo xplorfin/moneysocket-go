@@ -1,6 +1,7 @@
 package rendezvous
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
@@ -25,6 +26,7 @@ const IncomingRendezvousNexusName = "IncomingRendezvousNexus"
 
 func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *RendezvousDirectory) *IncomingRendezvousNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingRendezvousNexusName, belowNexus, layer)
+	fmt.Print(baseNexus.Uuid().String())
 	og := IncomingRendezvousNexus{
 		BaseNexus: &baseNexus,
 		directory: directory,

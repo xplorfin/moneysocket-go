@@ -14,16 +14,16 @@ type RelayLayer struct {
 	RendezvousLayer *rendezvous.IncomingRendezvousLayer
 }
 
-func (r *RelayLayer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
-	rendezvousNexus.SetOnMessage(r.OnMessage)
-	rendezvousNexus.SetOnBinMessage(r.OnBinMessage)
-}
-
 func NewRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *RelayLayer {
 	return &RelayLayer{
 		BaseLayer:       layer.NewBaseLayer(),
 		RendezvousLayer: rendezvousLayer,
 	}
+}
+
+func (r *RelayLayer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
+	rendezvousNexus.SetOnMessage(r.OnMessage)
+	rendezvousNexus.SetOnBinMessage(r.OnBinMessage)
 }
 
 func (r *RelayLayer) RegisterAboveLayer(belowLayer layer.Layer) {

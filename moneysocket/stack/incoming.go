@@ -39,16 +39,15 @@ func NewIncomingStack(config *config.Config, outgoingLocalLayer *local.OutgoingL
 
 func (i *IncomingStack) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) {
 	i.relayLayer = relay.NewRelayLayer(rendezvousLayer)
-
-	i.rendezvousLayer.SetOnAnnounce(i.relayLayer.OnAnnounce)
-	i.rendezvousLayer.SetOnRevoke(i.relayLayer.OnRevoke)
+	i.relayLayer.RegisterAboveLayer(rendezvousLayer)
+	i.relayLayer.RegisterLayerEvent(i.SendStackEvent, message.Relay)
 }
 
 func (i *IncomingStack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer2 layer.Layer) {
 	i.rendezvousLayer = rendezvous.NewIncomingRendezvousLayer()
 	i.rendezvousLayer.RegisterAboveLayer(belowLayer1)
 	i.rendezvousLayer.RegisterAboveLayer(belowLayer2)
-	i.rendezvousLayer.RegisterLayerEvent(i.SendStackEvent, message.Relay)
+	i.rendezvousLayer.RegisterLayerEvent(i.SendStackEvent, message.IncomingRendezvous)
 }
 
 func (i *IncomingStack) SetupWebsocketLayer() {
@@ -58,7 +57,7 @@ func (i *IncomingStack) SetupWebsocketLayer() {
 
 func (i *IncomingStack) SetupLocalLayer(outgoingLocalLayer *local.OutgoingLocalLayer) {
 	i.localLayer = local.NewIncomingLocalLayer()
-	i.localLayer.RegisterLayerEvent(i.SendStackEvent, message.IncomingWebsocket)
+	i.localLayer.RegisterLayerEvent(i.SendStackEvent, message.IncomingLocal)
 	outgoingLocalLayer.SetIncomingLayer(i.localLayer)
 }
 
