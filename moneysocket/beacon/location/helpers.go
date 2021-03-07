@@ -5,6 +5,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/util"
 )
 
+// default tlv type for unimplemented location beacons
 const PLACEHOLDER_TLV_TYPE = 0
 
 // encode a placeholder tlv for python-parity tests
