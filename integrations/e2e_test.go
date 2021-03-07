@@ -68,7 +68,7 @@ func TestE2E(t *testing.T) {
 	}
 	walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
 	err = walletCon.DoConnect(walletCon.ConsumerBeacon)
-	if true {
+	if false {
 		walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
 		err = walletCon.DoConnect(walletCon.ConsumerBeacon)
 		if err != nil {
