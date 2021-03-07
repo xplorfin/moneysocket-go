@@ -23,8 +23,8 @@ type SellerApp struct {
 	ProviderInfo   seller.SellerInfo
 }
 
-func NewSellerApp(host string, useTls bool, port int) *SellerApp {
-	walletConsumer := NewWalletConsumer(host, useTls, port)
+func NewSellerApp(beacon beacon.Beacon) *SellerApp {
+	walletConsumer := NewWalletConsumer(beacon)
 	sellerStack := stack.NewSellerStack()
 	sa := SellerApp{
 		SellerStack:    sellerStack,

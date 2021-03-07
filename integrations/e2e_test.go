@@ -19,6 +19,9 @@ func makeConfig(t *testing.T) *config.Config {
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
 	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
 	testConfig.ListenConfig.BindHost = "localhost"
+	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
+	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
+
 	testConfig.RpcConfig.BindHost = "localhost"
 	testConfig.RpcConfig.BindPort = nettest.GetFreePort(t)
 	return testConfig
@@ -54,16 +57,17 @@ func TestE2E(t *testing.T) {
 	}
 	t.Log(account1Beacon)
 
-	// start the seller wallet consumer
-	app := NewSellerApp(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
+	// start the seller wallet consumer on account-1
 	account1Listen := getBeacon(t, terminusClient, "1")
+	app := NewSellerApp(account1Listen)
 	err = app.ConsumerStack.DoConnect(account1Listen)
 	if err != nil {
 		t.Error(err)
 	}
 
-	walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
+	// generate beacon
 	account0Listen := getBeacon(t, terminusClient, "0")
+	walletCon := NewWalletConsumer(account0Listen)
 	err = walletCon.DoConnect(account0Listen)
 
 	time.Sleep(time.Second * 10)
@@ -78,7 +82,7 @@ func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account str
 	}
 
 	// get the beacon
-	acc, err := beacon.DecodeFromBech32Str(extreactBeacon(accountBeacon))
+	acc, err := beacon.DecodeFromBech32Str(extractBeacon(accountBeacon))
 	if err != nil {
 		t.Error(err)
 	}
@@ -86,6 +90,6 @@ func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account str
 }
 
 // extract a beacon from a terminus response
-func extreactBeacon(response string) string {
+func extractBeacon(response string) string {
 	return strings.Split(response[strings.Index(response, beacon.MoneysocketHrp):], " ")[0]
 }
