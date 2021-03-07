@@ -1,5 +1,6 @@
 package base
 
+// TODO: move to map
 //covers both request and notifications
 type MessageType int
 

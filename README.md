@@ -9,12 +9,6 @@
 
 This is a golang implementation of the [moneysocket protocol](https://github.com/moneysocket/py-moneysocket) that aims to have full integration testing & parity with py & js moneysocket. This project is not yet usable in any state beyond tvl encoding/decoding. The code is a bit of a mess as well since parts of this were torn from private [xplorfin](https://entropy.rocks/) repos. If you want to check it out anyway, you can run terminus
 
- To Do:
- 
- 1. General cleanup
- 2. Cleanup mixed tlv encoding/decoding
- 3. use uuid or string consistently
-
 # Architecture
    
 Testing:
@@ -28,5 +22,4 @@ Testing:
  1. generate buyer consumer beacon
  1. connect seller app provider to buyer consumer
  1. seller opens store
- 
- 
+

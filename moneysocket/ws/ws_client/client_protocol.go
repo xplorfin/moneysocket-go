@@ -11,7 +11,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// this class attempts to emulate the twisted socket interface
+// WebsocketClientProtocol class attempts to emulate the twisted socket interface
 // for usabilities sake and calls events on downstream nexuses
 type WebsocketClientProtocol interface {
 	// calls when a new connection is made
@@ -35,7 +35,7 @@ type WebsocketClientProtocol interface {
 }
 
 // base websocket service you can wrap in a struct so you don't need to reimplement
-// empty event listeners
+// empty event listeners. It  also provides a canonical way to send messages
 type BaseWebsocketClient struct {
 	// See: https://git.io/JtPNQ, gorilla websockets do not suppor tconcurrent writers
 	Mux            sync.Mutex
@@ -43,19 +43,29 @@ type BaseWebsocketClient struct {
 	BaseSharedSeed *beacon.SharedSeed
 }
 
-// do nothing
+// called when connection is established
 func (w *BaseWebsocketClient) OnConnecting() {}
 
+// get the connection object
 func (w *BaseWebsocketClient) getConnection() *websocket.Conn {
 	return w.Conn
 }
 
+// called on connect, sets the connection object
 func (w *BaseWebsocketClient) OnConnect(conn *websocket.Conn, r *http.Response) {
 	w.Conn = conn
 }
-func (w *BaseWebsocketClient) OnOpen()                                        {}
-func (w *BaseWebsocketClient) OnWsMessage(payload []byte, isBinary bool)      {}
+
+// called when the connection is opened
+func (w *BaseWebsocketClient) OnOpen() {}
+
+// called when a ws message is received
+func (w *BaseWebsocketClient) OnWsMessage(payload []byte, isBinary bool) {}
+
+// called when a connection is closed
 func (w *BaseWebsocketClient) OnClose(wasClean bool, code int, reason string) {}
+
+// send a websocket message
 func (w *BaseWebsocketClient) Send(msg base.MoneysocketMessage) error {
 	if w.getConnection() == nil {
 		return errors.New("not currently connected")
@@ -67,6 +77,7 @@ func (w *BaseWebsocketClient) Send(msg base.MoneysocketMessage) error {
 	return w.SendBin(res)
 }
 
+// send a binary message
 func (w *BaseWebsocketClient) SendBin(msg []byte) (err error) {
 	if w.getConnection() == nil {
 		return errors.New("not currently connected")
@@ -77,12 +88,15 @@ func (w *BaseWebsocketClient) SendBin(msg []byte) (err error) {
 	return err
 }
 
+// get shared seed
 func (w *BaseWebsocketClient) SharedSeed() *beacon.SharedSeed {
 	return w.BaseSharedSeed
 }
 
+// make sure the client binds to the base websocket client
 var _ WebsocketClientProtocol = &BaseWebsocketClient{}
 
+// Creates a websocket client with default options
 func NewBaseWebsocketClient() *BaseWebsocketClient {
 	return &BaseWebsocketClient{}
 }
