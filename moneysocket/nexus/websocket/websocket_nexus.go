@@ -24,10 +24,12 @@ func (o *WebsocketNexus) OnBinMessage(belowNexus nexus.Nexus, msgByte []byte) {
 	o.BaseNexus.OnBinMessage(belowNexus, msgByte)
 }
 
+
 func NewWebsocketNexus(belowNexus nexus.Nexus) WebsocketNexus {
 	n := WebsocketNexus{base.NewBaseNexus(WebsocketNexusName)}
 	n.BelowNexus = &belowNexus
-	n.RegisterAboveNexus(belowNexus)
+	belowNexus.SetOnMessage(n.OnMessage)
+	belowNexus.SetOnBinMessage(n.OnBinMessage)
 	// TODO register above nexus here (should really be done all over the place)
 	return n
 }

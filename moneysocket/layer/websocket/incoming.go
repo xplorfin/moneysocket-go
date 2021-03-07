@@ -39,10 +39,6 @@ func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	websocketNexus := websocket.NewWebsocketNexus(belowNexus)
 	i.WebsocketNexus = &websocketNexus
-	i.WebsocketNexus.RegisterAboveNexus(belowNexus)
-	// register above workaround
-	i.WebsocketNexus.SetOnMessage(belowNexus.OnMessage)
-	i.WebsocketNexus.SetOnBinMessage(belowNexus.OnBinMessage)
 
 	i.TrackNexus(i.WebsocketNexus, belowNexus)
 	i.TrackNexusAnnounced(i.WebsocketNexus)

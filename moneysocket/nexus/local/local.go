@@ -19,7 +19,9 @@ func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) LocalNexus {
 	ln := LocalNexus{
 		base.NewBaseNexusFull(LocalNexusName, belowNexus, layer),
 	}
-	ln.RegisterAboveNexus(belowNexus)
+	belowNexus.SetOnBinMessage(ln.OnBinMessage)
+	belowNexus.SetOnMessage(ln.OnMessage)
+
 	return ln
 }
 

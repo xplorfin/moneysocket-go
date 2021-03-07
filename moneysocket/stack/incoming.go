@@ -32,7 +32,7 @@ func NewIncomingStack(config *config.Config, outgoingLocalLayer *local.OutgoingL
 	}
 	is.SetupLocalLayer(outgoingLocalLayer)
 	is.SetupWebsocketLayer()
-	is.SetupRendezvousLayer(is.localLayer, is.websocketLayer)
+	is.SetupRendezvousLayer(is.websocketLayer, is.localLayer)
 	is.SetupRelayLayer(is.rendezvousLayer)
 	return &is
 }

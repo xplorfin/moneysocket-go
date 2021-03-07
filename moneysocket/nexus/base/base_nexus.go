@@ -1,6 +1,7 @@
 package base
 
 import (
+	"fmt"
 	uuid "github.com/satori/go.uuid"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
@@ -50,6 +51,7 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 func (b BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	if b.IsEqual(belowNexus) {
 		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.Uuid(), b.Name(), b.Uuid())
+		log.Print(b.GetDownwardNexusList())
 		panic("crossed nexus?")
 	}
 }
@@ -68,6 +70,9 @@ func (b BaseNexus) IsEqual(n nexus.Nexus) bool {
 
 func (b BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
 	b.CheckCrossedNexus(belowNexus)
+	if b.Name() == "OutgoingLocalNexus"{
+		fmt.Print("err")
+	}
 	// default to onmessage
 	if b.onMessage != nil {
 		b.onMessage(belowNexus, msg)
@@ -131,9 +136,4 @@ func (b *BaseNexus) SetOnMessage(messageFunc nexus.OnMessage) {
 
 func (b *BaseNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
 	b.onBinMessage = messageBinFunc
-}
-
-func (b *BaseNexus) RegisterAboveNexus(belowNexus nexus.Nexus) {
-	belowNexus.SetOnMessage(b.onMessage)
-	belowNexus.SetOnBinMessage(b.onBinMessage)
 }

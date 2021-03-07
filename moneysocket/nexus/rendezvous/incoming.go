@@ -29,6 +29,8 @@ func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, direc
 		BaseNexus: &baseNexus,
 		directory: directory,
 	}
+	belowNexus.SetOnBinMessage(og.OnBinMessage)
+	belowNexus.SetOnMessage(og.OnMessage)
 	return og
 }
 
