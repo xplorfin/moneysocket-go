@@ -31,7 +31,7 @@ type SellerInfo struct {
 	Items      []notification.Item `json:"items"`
 }
 
-func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) SellerNexus {
+func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) *SellerNexus {
 	baseNexus := base.NewBaseNexusFull(SellerNexusName, belowNexus, layer)
 	sn := SellerNexus{
 		&baseNexus,
@@ -41,7 +41,7 @@ func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) SellerNexus {
 	}
 	belowNexus.SetOnBinMessage(sn.OnBinMessage)
 	belowNexus.SetOnMessage(sn.OnMessage)
-	return sn
+	return &sn
 }
 
 func (s *SellerNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {

@@ -32,11 +32,11 @@ func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, o)
 	// todo swap this to register above nexus
 
-	o.TrackNexus(&localNexus, belowNexus)
-	o.TrackNexusAnnounced(&localNexus)
-	o.SendLayerEvent(&localNexus, message.NexusAnnounced)
+	o.TrackNexus(localNexus, belowNexus)
+	o.TrackNexusAnnounced(localNexus)
+	o.SendLayerEvent(localNexus, message.NexusAnnounced)
 	if o.OnAnnounce != nil {
-		o.OnAnnounce(&localNexus)
+		o.OnAnnounce(localNexus)
 	}
 }
 
@@ -47,14 +47,14 @@ func (o *OutgoingLocalLayer) SetIncomingLayer(incomingLayer layer.Layer) {
 func (o *OutgoingLocalLayer) Connect(sharedSeed beacon.SharedSeed) {
 	joinedNexus := local.NewJoinedLocalNexus()
 	outgoingNexus := local.NewOutgoingLocalNexus(joinedNexus, o, sharedSeed)
-	o.OutgoingBySharedSeed[sharedSeed.ToString()] = &outgoingNexus
+	o.OutgoingBySharedSeed[sharedSeed.ToString()] = outgoingNexus
 	incomingNexus := local.NewIncomingLocalNexus(joinedNexus, o.IncomingLocalLayer)
 	// add incoming nexus on message
-	o.IncomingBySharedSeed[sharedSeed.ToString()] = &incomingNexus
+	o.IncomingBySharedSeed[sharedSeed.ToString()] = incomingNexus
 
-	o.IncomingLocalLayer.AnnounceNexus(&incomingNexus)
+	o.IncomingLocalLayer.AnnounceNexus(incomingNexus)
 
-	o.AnnounceNexus(&outgoingNexus)
+	o.AnnounceNexus(outgoingNexus)
 }
 
 func (o *OutgoingLocalLayer) Disconnect(sharedSeed beacon.SharedSeed) {

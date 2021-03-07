@@ -33,8 +33,8 @@ type IncomingSocket struct {
 const IncomingSocketName = "IncomingSocketName"
 
 // create a new incoming websocket nexus (accepts request)
-func NewIncomingSocket() IncomingSocket {
-	return IncomingSocket{
+func NewIncomingSocket() *IncomingSocket {
+	return &IncomingSocket{
 		WebSocketServerProtocol: ws_server.NewBaseWebsocketService(),
 		wasAnnounced:            false,
 		name:                    IncomingSocketName,
@@ -86,8 +86,7 @@ func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
 		log.Infof("binary payload of %d bytes", len(payload))
 		sharedSeed := i.SharedSeed()
 
-		// this needs to be flipped
-		if sharedSeed != nil && message.IsCypherText(payload) {
+		if sharedSeed == nil && message.IsCypherText(payload) {
 			i.OnBinMessage(i, payload)
 			return
 		}

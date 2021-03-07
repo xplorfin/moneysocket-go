@@ -13,20 +13,21 @@ import (
 
 // TODO implement this
 type OutgoingRendezvousNexus struct {
-	base.BaseNexus
+	*base.BaseNexus
 	rendezvousFinishedCb func(nexus.Nexus)
 }
 
 const OutgoingRendezvousNexusName = "OutgoingRendezvousNexus"
 
-func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) OutgoingRendezvousNexus {
+func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) *OutgoingRendezvousNexus {
+	bnf := base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer)
 	og := OutgoingRendezvousNexus{
-		BaseNexus: base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer),
+		BaseNexus: &bnf,
 	}
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
 
-	return og
+	return &og
 }
 
 func (o OutgoingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {

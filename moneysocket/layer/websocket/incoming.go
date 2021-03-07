@@ -26,7 +26,7 @@ func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 	is := IncomingWebsocketLayer{
 		BaseLayer:      layer.NewBaseLayer(),
 		Config:         config,
-		IncomingSocket: &wn,
+		IncomingSocket: wn,
 	}
 	// set factory ms protocol layer to the current layer
 	is.IncomingSocket.FactoryMsProtocolLayer = &is
@@ -35,7 +35,7 @@ func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 
 func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	websocketNexus := websocket.NewWebsocketNexus(belowNexus, i)
-	i.WebsocketNexus = &websocketNexus
+	i.WebsocketNexus = websocketNexus
 
 	i.TrackNexus(i.WebsocketNexus, belowNexus)
 	i.TrackNexusAnnounced(i.WebsocketNexus)

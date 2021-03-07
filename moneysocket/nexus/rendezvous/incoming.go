@@ -23,7 +23,7 @@ type IncomingRendezvousNexus struct {
 
 const IncomingRendezvousNexusName = "IncomingRendezvousNexus"
 
-func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *RendezvousDirectory) IncomingRendezvousNexus {
+func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *RendezvousDirectory) *IncomingRendezvousNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingRendezvousNexusName, belowNexus, layer)
 	og := IncomingRendezvousNexus{
 		BaseNexus: &baseNexus,
@@ -32,11 +32,11 @@ func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, direc
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
 
-	return og
+	return &og
 }
 
 // TODO all this logic _really_ should occur in message
-func (i IncomingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {
+func (i *IncomingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {
 	if msg.MessageClass() != message_base.Request {
 		return false
 	}

@@ -40,7 +40,7 @@ func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 // announce a nexus and create the consumer transaction layer
 func (c *ConsumerTransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	cn := transact.NewConsumerTransactNexus(belowNexus)
-	c.consumerTransactNexus = &cn
+	c.consumerTransactNexus = cn
 	c.TrackNexus(c.consumerTransactNexus, belowNexus)
 	c.TrackNexusAnnounced(c.consumerTransactNexus)
 	c.SendLayerEvent(c.consumerTransactNexus, message.NexusAnnounced)
@@ -52,7 +52,7 @@ func (c *ConsumerTransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 // setup the consumer transaction enxus
 func (c *ConsumerTransactLayer) SetupConsumerTransactionNexus(belowNexus nexus.Nexus) {
 	ctn := transact.NewConsumerTransactNexus(belowNexus)
-	c.consumerTransactNexus = &ctn
+	c.consumerTransactNexus = ctn
 	c.consumerTransactNexus.SetOnPreimage(c.onPreimage)
 	c.consumerTransactNexus.SetOnInvoice(c.onInvoice)
 	c.consumerTransactNexus.SetOnProviderInfo(c.onProviderInfo)

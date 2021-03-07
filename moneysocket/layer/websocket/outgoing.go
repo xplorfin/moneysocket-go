@@ -23,7 +23,7 @@ func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 	os := OutgoingWebsocketLayer{
 		BaseLayer:              layer.NewBaseLayer(),
 		NexusBySharedSeed:      layer.NexusStringMap{},
-		OutgoingSocketProtocol: &outgoingSocket,
+		OutgoingSocketProtocol: outgoingSocket,
 	}
 	os.OutgoingSocketProtocol.FactoryMsProtocolLayer = &os
 	return &os
@@ -31,14 +31,14 @@ func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 
 func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	websocketNexus := nws.NewWebsocketNexus(belowNexus, o)
-	o.TrackNexus(&websocketNexus, belowNexus)
-	o.TrackNexusAnnounced(&websocketNexus)
+	o.TrackNexus(websocketNexus, belowNexus)
+	o.TrackNexusAnnounced(websocketNexus)
 
 	sharedSeed := websocketNexus.SharedSeed()
-	o.NexusBySharedSeed.Store(sharedSeed.ToString(), &websocketNexus)
-	o.SendLayerEvent(&websocketNexus, message.NexusAnnounced)
+	o.NexusBySharedSeed.Store(sharedSeed.ToString(), websocketNexus)
+	o.SendLayerEvent(websocketNexus, message.NexusAnnounced)
 	if o.OnAnnounce != nil {
-		o.OnAnnounce(&websocketNexus)
+		o.OnAnnounce(websocketNexus)
 	}
 }
 

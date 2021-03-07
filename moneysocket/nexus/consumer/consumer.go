@@ -32,7 +32,7 @@ type ConsumerNexus struct {
 
 const ConsumerNexusName = "ConsumerNexus"
 
-func NewConsumerNexus(belowNexus nexus.Nexus) ConsumerNexus {
+func NewConsumerNexus(belowNexus nexus.Nexus) *ConsumerNexus {
 	consumerNexus := ConsumerNexus{
 		BaseNexus:    base.NewBaseNexus(ConsumerNexusName),
 		donePinging:  make(chan bool, 1),
@@ -40,10 +40,10 @@ func NewConsumerNexus(belowNexus nexus.Nexus) ConsumerNexus {
 	}
 	belowNexus.SetOnBinMessage(consumerNexus.OnBinMessage)
 	belowNexus.SetOnMessage(consumerNexus.OnMessage)
-	return consumerNexus
+	return &consumerNexus
 }
 
-func (c ConsumerNexus) isLayerMessage(msg []byte) bool {
+func (c *ConsumerNexus) isLayerMessage(msg []byte) bool {
 	msgClass, _ := jsonparser.GetString(msg, message.MessageClass)
 	if msgClass != base2.Notification.ToString() {
 		return false

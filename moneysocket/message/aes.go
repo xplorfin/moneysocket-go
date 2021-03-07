@@ -40,11 +40,6 @@ func Encrypt(msg []byte, key []byte) ([]byte, error) {
 
 // Decrypt decrypts cipher text string into plain text string
 func Decrypt(cipherText []byte, key []byte) (string, error) {
-	//cipherText, err := hex.DecodeString(string(encrypted))
-	//if err != nil{
-	//	return "", err
-	//}
-
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		panic(err)

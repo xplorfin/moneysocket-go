@@ -25,7 +25,7 @@ func (o *ProviderLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 
 func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus := provider.NewProviderNexus(belowNexus)
-	o.TrackNexus(&providerNexus, belowNexus)
+	o.TrackNexus(providerNexus, belowNexus)
 	providerNexus.WaitForConsumer(o.providerFinishedCb)
 }
 

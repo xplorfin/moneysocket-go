@@ -25,10 +25,10 @@ func (i *IncomingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 func (i *IncomingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, i)
 	// register above nexus
-	i.TrackNexus(&localNexus, belowNexus)
+	i.TrackNexus(localNexus, belowNexus)
 	i.TrackNexusAnnounced(belowNexus)
-	i.SendLayerEvent(&localNexus, message.NexusAnnounced)
+	i.SendLayerEvent(localNexus, message.NexusAnnounced)
 	if i.OnAnnounce != nil {
-		i.OnAnnounce(&localNexus)
+		i.OnAnnounce(localNexus)
 	}
 }
