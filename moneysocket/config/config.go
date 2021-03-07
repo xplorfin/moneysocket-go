@@ -24,8 +24,8 @@ func NewConfig() *Config {
 		ListenConfig: ListenConfig{
 			BindHost:     "localhost",
 			BindPort:     5000,
-			externalHost: "localhost",
-			externalPort: 50001,
+			ExternalHost: "localhost",
+			ExternalPort: 50001,
 		},
 		RpcConfig: RpcConfig{
 			BindHost:     "localhost",
@@ -73,12 +73,12 @@ func (c *Config) GetAccountPersistDir() string {
 
 //  host for other devices to connect via the beacon
 func (c *Config) GetExternalHost() string {
-	return c.ListenConfig.externalHost
+	return c.ListenConfig.ExternalHost
 }
 
 //  host for other devices to connect via the beacon
 func (c *Config) GetExternalPort() int {
-	return c.ListenConfig.externalPort
+	return c.ListenConfig.ExternalPort
 }
 
 // wether or not to use tls

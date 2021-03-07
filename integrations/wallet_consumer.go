@@ -16,15 +16,14 @@ type WalletConsumer struct {
 	ConsumerBeacon beacon.Beacon
 }
 
-func makeConsumerBeacon(host string, useTls bool, port int) beacon.Beacon {
+func generateNewBeacon(host string, useTls bool, port int) beacon.Beacon {
 	res := beacon.NewBeacon()
-	loc := location.NewWebsocketLocationPort(host, false, port)
+	loc := location.NewWebsocketLocationPort(host, useTls, port)
 	res.AddLocation(loc)
 	return res
 }
 
-func NewWalletConsumer(host string, useTls bool, port int) WalletConsumer {
-	consumerBeacon := makeConsumerBeacon(host, useTls, port)
+func NewWalletConsumer(beacon beacon.Beacon) WalletConsumer {
 	cons := stack.NewOutgoingConsumerStack()
 	cons.SetOnAnnounce(func(nexus nexus.Nexus) {
 		fmt.Println("wallet online")
@@ -47,5 +46,5 @@ func NewWalletConsumer(host string, useTls bool, port int) WalletConsumer {
 	cons.SetOnPreimage(func(transactNexus nexus.Nexus, preimage string, requestReferenceUuid string) {
 		fmt.Println(preimage)
 	})
-	return WalletConsumer{cons, consumerBeacon}
+	return WalletConsumer{cons, beacon}
 }

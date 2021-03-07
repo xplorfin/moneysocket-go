@@ -99,7 +99,7 @@ func (s *TerminusStack) GetListenLocation() []location.Location {
 	return s.incomingStack.GetListenLocations()
 }
 
-func (s *TerminusStack) Connect(location location.WebsocketLocation, sharedSeed *beacon.SharedSeed) (websocket2.OutgoingSocket, error) {
+func (s *TerminusStack) Connect(location location.WebsocketLocation, sharedSeed *beacon.SharedSeed) (*websocket2.OutgoingSocket, error) {
 	return s.websocketLayer.Connect(location, sharedSeed)
 }
 

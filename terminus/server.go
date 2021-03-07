@@ -31,6 +31,7 @@ func NewTerminus(config *config.Config) Terminus {
 	}
 }
 
+// todo break this out into seperate methods
 func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var rpcReq RpcMessage
@@ -45,7 +46,30 @@ func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 		w.Write([]byte(t.GetInfo()))
 	case CreateAccountMethod:
 		adb := t.Create(1000)
-		w.Write([]byte(fmt.Sprintf("created account %s, wad: %s", adb.Details.AccountName, adb.Details.Wad.FmtShort())))
+		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("created account %s, wad: %s", adb.Details.AccountName, adb.Details.Wad.FmtShort()))))
+	case ConnectMethod:
+		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 2 {
+			w.Write([]byte(t.makeJsonResponse("error, account not passed")))
+			return
+		}
+		params := rpcReq.Params[0]
+		decodedBeacon, err := beacon.DecodeFromBech32Str(params[1])
+		if err != nil {
+			w.Write([]byte(t.makeJsonResponse("error, beacon invalid")))
+			return
+		}
+
+		acct := t.directory.LookupByName(params[0])
+		if acct == nil {
+			w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("account %s not found", params[0]))))
+			return
+		}
+		ss := decodedBeacon.GetSharedSeed()
+		_, err = t.stack.Connect(decodedBeacon.Locations()[0].(location.WebsocketLocation), &ss)
+		acct.AddConnectionAttempt(decodedBeacon, err)
+		acct.Details.AddBeacon(decodedBeacon)
+		t.directory.ReindexAccount(*acct)
+		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("connected: %s to %s", params[0], params[1]))))
 	case ListenMethod:
 		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 1 {
 			w.Write([]byte(t.makeJsonResponse("error, account not passed")))

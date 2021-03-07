@@ -11,9 +11,14 @@ import (
 )
 
 const (
-	GetInfoMethod       = "getinfo"
+	// get info rpc method
+	GetInfoMethod = "getinfo"
+	// create account rpc method
 	CreateAccountMethod = "create"
-	ListenMethod        = "listen"
+	// connect rpc method
+	ConnectMethod = "connect"
+	// listen rpc method
+	ListenMethod = "listen"
 )
 
 type TerminusClient struct {
@@ -45,6 +50,11 @@ func (t TerminusClient) CreateAccount(msats int) (res string, err error) {
 
 func (t TerminusClient) Listen(accountName string) (res string, err error) {
 	resp, err := t.ExecCmd(ListenMethod, []string{accountName})
+	return t.decodeJsonResponse(resp), err
+}
+
+func (t TerminusClient) Connect(accountName, beacon string) (res string, err error) {
+	resp, err := t.ExecCmd(ConnectMethod, []string{accountName, beacon})
 	return t.decodeJsonResponse(resp), err
 }
 

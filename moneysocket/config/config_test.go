@@ -18,8 +18,8 @@ func TestGetters(t *testing.T) {
 		ListenConfig: ListenConfig{
 			BindHost:       "127.0.0.1",
 			BindPort:       nettest.GetFreePort(t),
-			externalHost:   gofakeit.Word(),
-			externalPort:   nettest.GetFreePort(t),
+			ExternalHost:   gofakeit.Word(),
+			ExternalPort:   nettest.GetFreePort(t),
 			useTLS:         true,
 			certFile:       serverCertFile,
 			certKey:        serverKeyFile,
@@ -42,8 +42,8 @@ func TestGetters(t *testing.T) {
 	Equal(t, config.GetAccountPersistDir(), config.AccountPersistDir)
 	Equal(t, config.GetBindHost(), config.ListenConfig.BindHost)
 	Equal(t, config.GetBindPort(), config.ListenConfig.BindPort)
-	Equal(t, config.GetExternalHost(), config.ListenConfig.externalHost)
-	Equal(t, config.GetExternalPort(), config.ListenConfig.externalPort)
+	Equal(t, config.GetExternalHost(), config.ListenConfig.ExternalHost)
+	Equal(t, config.GetExternalPort(), config.ListenConfig.ExternalPort)
 	Equal(t, config.GetUseTls(), config.ListenConfig.useTLS)
 	Equal(t, config.GetCertFile(), config.ListenConfig.certFile)
 	Equal(t, config.GetKeyFile(), config.ListenConfig.certKey)

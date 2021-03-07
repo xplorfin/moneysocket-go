@@ -19,9 +19,9 @@ type ListenConfig struct {
 	// default port to listen for websocket connections port not specified.
 	BindPort int
 	//  host for other devices to connect via the beacon
-	externalHost string
+	ExternalHost string
 	// port for other devices to connect via the beacon
-	externalPort int
+	ExternalPort int
 	// Use TLS for websocket connections
 	useTLS bool
 	// if UseTLS is True, use this cert file
@@ -61,9 +61,9 @@ func (l ListenConfig) Validate() error {
 		// bind port cannot be null
 		validation.Field(&l.BindPort, validation.Required, ozzo_validators.IsPortAvailable),
 		// external host cannot be null and must be valid
-		validation.Field(&l.externalHost, validation.Required, is.Host),
+		validation.Field(&l.ExternalHost, validation.Required, is.Host),
 		// external port must be available
-		validation.Field(&l.externalPort, validation.Required, ozzo_validators.IsPortAvailable),
+		validation.Field(&l.ExternalPort, validation.Required, ozzo_validators.IsPortAvailable),
 		// use tls must be set (should always be set)
 		validation.Field(&l.useTLS),
 		// certFile is required when use tls is true

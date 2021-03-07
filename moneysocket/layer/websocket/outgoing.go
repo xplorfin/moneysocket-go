@@ -15,14 +15,15 @@ import (
 type OutgoingWebsocketLayer struct {
 	layer.BaseLayer
 	NexusBySharedSeed      layer.NexusStringMap
-	OutgoingSocketProtocol nws.OutgoingSocket
+	OutgoingSocketProtocol *nws.OutgoingSocket
 }
 
 func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
+	outgoingSocket := nws.NewOutgoingSocket()
 	os := OutgoingWebsocketLayer{
 		BaseLayer:              layer.NewBaseLayer(),
 		NexusBySharedSeed:      layer.NexusStringMap{},
-		OutgoingSocketProtocol: nws.NewOutgoingSocket(),
+		OutgoingSocketProtocol: &outgoingSocket,
 	}
 	os.OutgoingSocketProtocol.FactoryMsProtocolLayer = &os
 	return &os
@@ -41,12 +42,12 @@ func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, seed *beacon.SharedSeed) (nws.OutgoingSocket, error) {
+func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, seed *beacon.SharedSeed) (*nws.OutgoingSocket, error) {
 	o.OutgoingSocketProtocol.FactoryMsProtocolLayer = o
 	o.OutgoingSocketProtocol.OutgoingSharedSeed = seed
 	// we do this in a func so a traceback leads back here
 	go func() {
-		ws_client.NewWsClient(&o.OutgoingSocketProtocol, location.ToString())
+		ws_client.NewWsClient(o.OutgoingSocketProtocol, location.ToString())
 	}()
 	return o.OutgoingSocketProtocol, nil
 }
