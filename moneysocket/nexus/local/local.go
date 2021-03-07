@@ -10,14 +10,15 @@ import (
 )
 
 type LocalNexus struct {
-	base.BaseNexus
+	*base.BaseNexus
 }
 
 const LocalNexusName = "LocalNexusName"
 
 func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) LocalNexus {
+	bnf := base.NewBaseNexusFull(LocalNexusName, belowNexus, layer)
 	ln := LocalNexus{
-		base.NewBaseNexusFull(LocalNexusName, belowNexus, layer),
+		&bnf,
 	}
 	belowNexus.SetOnBinMessage(ln.OnBinMessage)
 	belowNexus.SetOnMessage(ln.OnMessage)

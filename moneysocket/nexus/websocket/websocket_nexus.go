@@ -12,7 +12,7 @@ import (
 const WebsocketNexusName = "WebsocketNexus"
 
 type WebsocketNexus struct {
-	base.BaseNexus
+	*base.BaseNexus
 }
 
 func (o *WebsocketNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
@@ -26,7 +26,8 @@ func (o *WebsocketNexus) OnBinMessage(belowNexus nexus.Nexus, msgByte []byte) {
 }
 
 func NewWebsocketNexus(belowNexus nexus.Nexus, layer layer.Layer) WebsocketNexus {
-	n := WebsocketNexus{base.NewBaseNexusFull(WebsocketNexusName, belowNexus, layer)}
+	bnf := base.NewBaseNexusFull(WebsocketNexusName, belowNexus, layer)
+	n := WebsocketNexus{&bnf}
 	n.BelowNexus = &belowNexus
 	belowNexus.SetOnMessage(n.OnMessage)
 	belowNexus.SetOnBinMessage(n.OnBinMessage)

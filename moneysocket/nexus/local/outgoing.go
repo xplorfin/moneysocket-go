@@ -13,7 +13,7 @@ import (
 )
 
 type OutgoingLocalNexus struct {
-	base.BaseNexus
+	*base.BaseNexus
 	belowNexus *JoinedLocalNexus
 	sharedSeed beacon.SharedSeed
 }
@@ -21,8 +21,9 @@ type OutgoingLocalNexus struct {
 const OutgoingLocalNexusName = "OutgoingLocalNexus"
 
 func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) OutgoingLocalNexus {
+	bnf := base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer)
 	og := OutgoingLocalNexus{
-		BaseNexus:  base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer),
+		BaseNexus:  &bnf,
 		belowNexus: belowNexus,
 	}
 	// this needs to be done everywhere

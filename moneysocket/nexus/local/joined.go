@@ -12,7 +12,7 @@ import (
 const JoinedLocalNexusName = "JoinedLocalNexus"
 
 type JoinedLocalNexus struct {
-	base.BaseNexus
+	*base.BaseNexus
 	outgoingNexus compat.RevokableNexus
 	incomingNexus compat.RevokableNexus
 
@@ -37,7 +37,7 @@ func (j *JoinedLocalNexus) SendBinFromIncoming(msg []byte) {
 func NewJoinedLocalNexus() *JoinedLocalNexus {
 	bn := base.NewBaseNexus(JoinedLocalNexusName)
 	return &JoinedLocalNexus{
-		BaseNexus:     *bn,
+		BaseNexus:     bn,
 		outgoingNexus: nil,
 		incomingNexus: nil,
 	}
