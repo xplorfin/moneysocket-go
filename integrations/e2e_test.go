@@ -2,6 +2,8 @@ package integrations
 
 import (
 	"context"
+	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
+	"strings"
 	"testing"
 	"time"
 
@@ -40,46 +42,50 @@ func TestE2E(t *testing.T) {
 	terminusClient := terminus.NewClient(cfg)
 	// create two accounts
 	// -- account 1
-	res, err := terminusClient.CreateAccount(1000000)
+	account1Beacon, err := terminusClient.CreateAccount(1000000)
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(res)
+	t.Log(account1Beacon)
 	// -- acount 2
-	res, err = terminusClient.CreateAccount(1000000)
+	account1Beacon, err = terminusClient.CreateAccount(1000000)
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(res)
+	t.Log(account1Beacon)
 
-	// grab info, TODO validate
-
-	res, err = terminusClient.GetInfo()
-	if err != nil {
-		t.Error(err)
-	}
-	t.Log(res)
-
-	// listen on account-1
-
-	res, err = terminusClient.Listen("0")
-	if err != nil {
-		t.Error(err)
-	}
-	walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
-	err = walletCon.DoConnect(walletCon.ConsumerBeacon)
-	if false {
-		walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
-		err = walletCon.DoConnect(walletCon.ConsumerBeacon)
-		if err != nil {
-			t.Error(err)
-		}
-	}
+	// start the seller wallet consumer
 	app := NewSellerApp(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
-	err = app.ConsumerStack.DoConnect(makeConsumerBeacon(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort()))
+	account1Listen := getBeacon(t, terminusClient, "1")
+	err = app.ConsumerStack.DoConnect(account1Listen)
 	if err != nil {
 		t.Error(err)
 	}
-	NewSellerApp(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
+
+	walletCon := NewWalletConsumer(cfg.GetBindHost(), cfg.GetUseTls(), cfg.GetBindPort())
+	account0Listen := getBeacon(t, terminusClient, "0")
+	err = walletCon.DoConnect(account0Listen)
+
 	time.Sleep(time.Second * 10)
+}
+
+// get new beacon for account
+func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
+	accountBeacon, err := terminusClient.Listen(account)
+	if err != nil {
+		t.Error(err)
+
+	}
+
+	// get the beacon
+	acc, err := beacon.DecodeFromBech32Str(extreactBeacon(accountBeacon))
+	if err != nil {
+		t.Error(err)
+	}
+	return acc
+}
+
+// extract a beacon from a terminus response
+func extreactBeacon(response string) string {
+	return strings.Split(response[strings.Index(response, beacon.MoneysocketHrp):], " ")[0]
 }
