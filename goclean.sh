@@ -16,5 +16,4 @@ golangci-lint run --deadline=10m --disable-all \
 --enable=gosimple \
 --enable=unconvert
 
-env GORACE="halt_on_error=1" go-acc -o profile.cov ./...
 
