@@ -6,6 +6,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
+	"log"
 )
 
 const ProviderNexusName = "ProviderNexus"
@@ -44,6 +45,7 @@ func (o *ProviderNexus) NotifyProviderNotReady() {
 }
 
 func (o *ProviderNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
+	log.Println("provider nexus got message")
 	if !o.IsLayerMessage(msg) {
 		o.BaseNexus.OnMessage(belowNexus, msg)
 		return
@@ -70,12 +72,12 @@ func (o *ProviderNexus) NotifyPong() {
 }
 
 func (o *ProviderNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+	log.Println("provider nexus got raw msg")
 	o.BaseNexus.OnBinMessage(belowNexus, msg)
 }
 
-// TODO
 func (o *ProviderNexus) WaitForConsumer(providerFinishedCb func(nexus2 nexus.Nexus)) {
-
+	o.ProviderFinishedCb = providerFinishedCb
 }
 
 func (o *ProviderNexus) NotifyProviderReady() {

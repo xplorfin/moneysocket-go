@@ -12,6 +12,7 @@ import (
 	"github.com/xplorfin/tlsutils"
 )
 
+// ListenConfig specifies the configuration for terminus to listen on
 type ListenConfig struct {
 	// Default listening bind setting. 127.0.0.1 for localhost connections, 0.0.0.0
 	// for allowing connections from other hosts
@@ -54,6 +55,7 @@ func (l ListenConfig) getCertificate() tlsutils.TlsCert {
 	}
 }
 
+// validate the configuration
 func (l ListenConfig) Validate() error {
 	err := validation.ValidateStruct(&l,
 		// bind host cannot be null

@@ -29,12 +29,24 @@ func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus.WaitForConsumer(o.providerFinishedCb)
 }
 
+func (o *ProviderLayer) RevokeNexus(belowNexus nexus.Nexus) {
+	res, _ := o.NexusByBelow.Get(belowNexus.Uuid())
+	providerNexus, _ := o.Nexuses.Get(res)
+	o.BaseLayer.RevokeNexus(providerNexus)
+	ss := providerNexus.SharedSeed()
+	delete(o.WaitingForApp, ss.ToString())
+}
+
 func (o *ProviderLayer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.AccountDb {
 	return o.handlerProvideInfoRequest(seed)
 }
 
 func (o *ProviderLayer) SetHandlerProvideInfoRequest(hpir compat.HandleProviderInfoRequest) {
 	o.handlerProvideInfoRequest = hpir
+}
+
+func (o *ProviderLayer) NexusWaitingForApp(ss beacon.SharedSeed, providerNexus nexus.Nexus) {
+	o.WaitingForApp[ss.ToString()] = providerNexus
 }
 
 func (o *ProviderLayer) ProviderNowReadyFromApp() {

@@ -11,7 +11,6 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-// TODO implement this
 type OutgoingRendezvousNexus struct {
 	*base.BaseNexus
 	rendezvousFinishedCb func(nexus.Nexus)

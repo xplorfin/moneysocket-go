@@ -16,33 +16,36 @@ const (
 	BLUETOOTH_TYPE                = "Bluetooth"
 )
 
+// BluetoothLocation beacon - this is not currently implemented and is reserved for future use
 type BluetoothLocation struct {
 	PlaceholderString string
 }
 
-// statically assert that this type binds to location interface
-var _ Location = BluetoothLocation{}
-
+// Create a new bluetooth location with the default header
 func NewBluetoothLocation() BluetoothLocation {
 	return BluetoothLocation{
 		PlaceholderString: DEFAULT_BLUETOOTH_PLACEHOLDER,
 	}
 }
 
+// Get the BluetoothLocation tlv type
 func (loc BluetoothLocation) Type() tlvHelper.Type {
 	return util.BluetoothLocationTlvType
 }
 
+// get the encoded tlv of a given BluetoothLocation
 func (loc BluetoothLocation) Tlv() []tlvHelper.Record {
 	placeHolder := EncodedPlaceHolderTlv(loc.PlaceholderString)
 	return []tlvHelper.Record{tlvHelper.MakePrimitiveRecord(util.BluetoothLocationTlvType, &placeHolder)}
 }
 
+// get the encoded tlv of a given BluetoothLocation
 func (loc BluetoothLocation) EncodedTlv() []byte {
 	res := loc.Tlv()
 	return util2.TlvRecordToBytes(res...)
 }
 
+// encode the BluetoothLocation to a json-serializable map
 func (loc BluetoothLocation) ToObject() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["type"] = BLUETOOTH_TYPE
@@ -50,6 +53,7 @@ func (loc BluetoothLocation) ToObject() map[string]interface{} {
 	return m
 }
 
+// decode a BluetoothLocation from a tlv object
 func BluetoothLocationFromTlv(tlv util.Tlv) (loc BluetoothLocation, err error) {
 	if tlv.Type() != util.BluetoothLocationTlvType {
 		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), util.BluetoothLocationTlvType)
@@ -71,3 +75,6 @@ func BluetoothLocationFromTlv(tlv util.Tlv) (loc BluetoothLocation, err error) {
 	}
 	return loc, err
 }
+
+// statically assert that this type binds to location interface
+var _ Location = BluetoothLocation{}

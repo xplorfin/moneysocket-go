@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
@@ -127,6 +128,24 @@ func (t *Terminus) Create(msats int) account.AccountDb {
 	return acct
 }
 
+func (t *Terminus) RetryConnectionLoop() {
+	for {
+		for _, acct := range t.directory.GetAccountList() {
+			disconnectedBeacons := acct.GetDisconnectedBeacons()
+			for _, disconnectedBeacon := range disconnectedBeacons {
+				loc := disconnectedBeacon.Locations()[0]
+				if loc.Type() != util.WebsocketLocationTlvType {
+					panic(fmt.Sprintf("location type %d is not supported", util.WebsocketLocationTlvType))
+				}
+				ss := disconnectedBeacon.GetSharedSeed()
+				_, err := t.stack.Connect(loc.(location.WebsocketLocation), &ss)
+				acct.AddConnectionAttempt(disconnectedBeacon, err)
+			}
+		}
+		time.Sleep(time.Second * 3)
+	}
+}
+
 // raw shared seed is optional
 func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon string, err error) {
 	acct := t.directory.LookupByName(rawAcct)
@@ -192,6 +211,11 @@ func (t *Terminus) Start(ctx context.Context) error {
 		}
 		t.LoadPersisted()
 		t.stack.Listen()
+		return nil
+	})
+
+	g.Go(func() error {
+		t.RetryConnectionLoop()
 		return nil
 	})
 

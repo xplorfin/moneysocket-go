@@ -31,4 +31,9 @@ func (l *LocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.Mone
 	l.BaseNexus.OnMessage(belowNexus, msg)
 }
 
+func (l *LocalNexus) SendBin(msg []byte) error {
+	log.Println("local nexus sent bin")
+	return l.BaseNexus.SendBin(msg)
+}
+
 var _ nexus.Nexus = &LocalNexus{}
