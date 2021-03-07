@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	uuid "github.com/satori/go.uuid"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -10,7 +11,6 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	moneysocket_message "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_client"
 )
 
@@ -18,21 +18,29 @@ const OutgoingSocketName = "OutgoingSocket"
 
 type OutgoingSocket struct {
 	ws_client.WebsocketClientProtocol
-	nexusHelper.Nexus
 	wasAnnounced bool
 	// protocol layer coorespond to the socket interface
 	FactoryMsProtocolLayer layer.Layer
 	// add an outgoing shared seed modules
 	OutgoingSharedSeed *beacon.SharedSeed
+	// name of the nexus (stored for debugging)
+	name string
+	// uuid of the nexus
+	uuid uuid.UUID
+	// on message
+	onMessage nexusHelper.OnMessage
+	// on bin message
+	onBinMessage nexusHelper.OnBinMessage
 }
 
 // create a new incoming websocket nexus (accepts request)
 func NewOutgoingSocket() OutgoingSocket {
 	return OutgoingSocket{
 		WebsocketClientProtocol: ws_client.NewBaseWebsocketClient(),
-		Nexus:                   base.NewBaseNexus(OutgoingSocketName),
 		wasAnnounced:            false,
 		OutgoingSharedSeed:      nil,
+		name:                    OutgoingSocketName,
+		uuid:                    uuid.NewV4(),
 	}
 }
 
@@ -72,12 +80,12 @@ func (i *OutgoingSocket) OnOpen() {
 // cooresponds to the nexus interface, handles a message
 func (i *OutgoingSocket) OnMessage(belowNexus nexusHelper.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	log.Info("websocket nexus got message")
-	i.Nexus.OnMessage(belowNexus, msg)
+	i.onMessage(belowNexus, msg)
 }
 
 // cooresponds to the nexus interface, handles a binary message
 func (i *OutgoingSocket) OnBinMessage(belowNexus nexusHelper.Nexus, msg []byte) {
-	panic("not yet implemented")
+	i.onBinMessage(belowNexus, msg)
 }
 
 func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
@@ -96,6 +104,34 @@ func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
 		log.Infof("text payload %s", payload)
 		log.Error("text payload is unexpected, dropping")
 	}
+}
+
+func (i *OutgoingSocket) Uuid() uuid.UUID {
+	return i.uuid
+}
+
+func (i *OutgoingSocket) IsEqual(n nexusHelper.Nexus) bool {
+	panic("implement me")
+}
+
+func (i *OutgoingSocket) GetDownwardNexusList() []nexusHelper.Nexus {
+	panic("implement me")
+}
+
+func (i *OutgoingSocket) InitiateClose() {
+	panic("implement me")
+}
+
+func (i *OutgoingSocket) Name() string {
+	return i.name
+}
+
+func (i *OutgoingSocket) SetOnMessage(messageFunc nexusHelper.OnMessage) {
+	i.onMessage = messageFunc
+}
+
+func (i *OutgoingSocket) SetOnBinMessage(messageBinFunc nexusHelper.OnBinMessage) {
+	i.onBinMessage = messageBinFunc
 }
 
 func (i *OutgoingSocket) OnClose(wasClean bool, code int, reason string) {

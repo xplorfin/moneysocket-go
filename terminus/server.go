@@ -46,6 +46,11 @@ func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	case CreateAccountMethod:
 		adb := t.Create(1000)
 		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("created account %s, wad: %s", adb.Details.AccountName, adb.Details.Wad.FmtShort()))))
+	case ConnectMethod:
+		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 1 {
+			w.Write([]byte(t.makeJsonResponse("error, account not passed")))
+		}
+		t.directory.LookupByName(rpcReq.Params[0][0])
 	case ListenMethod:
 		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 1 {
 			w.Write([]byte(t.makeJsonResponse("error, account not passed")))

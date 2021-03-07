@@ -11,9 +11,14 @@ import (
 )
 
 const (
-	GetInfoMethod       = "getinfo"
+	// get info rpc method
+	GetInfoMethod = "getinfo"
+	// create account rpc method
 	CreateAccountMethod = "create"
-	ListenMethod        = "listen"
+	// connect rpc method
+	ConnectMethod = "connect"
+	// listen rpc method
+	ListenMethod = "listen"
 )
 
 type TerminusClient struct {
