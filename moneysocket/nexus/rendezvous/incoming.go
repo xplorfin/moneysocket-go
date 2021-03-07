@@ -35,7 +35,6 @@ func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, direc
 	return &og
 }
 
-// TODO all this logic _really_ should occur in message
 func (i *IncomingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {
 	if msg.MessageClass() != message_base.Request {
 		return false
