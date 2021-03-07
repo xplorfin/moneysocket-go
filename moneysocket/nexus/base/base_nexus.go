@@ -1,7 +1,6 @@
 package base
 
 import (
-	"fmt"
 	uuid "github.com/satori/go.uuid"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
@@ -13,6 +12,7 @@ import (
 // helper function for when youd don't want to pass a handler
 
 type BaseNexus struct {
+	// name of the nexus (stored in base for debugging)
 	name         string
 	uuid         uuid.UUID
 	BelowNexus   *nexus.Nexus
@@ -48,7 +48,7 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 	}
 }
 
-func (b BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
+func (b *BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	if b.IsEqual(belowNexus) {
 		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.Uuid(), b.Name(), b.Uuid())
 		log.Print(b.GetDownwardNexusList())
@@ -56,43 +56,40 @@ func (b BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-func (b BaseNexus) Uuid() uuid.UUID {
+func (b *BaseNexus) Uuid() uuid.UUID {
 	return b.uuid
 }
 
-func (b BaseNexus) Name() string {
+func (b *BaseNexus) Name() string {
 	return b.name
 }
 
-func (b BaseNexus) IsEqual(n nexus.Nexus) bool {
+func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
 	return n.Uuid() == b.Uuid()
 }
 
-func (b BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
+func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
 	b.CheckCrossedNexus(belowNexus)
-	if b.Name() == "OutgoingLocalNexus"{
-		fmt.Print("err")
-	}
 	// default to onmessage
 	if b.onMessage != nil {
 		b.onMessage(belowNexus, msg)
 		return
 	}
-	if b.BelowNexus != nil {
-		(*b.BelowNexus).OnMessage(belowNexus, msg)
-	}
+	//if b.BelowNexus != nil {
+	//	(*b.BelowNexus).OnMessage(belowNexus, msg)
+	//}
 }
 
-func (b BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	b.CheckCrossedNexus(belowNexus)
 	// default to onbinmessage
 	if b.onBinMessage != nil {
 		b.onBinMessage(belowNexus, msg)
 		return
 	}
-	if b.BelowNexus != nil {
-		(*b.BelowNexus).OnBinMessage(belowNexus, msg)
-	}
+	//if b.BelowNexus != nil {
+	//	(*b.BelowNexus).OnBinMessage(belowNexus, msg)
+	//}
 }
 
 func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {

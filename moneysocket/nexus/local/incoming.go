@@ -1,6 +1,7 @@
 package local
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
@@ -29,6 +30,11 @@ func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) Inco
 	return og
 }
 
+func (b *IncomingLocalNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
+	fmt.Println("te")
+	fmt.Println(b.Uuid().String())
+	b.BaseNexus.SetOnBinMessage(messageBinFunc)
+}
 
 func (i *IncomingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	log.Println("incoming local nexus got msg")

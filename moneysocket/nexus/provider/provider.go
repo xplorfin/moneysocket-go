@@ -84,5 +84,8 @@ func (o *ProviderNexus) ProviderNowReady() {
 
 func NewProviderNexus(belowNexus nexus.Nexus) ProviderNexus {
 	baseNexus := base.NewBaseNexusBelow(ProviderNexusName, belowNexus)
-	return ProviderNexus{baseNexus, "", nil, nil}
+	pn := ProviderNexus{baseNexus, "", nil, nil}
+	belowNexus.SetOnBinMessage(pn.OnBinMessage)
+	belowNexus.SetOnMessage(pn.OnMessage)
+	return pn
 }

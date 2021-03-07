@@ -25,6 +25,7 @@ func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) Outgo
 	}
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
+
 	return og
 }
 

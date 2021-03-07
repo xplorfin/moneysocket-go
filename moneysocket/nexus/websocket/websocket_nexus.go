@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"log"
 
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
@@ -11,7 +12,7 @@ import (
 const WebsocketNexusName = "WebsocketNexus"
 
 type WebsocketNexus struct {
-	*base.BaseNexus
+	base.BaseNexus
 }
 
 func (o *WebsocketNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
@@ -24,9 +25,8 @@ func (o *WebsocketNexus) OnBinMessage(belowNexus nexus.Nexus, msgByte []byte) {
 	o.BaseNexus.OnBinMessage(belowNexus, msgByte)
 }
 
-
-func NewWebsocketNexus(belowNexus nexus.Nexus) WebsocketNexus {
-	n := WebsocketNexus{base.NewBaseNexus(WebsocketNexusName)}
+func NewWebsocketNexus(belowNexus nexus.Nexus, layer layer.Layer) WebsocketNexus {
+	n := WebsocketNexus{base.NewBaseNexusFull(WebsocketNexusName, belowNexus, layer)}
 	n.BelowNexus = &belowNexus
 	belowNexus.SetOnMessage(n.OnMessage)
 	belowNexus.SetOnBinMessage(n.OnBinMessage)

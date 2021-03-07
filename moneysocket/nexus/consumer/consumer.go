@@ -32,12 +32,15 @@ type ConsumerNexus struct {
 
 const ConsumerNexusName = "ConsumerNexus"
 
-func NewConsumerNexus() ConsumerNexus {
-	return ConsumerNexus{
+func NewConsumerNexus(belowNexus nexus.Nexus) ConsumerNexus {
+	consumerNexus := ConsumerNexus{
 		BaseNexus:    base.NewBaseNexus(ConsumerNexusName),
 		donePinging:  make(chan bool, 1),
 		pingInterval: time.Second * 3,
 	}
+	belowNexus.SetOnBinMessage(consumerNexus.OnBinMessage)
+	belowNexus.SetOnMessage(consumerNexus.OnMessage)
+	return consumerNexus
 }
 
 func (c ConsumerNexus) isLayerMessage(msg []byte) bool {

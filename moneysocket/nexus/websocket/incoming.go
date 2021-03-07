@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	uuid "github.com/satori/go.uuid"
 	"net/http"
 
 	"github.com/prometheus/common/log"
@@ -9,14 +10,21 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_server"
 )
 
 type IncomingSocket struct {
 	ws_server.WebSocketServerProtocol
-	nexusHelper.Nexus
+	// name of the nexus (stored for debugging)
+	name string
+	// uuid of the nexus
+	uuid uuid.UUID
+	// wether or not the nexus was announced
 	wasAnnounced bool
+	// on message
+	onMessage nexusHelper.OnMessage
+	// on bin message
+	onBinMessage nexusHelper.OnBinMessage
 	// protocol layer coorespond to the socket interface
 	FactoryMsProtocolLayer layer.Layer
 	FactoryMsSharedSeed    *beacon.SharedSeed
@@ -28,8 +36,9 @@ const IncomingSocketName = "IncomingSocketName"
 func NewIncomingSocket() IncomingSocket {
 	return IncomingSocket{
 		WebSocketServerProtocol: ws_server.NewBaseWebsocketService(),
-		Nexus:                   base.NewBaseNexus(IncomingSocketName),
 		wasAnnounced:            false,
+		name:                    IncomingSocketName,
+		uuid:                    uuid.NewV4(),
 	}
 }
 
@@ -64,12 +73,12 @@ func (i *IncomingSocket) SendBin(rawMsg []byte) error {
 // cooresponds to the nexus interface, handles a message
 func (i *IncomingSocket) OnMessage(belowNexus nexusHelper.Nexus, moneysocketMessage base2.MoneysocketMessage) {
 	log.Info("websocket nexus got message")
-	i.Nexus.OnMessage(belowNexus, moneysocketMessage)
+	i.onMessage(belowNexus, moneysocketMessage)
 }
 
 // cooresponds to the nexus interface, handles a binary message
 func (i *IncomingSocket) OnBinMessage(belowNexus nexusHelper.Nexus, msg []byte) {
-	i.Nexus.OnBinMessage(belowNexus, msg)
+	i.onBinMessage(belowNexus, msg)
 }
 
 func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
@@ -79,7 +88,7 @@ func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
 
 		// this needs to be flipped
 		if sharedSeed != nil && message.IsCypherText(payload) {
-			i.Nexus.OnBinMessage(i, payload)
+			i.OnBinMessage(i, payload)
 			return
 		}
 
@@ -119,6 +128,30 @@ func (i *IncomingSocket) SharedSeed() *beacon.SharedSeed {
 
 func (i *IncomingSocket) InitiateClose() {
 	i.Cancel()()
+}
+
+func (i *IncomingSocket) Name() string {
+	return i.name
+}
+
+func (i IncomingSocket) Uuid() uuid.UUID {
+	return i.uuid
+}
+
+func (i IncomingSocket) IsEqual(n nexusHelper.Nexus) bool {
+	panic("implement me")
+}
+
+func (i IncomingSocket) GetDownwardNexusList() []nexusHelper.Nexus {
+	panic("implement me")
+}
+
+func (i *IncomingSocket) SetOnMessage(messageFunc nexusHelper.OnMessage) {
+	i.onMessage = messageFunc
+}
+
+func (i *IncomingSocket) SetOnBinMessage(messageBinFunc nexusHelper.OnBinMessage) {
+	i.onBinMessage = messageBinFunc
 }
 
 // assert type is valid socket

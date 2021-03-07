@@ -63,5 +63,4 @@ func (u UnknownNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
 	panic("this is not a real nexus, did a getter return an error?")
 }
 
-
 var _ nexus.Nexus = UnknownNexus{}
