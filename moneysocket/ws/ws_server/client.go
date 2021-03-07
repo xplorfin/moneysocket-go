@@ -101,7 +101,6 @@ func (c *Client) writePump() error {
 			}
 			w.Write(message)
 
-
 			if err := w.Close(); err != nil {
 				return err
 			}
