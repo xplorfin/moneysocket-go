@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
-	beacon2 "github.com/xplorfin/moneysocket-go/moneysocket/beacon"
+	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	"github.com/xplorfin/moneysocket-go/moneysocket/wad"
@@ -131,15 +131,31 @@ func (a AccountDb) filename() string {
 	return fmt.Sprintf("%s/%s.json", a.config.GetAccountPersistDir(), a.Details.AccountName)
 }
 
-func (a *AccountDb) AddConnectionAttempt(attemptedBeacon beacon2.Beacon, err error) {
+// add a connection attempt for the current account
+func (a *AccountDb) AddConnectionAttempt(attemptedBeacon beacon.Beacon, err error) {
 	a.ConnectionAttempts[attemptedBeacon.ToBech32Str()] = err
+}
+
+// get array of beacons which have disconnected
+func (a *AccountDb) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
+	for _, detailBeacon := range a.Details.Beacons {
+		beaconStr := detailBeacon.ToBech32Str()
+		if val, ok := a.ConnectionAttempts[beaconStr]; ok {
+			if val != nil {
+				beacons = append(beacons, detailBeacon)
+			}
+		} else {
+			continue
+		}
+	}
+	return beacons
 }
 
 func (a AccountDb) GetSummaryString(locations []location.Location) (summaryStr string) {
 	summaryStr += fmt.Sprintf("\n%s: wad: %s\n", a.Details.AccountName, a.Details.Wad.FmtLong())
-	for _, beacon := range a.Details.Beacons {
-		beaconStr := beacon.ToBech32Str()
-		summaryStr += fmt.Sprintf("\n\t\toutgoing beacon: %s", beacon.ToBech32Str())
+	for _, detailBeacon := range a.Details.Beacons {
+		beaconStr := detailBeacon.ToBech32Str()
+		summaryStr += fmt.Sprintf("\n\t\toutgoing beacon: %s", detailBeacon.ToBech32Str())
 		if val, ok := a.ConnectionAttempts[beaconStr]; ok {
 			summaryStr += fmt.Sprintf("\n\t\t\tconnection attempts: %s", val)
 		} else {
@@ -148,12 +164,12 @@ func (a AccountDb) GetSummaryString(locations []location.Location) (summaryStr s
 	}
 
 	for _, sharedSeed := range a.Details.SharedSeeds {
-		beacon := beacon2.NewBeaconFromSeed(sharedSeed)
+		seedBeacon := beacon.NewBeaconFromSeed(sharedSeed)
 		for _, loc := range locations {
-			beacon.AddLocation(loc)
+			seedBeacon.AddLocation(loc)
 		}
 		summaryStr += fmt.Sprintf("\n\t\tincoming shared seed %s", sharedSeed.ToString())
-		summaryStr += fmt.Sprintf("\n\t\t\t incoming beacon: %s", beacon.ToBech32Str())
+		summaryStr += fmt.Sprintf("\n\t\t\t incoming beacon: %s", seedBeacon.ToBech32Str())
 	}
 	return summaryStr
 }

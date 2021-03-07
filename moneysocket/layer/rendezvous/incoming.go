@@ -55,8 +55,8 @@ func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) nexus.Nexus {
-	return *o.directory.GetPeerNexus(rendezvousNexus.Uuid())
+func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) *nexus.Nexus {
+	return o.directory.GetPeerNexus(rendezvousNexus.Uuid())
 }
 
 var _ layer.Layer = &IncomingRendezvousLayer{}

@@ -37,12 +37,12 @@ func (r *RelayLayer) RevokeNexus(rendezvousNexus nexusHelper.Nexus) {
 
 func (r *RelayLayer) OnMessage(rendezvousNexus nexusHelper.Nexus, msg base.MoneysocketMessage) {
 	peerNexus := r.RendezvousLayer.GetPeerNexus(rendezvousNexus)
-	_ = peerNexus.Send(msg)
+	_ = (*peerNexus).Send(msg)
 }
 
 func (r *RelayLayer) OnBinMessage(rendezvousNexus nexusHelper.Nexus, msg []byte) {
 	peerNexus := r.RendezvousLayer.GetPeerNexus(rendezvousNexus)
-	_ = peerNexus.SendBin(msg)
+	_ = (*peerNexus).SendBin(msg)
 }
 
 var _ layer.Layer = &RelayLayer{}
