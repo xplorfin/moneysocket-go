@@ -31,7 +31,8 @@ func GetPersistedAccounts(config *config.Config) (accts []AccountDb) {
 
 func NewAccountDb(accountName string, config *config.Config) (adb AccountDb) {
 	adb = AccountDb{
-		config: config,
+		ConnectionAttempts: make(map[string]error),
+		config:             config,
 		Details: Account{
 			AccountName: accountName,
 			AccountUuid: uuid.New().String(),

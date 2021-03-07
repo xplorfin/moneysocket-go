@@ -2,6 +2,7 @@ package integrations
 
 import (
 	"context"
+	"fmt"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"strings"
 	"testing"
@@ -72,8 +73,13 @@ func TestE2E(t *testing.T) {
 
 	// generate a new beacon and call connect
 	providerBeacon := generateNewBeacon(cfg.GetExternalHost(), cfg.GetUseTls(), cfg.GetExternalPort())
-	_ = providerBeacon
+	_, err = terminusClient.Connect("0", providerBeacon.ToBech32Str())
+	if err != nil {
+		t.Error(err)
+	}
 
+	// check if incoming socket is there
+	fmt.Print(terminusClient.GetInfo())
 	time.Sleep(time.Second * 10)
 }
 

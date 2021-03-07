@@ -78,6 +78,7 @@ func (t *TerminusDirectory) ReindexAccount(acct account.AccountDb) {
 
 func (t *TerminusDirectory) AddAccount(acct account.AccountDb) {
 	details := acct.Details
+	acct.ConnectionAttempts = make(map[string]error)
 	t.Accounts[details.AccountName] = acct
 	sharedSeeds := details.SharedSeeds
 	for _, sharedSeed := range sharedSeeds {

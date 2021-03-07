@@ -53,6 +53,11 @@ func (t TerminusClient) Listen(accountName string) (res string, err error) {
 	return t.decodeJsonResponse(resp), err
 }
 
+func (t TerminusClient) Connect(accountName, beacon string) (res string, err error) {
+	resp, err := t.ExecCmd(ConnectMethod, []string{accountName, beacon})
+	return t.decodeJsonResponse(resp), err
+}
+
 func (t TerminusClient) ExecCmd(method string, argv []string) (res []byte, err error) {
 	message := RpcMessage{
 		Method: method,
