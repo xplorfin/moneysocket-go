@@ -86,8 +86,7 @@ func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
 		log.Infof("binary payload of %d bytes", len(payload))
 		sharedSeed := i.SharedSeed()
 
-		// this needs to be flipped
-		if sharedSeed != nil && message.IsCypherText(payload) {
+		if sharedSeed == nil && message.IsCypherText(payload) {
 			i.OnBinMessage(i, payload)
 			return
 		}
