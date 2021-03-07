@@ -44,6 +44,11 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+      - name: Install go-acc
+        shell: bash
+        run: go get -u github.com/ory/go-acc
+        env:
+          GO111MODULE: "on"
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install Linters
