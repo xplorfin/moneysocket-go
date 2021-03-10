@@ -3,6 +3,7 @@ package websocket
 import (
 	uuid "github.com/satori/go.uuid"
 	"net/http"
+	"sync"
 
 	"github.com/prometheus/common/log"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
@@ -28,6 +29,8 @@ type IncomingSocket struct {
 	// protocol layer coorespond to the socket interface
 	FactoryMsProtocolLayer layer.Layer
 	FactoryMsSharedSeed    *beacon.SharedSeed
+
+	mux sync.Mutex
 }
 
 const IncomingSocketName = "IncomingSocketName"
@@ -42,21 +45,29 @@ func NewIncomingSocket() *IncomingSocket {
 	}
 }
 
-func (i IncomingSocket) OnConnecting(r *http.Request) {
+func (i *IncomingSocket) OnConnecting(r *http.Request) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	log.Info("Websocket connecting")
 }
 
-func (i IncomingSocket) OnConnect(r *http.Request) {
+func (i *IncomingSocket) OnConnect(r *http.Request) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	log.Info("Client connecting")
 }
 
 func (i *IncomingSocket) OnOpen() {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	log.Info("websocket connection open")
 	i.FactoryMsProtocolLayer.AnnounceNexus(i)
 	i.wasAnnounced = true
 }
 
 func (i *IncomingSocket) Send(msg base2.MoneysocketMessage) error {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	log.Infof("encoding msg %s", msg.MessageClass().ToString())
 	ss := i.SharedSeed()
 	msgBytes, err := message.WireEncode(msg, ss)
@@ -67,21 +78,29 @@ func (i *IncomingSocket) Send(msg base2.MoneysocketMessage) error {
 }
 
 func (i *IncomingSocket) SendBin(rawMsg []byte) error {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	return i.WebSocketServerProtocol.SendMessage(rawMsg)
 }
 
 // cooresponds to the nexus interface, handles a message
 func (i *IncomingSocket) OnMessage(belowNexus nexusHelper.Nexus, moneysocketMessage base2.MoneysocketMessage) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	log.Info("websocket nexus got message")
 	i.onMessage(belowNexus, moneysocketMessage)
 }
 
 // cooresponds to the nexus interface, handles a binary message
 func (i *IncomingSocket) OnBinMessage(belowNexus nexusHelper.Nexus, msg []byte) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	i.onBinMessage(belowNexus, msg)
 }
 
 func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	if isBinary {
 		log.Infof("binary payload of %d bytes", len(payload))
 		sharedSeed := i.SharedSeed()
@@ -133,23 +152,27 @@ func (i *IncomingSocket) Name() string {
 	return i.name
 }
 
-func (i IncomingSocket) Uuid() uuid.UUID {
+func (i *IncomingSocket) Uuid() uuid.UUID {
 	return i.uuid
 }
 
-func (i IncomingSocket) IsEqual(n nexusHelper.Nexus) bool {
+func (i *IncomingSocket) IsEqual(n nexusHelper.Nexus) bool {
 	panic("implement me")
 }
 
-func (i IncomingSocket) GetDownwardNexusList() []nexusHelper.Nexus {
+func (i *IncomingSocket) GetDownwardNexusList() []nexusHelper.Nexus {
 	panic("implement me")
 }
 
 func (i *IncomingSocket) SetOnMessage(messageFunc nexusHelper.OnMessage) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	i.onMessage = messageFunc
 }
 
 func (i *IncomingSocket) SetOnBinMessage(messageBinFunc nexusHelper.OnBinMessage) {
+	i.mux.Lock()
+	defer i.mux.Unlock()
 	i.onBinMessage = messageBinFunc
 }
 

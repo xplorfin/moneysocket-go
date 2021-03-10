@@ -43,17 +43,17 @@ func NewJoinedLocalNexus() *JoinedLocalNexus {
 	}
 }
 
-func (n *JoinedLocalNexus) SetIncomingNexus(incomingNexus compat.RevokableNexus) {
-	n.incomingNexus = incomingNexus
+func (j *JoinedLocalNexus) SetIncomingNexus(incomingNexus compat.RevokableNexus) {
+	j.incomingNexus = incomingNexus
 }
 
-func (n *JoinedLocalNexus) SetOutgoingNexus(outgoingNexus compat.RevokableNexus) {
-	n.outgoingNexus = outgoingNexus
+func (j *JoinedLocalNexus) SetOutgoingNexus(outgoingNexus compat.RevokableNexus) {
+	j.outgoingNexus = outgoingNexus
 }
 
-func (n *JoinedLocalNexus) InitiateClose() {
-	n.incomingNexus.InitiateClose()
-	n.outgoingNexus.InitiateClose()
+func (j *JoinedLocalNexus) InitiateClose() {
+	j.incomingNexus.InitiateClose()
+	j.outgoingNexus.InitiateClose()
 }
 
 var _ nexusHelper.Nexus = &JoinedLocalNexus{}

@@ -7,6 +7,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"log"
+	"sync"
 )
 
 // helper function for when youd don't want to pass a handler
@@ -19,6 +20,7 @@ type BaseNexus struct {
 	Layer        layer.Layer
 	onMessage    nexus.OnMessage
 	onBinMessage nexus.OnBinMessage
+	mux          sync.Mutex
 }
 
 // statically assert nexus type conformity
@@ -70,6 +72,8 @@ func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
 
 func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
 	b.CheckCrossedNexus(belowNexus)
+	b.mux.Lock()
+	defer b.mux.Unlock()
 	if b.onMessage != nil {
 		b.onMessage(b, msg)
 		return
@@ -78,6 +82,8 @@ func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessag
 
 func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	b.CheckCrossedNexus(belowNexus)
+	b.mux.Lock()
+	defer b.mux.Unlock()
 	// default to onbinmessage
 	if b.onBinMessage != nil {
 		b.onBinMessage(b, msg)
@@ -85,10 +91,10 @@ func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	}
 }
 
-func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
+func (b *BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
 	if b.BelowNexus != nil {
 		belowList = (*b.BelowNexus).GetDownwardNexusList()
-		belowList = append(belowList, &b)
+		belowList = append(belowList, b)
 	}
 	return belowList
 }
@@ -121,9 +127,13 @@ func (b *BaseNexus) SharedSeed() *beacon.SharedSeed {
 }
 
 func (b *BaseNexus) SetOnMessage(messageFunc nexus.OnMessage) {
+	b.mux.Lock()
+	defer b.mux.Unlock()
 	b.onMessage = messageFunc
 }
 
 func (b *BaseNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
+	b.mux.Lock()
+	defer b.mux.Unlock()
 	b.onBinMessage = messageBinFunc
 }

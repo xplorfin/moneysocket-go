@@ -3,6 +3,7 @@ package layer
 import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
+	"sync"
 )
 
 type OnLayerEventFn = func(layerName string, nexus nexusHelper.Nexus, event string)
@@ -47,6 +48,7 @@ type BaseLayer struct {
 	BelowNexuses NexusMap
 	NexusByBelow NexusUuidMap
 	BelowByNexus NexusUuidMap
+	mux          sync.Mutex
 }
 
 func (l *BaseLayer) SetOnLayerEvent(o OnLayerEventFn) {
@@ -67,6 +69,8 @@ func (l *BaseLayer) RegisterLayerEvent(fn OnLayerEventFn, layerName string) {
 }
 
 func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
+	l.mux.Lock()
+	defer l.mux.Unlock()
 	l.Nexuses.Store(nexus.Uuid(), nexus)
 	l.BelowNexuses.Store(belowNexus.Uuid(), belowNexus)
 	l.NexusByBelow.Store(belowNexus.Uuid(), nexus.Uuid())
@@ -75,6 +79,8 @@ func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.N
 }
 
 func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
+	l.mux.Lock()
+	defer l.mux.Unlock()
 	l.Nexuses.Delete(nexus.Uuid())
 	l.BelowByNexus.Delete(belowNexus.Uuid())
 	l.NexusByBelow.Delete(belowNexus.Uuid())

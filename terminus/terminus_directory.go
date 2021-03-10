@@ -2,6 +2,7 @@ package terminus
 
 import (
 	"strconv"
+	"sync"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
@@ -10,6 +11,7 @@ import (
 
 type TerminusDirectory struct {
 	config                *config.Config
+	mux                   sync.RWMutex
 	AccountBySharedSeed   map[string]account.AccountDb
 	SharedSeedsByAccount  map[string][]beacon.SharedSeed
 	Accounts              map[string]account.AccountDb
@@ -28,6 +30,8 @@ func NewTerminusDirectory(config *config.Config) *TerminusDirectory {
 
 // python verison is an iterator
 func (t *TerminusDirectory) GetAccounts() (accounts []account.AccountDb) {
+	t.mux.RLock()
+	defer t.mux.RUnlock()
 	for _, v := range t.Accounts {
 		accounts = append(accounts, v)
 	}
@@ -51,13 +55,17 @@ func (t *TerminusDirectory) GenerateAccountName() string {
 
 // get list of acount names
 func (t *TerminusDirectory) GetAccountNameSet() (accounts []string) {
-	for _, account := range t.Accounts {
-		accounts = append(accounts, account.Details.AccountName)
+	t.mux.RLock()
+	defer t.mux.RUnlock()
+	for _, acct := range t.Accounts {
+		accounts = append(accounts, acct.Details.AccountName)
 	}
 	return accounts
 }
 
 func (t *TerminusDirectory) LookupByName(name string) *account.AccountDb {
+	t.mux.RLock()
+	defer t.mux.RUnlock()
 	if val, ok := t.Accounts[name]; ok {
 		return &val
 	}
@@ -77,6 +85,8 @@ func (t *TerminusDirectory) ReindexAccount(acct account.AccountDb) {
 }
 
 func (t *TerminusDirectory) AddAccount(acct account.AccountDb) {
+	t.mux.Lock()
+	defer t.mux.Unlock()
 	details := acct.Details
 	acct.ConnectionAttempts = make(map[string]error)
 	t.Accounts[details.AccountName] = acct
