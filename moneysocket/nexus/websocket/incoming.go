@@ -1,8 +1,9 @@
 package websocket
 
 import (
-	uuid "github.com/satori/go.uuid"
 	"net/http"
+
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/prometheus/common/log"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"

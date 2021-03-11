@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+
 	cli "github.com/urfave/cli/v2"
 	messagebase "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/terminus"

@@ -3,10 +3,11 @@ package integrations
 import (
 	"context"
 	"fmt"
-	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
