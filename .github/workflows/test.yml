@@ -54,7 +54,7 @@ jobs:
       - name: Install Linters
         run: "curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.35.2"
       - name: Test
-        run: env GORACE="halt_on_error=1" go-acc -o profile.cov -race ./...
+        run: env GORACE="halt_on_error=1" go-acc -o profile.cov ./...
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
         with:
