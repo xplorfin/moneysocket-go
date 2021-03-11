@@ -1,8 +1,9 @@
 package websocket
 
 import (
-	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"log"
+
+	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
