@@ -515,10 +515,10 @@ github.com/vmihailenco/msgpack v4.0.4+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6Ac
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xplorfin/btcd v0.21.0-hotfix h1:zaab2dksut4t4J9jEMIOjSilMIhSuYVRUitLUYiceOM=
 github.com/xplorfin/btcd v0.21.0-hotfix/go.mod h1:Sv4JPQ3/M+teHz9Bo5jBpkNcP0x6r7rdihlNL/7tTAs=
-github.com/xplorfin/docker-utils v0.4.0 h1:kAEj1UWkkxjgKHuXuFM7T0/A38mxYd2Br0IrgiYLpLE=
-github.com/xplorfin/docker-utils v0.4.0/go.mod h1:HYQRk0GIav9DK7NWY/YLqHjgeCfoJ74eJCSGK5blI54=
-github.com/xplorfin/lndmock v0.4.0 h1:wQOk8wo2gVsrYjO5+ASYe8k7jOfv+au4iD06KOo9r4E=
-github.com/xplorfin/lndmock v0.4.0/go.mod h1:NCgt4RNciIDsFmBKPrIiFtbGRg3ESJmbMNXRf//UGOg=
+github.com/xplorfin/docker-utils v0.6.0 h1:1Q/w5B4b1PptYDqoNXXcQ1RrWeuhZNLnd0EyN/zBlQ0=
+github.com/xplorfin/docker-utils v0.6.0/go.mod h1:HYQRk0GIav9DK7NWY/YLqHjgeCfoJ74eJCSGK5blI54=
+github.com/xplorfin/lndmock v0.10.0 h1:b1+4Mv9iUfG283DOJ3w2ocq5Av19NWdoWfVBEIUsRHM=
+github.com/xplorfin/lndmock v0.10.0/go.mod h1:cUnqK6qv7bp9S3fYSa1WMhN5t+UJBnot2f5qff9V66Y=
 github.com/xplorfin/netutils v0.22.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/netutils v0.23.0 h1:cINULQWu0IkBiiI3MosLbFO4+DdrxzrohdStvgLsJrc=
 github.com/xplorfin/netutils v0.23.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
