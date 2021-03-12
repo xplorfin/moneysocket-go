@@ -519,8 +519,8 @@ github.com/xplorfin/docker-utils v0.6.0/go.mod h1:HYQRk0GIav9DK7NWY/YLqHjgeCfoJ7
 github.com/xplorfin/lndmock v0.11.0 h1:g/dW4+yujFVlvMBsfeo3iURMZ7zWjIj1HHguCBfoeNg=
 github.com/xplorfin/lndmock v0.11.0/go.mod h1:cUnqK6qv7bp9S3fYSa1WMhN5t+UJBnot2f5qff9V66Y=
 github.com/xplorfin/netutils v0.22.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
-github.com/xplorfin/netutils v0.23.0 h1:cINULQWu0IkBiiI3MosLbFO4+DdrxzrohdStvgLsJrc=
-github.com/xplorfin/netutils v0.23.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
+github.com/xplorfin/netutils v0.24.0 h1:Nmvp7d14EY0d/WlwW09oKpqWnhvGU7/DPATVOv23DEQ=
+github.com/xplorfin/netutils v0.24.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/ozzo-validators v0.23.0 h1:RFvsyRyOtP7oz0frmPKObhD2ltpZK44qmgjzdlpiK/E=
 github.com/xplorfin/ozzo-validators v0.23.0/go.mod h1:EyNVPwTrM6WUztwqrtd37owUmkxUBOZb8Owhh0WIYEw=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=
