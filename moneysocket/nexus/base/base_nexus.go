@@ -1,13 +1,14 @@
 package base
 
 import (
+	"log"
+	"sync"
+
 	uuid "github.com/satori/go.uuid"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"log"
-	"sync"
 )
 
 // helper function for when youd don't want to pass a handler

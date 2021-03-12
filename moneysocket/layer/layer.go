@@ -1,9 +1,10 @@
 package layer
 
 import (
+	"sync"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"sync"
 )
 
 type OnLayerEventFn = func(layerName string, nexus nexusHelper.Nexus, event string)
