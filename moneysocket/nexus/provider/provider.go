@@ -1,12 +1,13 @@
 package provider
 
 import (
+	"log"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer/compat"
 	message_base "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
-	"log"
 )
 
 const ProviderNexusName = "ProviderNexus"

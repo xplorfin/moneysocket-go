@@ -7,6 +7,7 @@ require (
 	github.com/brianvoe/gofakeit/v5 v5.11.2
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/buger/jsonparser v1.1.1
+	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dustin/go-humanize v1.0.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/google/uuid v1.2.0
@@ -22,10 +23,10 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/xplorfin/lndmock v0.4.0
+	github.com/xplorfin/lndmock v0.10.0
 	github.com/xplorfin/netutils v0.23.0
 	github.com/xplorfin/ozzo-validators v0.23.0
-	github.com/xplorfin/tlsutils v0.17.0
+	github.com/xplorfin/tlsutils v0.18.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210304124612-50617c2ba197 // indirect
