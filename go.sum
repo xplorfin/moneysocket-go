@@ -514,10 +514,10 @@ github.com/vmihailenco/msgpack v4.0.4+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6Ac
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xplorfin/btcd v0.21.0-hotfix h1:zaab2dksut4t4J9jEMIOjSilMIhSuYVRUitLUYiceOM=
 github.com/xplorfin/btcd v0.21.0-hotfix/go.mod h1:Sv4JPQ3/M+teHz9Bo5jBpkNcP0x6r7rdihlNL/7tTAs=
-github.com/xplorfin/docker-utils v0.6.0 h1:1Q/w5B4b1PptYDqoNXXcQ1RrWeuhZNLnd0EyN/zBlQ0=
-github.com/xplorfin/docker-utils v0.6.0/go.mod h1:HYQRk0GIav9DK7NWY/YLqHjgeCfoJ74eJCSGK5blI54=
-github.com/xplorfin/lndmock v0.11.0 h1:g/dW4+yujFVlvMBsfeo3iURMZ7zWjIj1HHguCBfoeNg=
-github.com/xplorfin/lndmock v0.11.0/go.mod h1:cUnqK6qv7bp9S3fYSa1WMhN5t+UJBnot2f5qff9V66Y=
+github.com/xplorfin/docker-utils v0.8.0 h1:di/Q/OsPFHNTPcq2m28SLz/D9qA9wiRtlbX1JgjiZXM=
+github.com/xplorfin/docker-utils v0.8.0/go.mod h1:kmtOYoWpZsNp3jw5GyeQaFyNRbfJEMC8/nvU3lJ2eE0=
+github.com/xplorfin/lndmock v0.12.0 h1:2suFX4zQORAOPsZGuM+QbY/ovnC2yVJnDRP5GxIjhvk=
+github.com/xplorfin/lndmock v0.12.0/go.mod h1:FWcRAHXZtplb66E7ptQL8f2ZbXQs06b0ag60lCwUmRE=
 github.com/xplorfin/netutils v0.24.0 h1:Nmvp7d14EY0d/WlwW09oKpqWnhvGU7/DPATVOv23DEQ=
 github.com/xplorfin/netutils v0.24.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/ozzo-validators v0.25.0 h1:KJm2FWnZtG9rPQXfpk/xPOCpR9wsSP1yQxGPpPK3D68=
