@@ -51,6 +51,7 @@ github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6r
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/brianvoe/gofakeit/v5 v5.11.2 h1:Ny5Nsf4z2023ZvYP8ujW8p5B1t5sxhdFaQ/0IYXbeSA=
 github.com/brianvoe/gofakeit/v5 v5.11.2/go.mod h1:/ZENnKqX+XrN8SORLe/fu5lZDIo1tuPncWuRD+eyhSI=
+github.com/brianvoe/gofakeit/v6 v6.2.2/go.mod h1:palrJUk4Fyw38zIFB/uBZqsgzW5VsNllhHKKwAebzew=
 github.com/btcsuite/btcd v0.0.0-20190629003639-c26ffa870fd8/go.mod h1:3J08xEfcugPacsc34/LKRU2yO7YmuT8yt28J8k2+rrI=
 github.com/btcsuite/btcd v0.0.0-20190824003749-130ea5bddde3/go.mod h1:3J08xEfcugPacsc34/LKRU2yO7YmuT8yt28J8k2+rrI=
 github.com/btcsuite/btcd v0.20.1-beta/go.mod h1:wVuoA8VJLEcwgqHBwHmzLRazpKxTv13Px/pDuV7OomQ=
@@ -523,6 +524,8 @@ github.com/xplorfin/lndmock v0.15.0 h1:IYZ3ksjgY2Ja+DGpRdRPcCpUeU6xvdXjgTd2M/Vhn
 github.com/xplorfin/lndmock v0.15.0/go.mod h1:fDVUNrkHt/2T8ofipyZGVOr9YHMQbTgSQBCj85S6de4=
 github.com/xplorfin/netutils v0.24.0 h1:Nmvp7d14EY0d/WlwW09oKpqWnhvGU7/DPATVOv23DEQ=
 github.com/xplorfin/netutils v0.24.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
+github.com/xplorfin/netutils v0.28.0 h1:VTNwUfrPlCMRq0IkZCDhT4gHMXXCyStcqwZDovDgLqg=
+github.com/xplorfin/netutils v0.28.0/go.mod h1:76o2O95Nb0zBmA+0RSnf49I7JsI6Ul4XqM/5f7VnK2E=
 github.com/xplorfin/ozzo-validators v0.25.0 h1:KJm2FWnZtG9rPQXfpk/xPOCpR9wsSP1yQxGPpPK3D68=
 github.com/xplorfin/ozzo-validators v0.25.0/go.mod h1:eGsZcWD8mNBJgvq1E3Md0a+6Q3OkhL8t2HSzak1DEhw=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=

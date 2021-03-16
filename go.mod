@@ -24,7 +24,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/xplorfin/lndmock v0.15.0
-	github.com/xplorfin/netutils v0.24.0
+	github.com/xplorfin/netutils v0.28.0
 	github.com/xplorfin/ozzo-validators v0.25.0
 	github.com/xplorfin/tlsutils v0.18.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
