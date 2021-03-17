@@ -13,6 +13,7 @@ import (
 )
 
 type OnPingFn func(nexus nexus.Nexus, msecs int)
+
 type ConsumerFinishedCb func(consumerNexus ConsumerNexus)
 
 type ConsumerNexus struct {
