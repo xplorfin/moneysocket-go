@@ -115,12 +115,6 @@ func (b *BaseNexus) InitiateClose() {
 }
 
 func (b BaseNexus) SharedSeed() *beacon.SharedSeed {
-	// handle nil pointers?
-	defer func() {
-		if r := recover(); r != nil {
-			// TODO
-		}
-	}()
 	if b.BelowNexus != nil {
 		return (*b.BelowNexus).SharedSeed()
 	}
