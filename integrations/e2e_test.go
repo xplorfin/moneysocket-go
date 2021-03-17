@@ -11,7 +11,7 @@ import (
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
-	//"github.com/xplorfin/moneysocket-go/relay"
+	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
@@ -19,15 +19,13 @@ import (
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
-	testConfig.ListenConfig.BindPort = 11033
-	testConfig.ListenConfig.BindHost = "0.0.0.0"
-	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
+	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
+	testConfig.ListenConfig.BindHost = "localhost"
+	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
-	testConfig.RpcConfig.BindHost = "0.0.0.0"
-	testConfig.RpcConfig.BindPort = 11034
-	testConfig.RpcConfig.ExternalHost = "127.0.0.1"
-	testConfig.RpcConfig.ExternalPort = testConfig.RpcConfig.BindPort
+	testConfig.RpcConfig.BindHost = "localhost"
+	testConfig.RpcConfig.BindPort = nettest.GetFreePort(t)
 	return testConfig
 }
 
@@ -35,24 +33,13 @@ func TestE2E(t *testing.T) {
 	cfg := makeConfig(t)
 	ctx := context.Background()
 
-	//// setup test relay
-	//testRelay := relay.NewRelay(cfg)
-	//go func() {
-	//	err := testRelay.RunApp()
-	//	if err != nil{
-	//		t.Error(err)
-	//	}
-	//}()
+	// setup test relay
+	testRelay := relay.NewRelay(cfg)
+	go testRelay.RunApp()
 
-	nettest.AssertConnected(cfg.GetRelayUrl(), t)
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
-	go func() {
-		err := testRpcServer.Start(ctx)
-		if err != nil{
-			t.Error(err)
-		}
-	}()
+	go testRpcServer.Start(ctx)
 
 	// test rpc server hostname
 	nettest.AssertConnected(cfg.GetRpcHostname(), t)
