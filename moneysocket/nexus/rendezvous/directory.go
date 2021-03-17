@@ -2,10 +2,9 @@ package rendezvous
 
 import (
 	"fmt"
-	"sync"
-
 	uuid "github.com/satori/go.uuid"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
+	"sync"
 )
 
 type RendezvousDirectory struct {
@@ -35,10 +34,12 @@ func NewRendezvousDirectory() *RendezvousDirectory {
 
 // get matching peer of a given nexus (1:1 mappnig)
 func (r *RendezvousDirectory) GetPeerNexus(nexusId uuid.UUID) *nexusHelper.Nexus {
+	//r.mux.Lock()
 	if peer, ok := r.UuidPeers[nexusId.String()]; ok {
 		matchingN := r.NexusesByUUID[peer]
 		return &matchingN
 	}
+	//r.mux.Unlock()
 	return nil
 }
 

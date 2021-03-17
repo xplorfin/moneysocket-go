@@ -1,14 +1,13 @@
 package rendezvous
 
 import (
-	"log"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	message_base "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
+	"log"
 )
 
 type IncomingRendezvousNexus struct {
