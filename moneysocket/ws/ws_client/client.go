@@ -1,8 +1,10 @@
 package ws_client
 
 import (
+	"net/http"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,7 +16,12 @@ const UnknownStatusCode = -1
 func NewWsClient(p WebsocketClientProtocol, wsUrl string) {
 	p.OnConnecting()
 
-	c, res, err := websocket.DefaultDialer.Dial(wsUrl, nil)
+	dialer := &websocket.Dialer{
+		Proxy:            http.ProxyFromEnvironment,
+		HandshakeTimeout: 45 * time.Second,
+	}
+
+	c, res, err := dialer.Dial(wsUrl, nil)
 	if err != nil {
 		statusCode := UnknownStatusCode
 		// handle cases where no response code is returned

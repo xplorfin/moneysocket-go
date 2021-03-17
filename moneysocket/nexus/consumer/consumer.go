@@ -4,9 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/buger/jsonparser"
+	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 
-	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
@@ -14,12 +13,13 @@ import (
 )
 
 type OnPingFn func(nexus nexus.Nexus, msecs int)
+
 type ConsumerFinishedCb func(consumerNexus ConsumerNexus)
 
 type ConsumerNexus struct {
 	*base.BaseNexus
 	handshakeFinished bool
-	pingStartTime     time.Time
+	pingStartTime     *time.Time
 	// how often to ping
 	pingInterval       time.Duration
 	onPing             OnPingFn
@@ -43,13 +43,12 @@ func NewConsumerNexus(belowNexus nexus.Nexus) *ConsumerNexus {
 	return &consumerNexus
 }
 
-func (c *ConsumerNexus) isLayerMessage(msg []byte) bool {
-	msgClass, _ := jsonparser.GetString(msg, message.MessageClass)
-	if msgClass != base2.Notification.ToString() {
+func (c *ConsumerNexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
+	if message.MessageClass() != base2.Notification {
 		return false
 	}
-	notificationName, _ := jsonparser.GetString(msg, message.NotificationName)
-	return containsString([]string{message.NotifyProvider, message.NotifyProviderNotReady, message.NotifyPing}, notificationName)
+	notif := message.(notification.MoneysocketNotification)
+	return notif.MessageClass() == base2.NotifyProvider || notif.MessageClass() == base2.NotifyProviderNotReady || notif.MessageClass() == base2.NotifyPong
 }
 
 func (c *ConsumerNexus) ConsumerFinishedCb() {
@@ -68,30 +67,34 @@ func (c *ConsumerNexus) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
 
 func (c *ConsumerNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
 	log.Print("consumer nexus got msg")
-	panic("todo")
-	//if !c.isLayerMessage(msg) {
-	//	c.BaseNexus.OnMessage(belowNexus, msg)
-	//}
-	//
-	//notificationName := json.GetString(msg, message.NotificationName)
-	//switch notificationName {
-	//case message.NotifyProvider:
-	//	if !c.handshakeFinished {
-	//		c.handshakeFinished = true
-	//	}
-	//	c.ConsumerFinishedCb()
-	//case message.NotifyProviderNotReady:
-	//	logger.Info("provider not ready, waiting")
-	//case message.NotifyPong:
-	//	if c.pingStartTime.IsZero() {
-	//		return
-	//	}
-	//	msecs := time.Since(c.pingStartTime).Milliseconds()
-	//	if true { //c.OnPing(){ // if onping function is supplied
-	//		c.OnPing(c, int(msecs))
-	//	}
-	//	c.pingStartTime = time.Time{}
-	//}
+	if !c.IsLayerMessage(msg) {
+		c.BaseNexus.OnMessage(belowNexus, msg)
+	}
+
+	notif := msg.(notification.MoneysocketNotification)
+	// TODO: switch case?
+	if notif.MessageClass() != base2.NotifyProvider {
+		if !c.handshakeFinished {
+			c.handshakeFinished = true
+			c.consumerFinishedCb(*c)
+		}
+		c.BaseNexus.OnMessage(belowNexus, msg)
+	}
+
+	if notif.MessageClass() != base2.NotifyProviderNotReady {
+		log.Println("provider not ready, waiying")
+	}
+
+	if notif.MessageClass() != base2.NotifyPong {
+		if c.pingStartTime != nil {
+			return
+		}
+		msecs := time.Since(*c.pingStartTime) * 1000
+		if c.onPing != nil {
+			c.onPing(c, int(msecs.Seconds()))
+		}
+		c.pingStartTime = nil
+	}
 }
 func (c *ConsumerNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	c.BaseNexus.OnBinMessage(belowNexus, msg)
@@ -99,12 +102,13 @@ func (c *ConsumerNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 
 func (c *ConsumerNexus) StartHandshake(cb ConsumerFinishedCb) {
 	c.consumerFinishedCb = cb
-	c.Send(request.NewRequestProvider())
+	_ = c.Send(request.NewRequestProvider())
 }
 
 // send a ping up the chain
 func (c *ConsumerNexus) SendPing() {
-	c.pingStartTime = time.Now()
+	currentTime := time.Now()
+	c.pingStartTime = &currentTime
 	c.Send(request.NewPingRequest())
 }
 
@@ -132,15 +136,6 @@ func (c *ConsumerNexus) StopPinging() {
 	if c.isPinging {
 		<-c.donePinging
 	}
-}
-
-func containsString(a []string, x string) bool {
-	for _, n := range a {
-		if x == n {
-			return true
-		}
-	}
-	return false
 }
 
 var _ nexus.Nexus = &ConsumerNexus{}

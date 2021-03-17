@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/xplorfin/moneysocket-go/relay"
+
 	cli "github.com/urfave/cli/v2"
 	messagebase "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/terminus"
@@ -74,6 +76,21 @@ func Start(args []string) {
 
 				server := terminus.NewTerminus(&cfg)
 				return server.Start(context.Context)
+			},
+		},
+		{
+			Name:  "relay",
+			Usage: "start the relay server",
+			Flags: configOptions,
+			Action: func(context *cli.Context) error {
+				cfg, err := fetchConfig(context)
+				if err != nil {
+					return err
+				}
+
+				server := relay.NewRelay(&cfg)
+
+				return server.RunApp()
 			},
 		},
 	}

@@ -11,7 +11,6 @@ import (
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
-	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
@@ -20,8 +19,8 @@ func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
 	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
-	testConfig.ListenConfig.BindHost = "localhost"
-	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
+	testConfig.ListenConfig.BindHost = "0.0.0.0"
+	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
 	testConfig.RpcConfig.BindHost = "localhost"
@@ -34,8 +33,8 @@ func TestE2E(t *testing.T) {
 	ctx := context.Background()
 
 	// setup test relay
-	testRelay := relay.NewRelay(cfg)
-	go testRelay.RunApp()
+	//testRelay := relay.NewRelay(cfg)
+	//go testRelay.RunApp()
 
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
@@ -81,7 +80,7 @@ func TestE2E(t *testing.T) {
 
 	// check if incoming socket is there
 	fmt.Print(terminusClient.GetInfo())
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 20)
 }
 
 // get new beacon for account

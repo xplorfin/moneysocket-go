@@ -2,6 +2,7 @@ package transact
 
 import (
 	moneysocket_message "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
+	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
@@ -39,17 +40,33 @@ func NewConsumerTransactNexus(belowNexus nexus.Nexus) *ConsumerTrackNexus {
 	return &c
 }
 
-func (c ConsumerTrackNexus) HandleLayerNotification() {
-	panic("method not yet implemented")
+func (c ConsumerTrackNexus) HandleLayerNotification(msg notification.MoneysocketNotification) {
+	if msg.RequestType() == moneysocket_message.NotifyOpinionInvoice {
+		notifyMsg := msg.(notification.NotifyInvoice)
+		if c.onInvoice != nil {
+			c.onInvoice(c, notifyMsg.Bolt11, msg.RequestReferenceUuid())
+		}
+	} else if msg.RequestType() == moneysocket_message.NotifyPreimage {
+		notifyMsg := msg.(notification.NotifyPreimage)
+		if c.onPreimage != nil {
+			c.onPreimage(c, notifyMsg.Preimage, notifyMsg.RequestReferenceUuid())
+		}
+	}
 }
 
-func (c ConsumerTrackNexus) IsLayerMessage(msg []byte) bool {
-	// TODO handle (this will be transitioned to ana ctual message handler)
-	panic("method not yet implemented")
+func (c ConsumerTrackNexus) IsLayerMessage(msg moneysocket_message.MoneysocketMessage) bool {
+	if msg.MessageClass() != moneysocket_message.Notification {
+		return false
+	}
+	notifyMsg := msg.(notification.MoneysocketNotification)
+	return notifyMsg.RequestType() == moneysocket_message.NotifyInvoiceNotification ||
+		notifyMsg.RequestType() == moneysocket_message.NotifyPreimage
 }
 
 func (c ConsumerTrackNexus) OnMessage(belowNexus nexus.Nexus, message moneysocket_message.MoneysocketMessage) {
-	panic("method not yet implemented")
+	if !c.IsLayerMessage(message) {
+		c.Nexus.OnMessage(belowNexus, message)
+	}
 }
 
 func (c ConsumerTrackNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
