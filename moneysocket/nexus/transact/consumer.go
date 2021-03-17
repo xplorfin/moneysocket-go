@@ -48,7 +48,7 @@ func (c ConsumerTrackNexus) HandleLayerNotification(msg notification.Moneysocket
 		}
 	} else if msg.RequestType() == moneysocket_message.NotifyPreimage {
 		notifyMsg := msg.(notification.NotifyPreimage)
-		if c.onPreimage != nil{
+		if c.onPreimage != nil {
 			c.onPreimage(c, notifyMsg.Preimage, notifyMsg.RequestReferenceUuid())
 		}
 	}
@@ -64,7 +64,7 @@ func (c ConsumerTrackNexus) IsLayerMessage(msg moneysocket_message.MoneysocketMe
 }
 
 func (c ConsumerTrackNexus) OnMessage(belowNexus nexus.Nexus, message moneysocket_message.MoneysocketMessage) {
-	if !c.IsLayerMessage(message){
+	if !c.IsLayerMessage(message) {
 		c.Nexus.OnMessage(belowNexus, message)
 	}
 }
