@@ -1,0 +1,17 @@
+// Package lightning package seeks to provide an interoperable interface for
+// interacting with different lightning clients (e.g. lnd, c-lightning, eclair, etc)
+// see: https://github.com/moneysocket/py-moneysocket/tree/main/moneysocket/lightning
+package lightning
+
+// TODO this is a callback
+type PaidCallback func()
+
+// Lightning is an implementable interface for interacting with different lightning clients
+type Lightning interface {
+	// RegisterPaidRecvCb registers a PaidCallback for when an invoice is paid
+	RegisterPaidRecvCb(callback PaidCallback)
+	// GetInvoice retrieves a bolt11 invoice for a given msatAmount
+	GetInvoice(msatAmount int)
+	// PayInvoice pays a bolt11 invoice
+	PayInvoice(bolt11 string)
+}
