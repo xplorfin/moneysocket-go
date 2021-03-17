@@ -17,13 +17,13 @@ type Relay struct {
 	relayLayer      *relay.RelayLayer
 }
 
-func NewRelay(config *config.Config) Relay {
+func NewRelay(config *config.Config) *Relay {
 	r := Relay{}
 	r.config = config
 	r.SetupWebsocketLayer()
 	r.SetupRendezvousLayer(r.websocketLayer)
 	r.SetupRelayLayer(r.rendezvousLayer)
-	return r
+	return &r
 }
 
 func (r *Relay) OnStackEvent(layerName string, nexus nexusHelper.Nexus, event string) {
@@ -45,8 +45,8 @@ func (r *Relay) SetupRendezvousLayer(belowLayer layer.Layer) *Relay {
 
 func (r *Relay) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *Relay {
 	r.relayLayer = relay.NewRelayLayer(rendezvousLayer)
-	r.relayLayer.SetOnAnnounce(rendezvousLayer.OnAnnounce)
-	r.relayLayer.SetOnRevoke(rendezvousLayer.OnRevoke)
+	r.relayLayer.RegisterAboveLayer(rendezvousLayer)
+	r.relayLayer.RegisterLayerEvent(r.OnStackEvent, message.Relay)
 	return r
 }
 
