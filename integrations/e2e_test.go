@@ -11,7 +11,6 @@ import (
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
-	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
@@ -19,7 +18,7 @@ import (
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
-	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
+	testConfig.ListenConfig.BindPort = 11060
 	testConfig.ListenConfig.BindHost = "localhost"
 	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
@@ -34,12 +33,14 @@ func TestE2E(t *testing.T) {
 	ctx := context.Background()
 
 	// setup test relay
-	testRelay := relay.NewRelay(cfg)
-	go testRelay.RunApp()
+	//testRelay := relay.NewRelay(cfg)
+	//go testRelay.RunApp()
+	//nettest.AssertConnected(cfg.GetRelayUrl(), t)
 
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
 	go testRpcServer.Start(ctx)
+	time.Sleep(time.Second * 2)
 
 	// test rpc server hostname
 	nettest.AssertConnected(cfg.GetRpcHostname(), t)
@@ -81,8 +82,9 @@ func TestE2E(t *testing.T) {
 
 	// check if incoming socket is there
 	fmt.Print(terminusClient.GetInfo())
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 1)
 }
+
 
 // get new beacon for account
 func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
