@@ -11,7 +11,6 @@ import (
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
-	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
@@ -19,7 +18,7 @@ import (
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
-	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
+	testConfig.ListenConfig.BindPort = 11033
 	testConfig.ListenConfig.BindHost = "localhost"
 	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
@@ -34,8 +33,8 @@ func TestE2E(t *testing.T) {
 	ctx := context.Background()
 
 	// setup test relay
-	testRelay := relay.NewRelay(cfg)
-	go testRelay.RunApp()
+	//testRelay := relay.NewRelay(cfg)
+	//go testRelay.RunApp()
 
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
