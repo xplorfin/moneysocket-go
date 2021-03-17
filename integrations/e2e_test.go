@@ -7,8 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/xplorfin/moneysocket-go/relay"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
 	"github.com/Flaque/filet"
@@ -35,8 +33,8 @@ func TestE2E(t *testing.T) {
 	ctx := context.Background()
 
 	// setup test relay
-	testRelay := relay.NewRelay(cfg)
-	go testRelay.RunApp()
+	//testRelay := relay.NewRelay(cfg)
+	//go testRelay.RunApp()
 
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
