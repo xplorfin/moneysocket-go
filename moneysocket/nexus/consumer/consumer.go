@@ -101,7 +101,7 @@ func (c *ConsumerNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 
 func (c *ConsumerNexus) StartHandshake(cb ConsumerFinishedCb) {
 	c.consumerFinishedCb = cb
-	c.Send(request.NewRequestProvider())
+	_ = c.Send(request.NewRequestProvider())
 }
 
 // send a ping up the chain
