@@ -80,7 +80,7 @@ func TestE2E(t *testing.T) {
 
 	// check if incoming socket is there
 	fmt.Print(terminusClient.GetInfo())
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Hour * 10)
 }
 
 // get new beacon for account
