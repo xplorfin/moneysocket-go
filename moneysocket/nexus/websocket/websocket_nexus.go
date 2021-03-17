@@ -19,7 +19,7 @@ type WebsocketNexus struct {
 func NewWebsocketNexus(belowNexus nexus.Nexus, layer layer.Layer) *WebsocketNexus {
 	bnf := base.NewBaseNexusFull(WebsocketNexusName, belowNexus, layer)
 	n := WebsocketNexus{&bnf}
-	n.BelowNexus = &belowNexus
+	n.BelowNexus = belowNexus
 	belowNexus.SetOnMessage(n.OnMessage)
 	belowNexus.SetOnBinMessage(n.OnBinMessage)
 	// TODO register above nexus here (should really be done all over the place)

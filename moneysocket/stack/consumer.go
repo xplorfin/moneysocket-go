@@ -118,7 +118,7 @@ func (c *ConsumerStack) OnProviderInfo(consumerTransactNexus nexusHelper.Nexus, 
 
 func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = belowNexus
-	c.sharedSeed = *belowNexus.SharedSeed()
+	c.sharedSeed = belowNexus.SharedSeed()
 	if c.OnAnnounce != nil {
 		c.OnAnnounce(belowNexus)
 	}
