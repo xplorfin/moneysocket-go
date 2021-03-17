@@ -29,7 +29,7 @@ type ConsumerStack struct {
 	onProviderInfo nexus_transact.OnProviderInfo
 
 	nexus      nexusHelper.Nexus
-	sharedSeed *beacon.SharedSeed
+	sharedSeed beacon.SharedSeed
 }
 
 func NewConsumerStack() *ConsumerStack {
@@ -118,7 +118,7 @@ func (c *ConsumerStack) OnProviderInfo(consumerTransactNexus nexusHelper.Nexus, 
 
 func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = belowNexus
-	c.sharedSeed = belowNexus.SharedSeed()
+	c.sharedSeed = *belowNexus.SharedSeed()
 	if c.OnAnnounce != nil {
 		c.OnAnnounce(belowNexus)
 	}
@@ -126,7 +126,7 @@ func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 
 func (c *ConsumerStack) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = nil
-	c.sharedSeed = &beacon.SharedSeed{}
+	c.sharedSeed = beacon.SharedSeed{}
 	if c.OnRevoke != nil {
 		c.OnRevoke(belowNexus)
 	}

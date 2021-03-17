@@ -2,7 +2,6 @@ package base
 
 import (
 	"log"
-	"reflect"
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
@@ -117,16 +116,12 @@ func (b *BaseNexus) InitiateClose() {
 
 func (b BaseNexus) SharedSeed() *beacon.SharedSeed {
 	// handle nil pointers?
-	//defer func() {
-	//	if r := recover(); r != nil {
-	//		// TODO
-	//	}
-	//}()
-	if b.BelowNexus == nil {
-		return nil
-	}
-	test := reflect.ValueOf(*b.BelowNexus).MethodByName("SharedSeed")
-	if !test.IsNil() && test.IsValid() {
+	defer func() {
+		if r := recover(); r != nil {
+			// TODO
+		}
+	}()
+	if b.BelowNexus != nil {
 		return (*b.BelowNexus).SharedSeed()
 	}
 	return nil
