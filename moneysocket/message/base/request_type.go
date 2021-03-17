@@ -25,7 +25,9 @@ const (
 	NotifyOpinionSellerNotReady          = iota
 	NotifyProviderNotReady               = iota
 	NotifyOpinionInvoice                 = iota
-	NotifyPong                           = iota
+	// TODO implement
+	NotifyPing = iota
+	NotifyPong = iota
 )
 
 // used for

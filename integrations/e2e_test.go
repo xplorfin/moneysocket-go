@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/xplorfin/moneysocket-go/relay"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
 	"github.com/Flaque/filet"
@@ -19,8 +21,8 @@ func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
 	testConfig.ListenConfig.BindPort = 11033
-	testConfig.ListenConfig.BindHost = "localhost"
-	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
+	testConfig.ListenConfig.BindHost = "0.0.0.0"
+	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
 	testConfig.RpcConfig.BindHost = "localhost"
@@ -33,8 +35,8 @@ func TestE2E(t *testing.T) {
 	ctx := context.Background()
 
 	// setup test relay
-	//testRelay := relay.NewRelay(cfg)
-	//go testRelay.RunApp()
+	testRelay := relay.NewRelay(cfg)
+	go testRelay.RunApp()
 
 	// setup test rpc server
 	testRpcServer := terminus.NewTerminus(cfg)
