@@ -20,7 +20,7 @@ import (
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
-	testConfig.ListenConfig.BindPort = 11033
+	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
 	testConfig.ListenConfig.BindHost = "0.0.0.0"
 	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
