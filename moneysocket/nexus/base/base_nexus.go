@@ -16,7 +16,7 @@ type BaseNexus struct {
 	// name of the nexus (stored in base for debugging)
 	name         string
 	uuid         uuid.UUID
-	BelowNexus   nexus.Nexus
+	BelowNexus   *nexus.Nexus
 	Layer        layer.Layer
 	onMessage    nexus.OnMessage
 	onBinMessage nexus.OnBinMessage
@@ -36,7 +36,7 @@ func NewBaseNexusBelow(name string, belowNexus nexus.Nexus) *BaseNexus {
 	return &BaseNexus{
 		name:       name,
 		uuid:       uuid.NewV4(),
-		BelowNexus: belowNexus,
+		BelowNexus: &belowNexus,
 	}
 }
 
@@ -44,7 +44,7 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 	return BaseNexus{
 		name:       name,
 		uuid:       uuid.NewV4(),
-		BelowNexus: belowNexus,
+		BelowNexus: &belowNexus,
 		Layer:      layer,
 	}
 }
@@ -88,7 +88,7 @@ func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 
 func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
 	if b.BelowNexus != nil {
-		belowList = (b.BelowNexus).GetDownwardNexusList()
+		belowList = (*b.BelowNexus).GetDownwardNexusList()
 		belowList = append(belowList, &b)
 	}
 	return belowList
@@ -96,21 +96,21 @@ func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
 
 func (b *BaseNexus) Send(msg base.MoneysocketMessage) error {
 	if b.BelowNexus != nil {
-		return (b.BelowNexus).Send(msg)
+		return (*b.BelowNexus).Send(msg)
 	}
 	return nil
 }
 
 func (b *BaseNexus) SendBin(msg []byte) error {
 	if b.BelowNexus != nil {
-		return (b.BelowNexus).SendBin(msg)
+		return (*b.BelowNexus).SendBin(msg)
 	}
 	return nil
 }
 
 func (b *BaseNexus) InitiateClose() {
 	if b.BelowNexus != nil {
-		(b.BelowNexus).InitiateClose()
+		(*b.BelowNexus).InitiateClose()
 	}
 }
 
@@ -122,7 +122,7 @@ func (b BaseNexus) SharedSeed() *beacon.SharedSeed {
 		}
 	}()
 	if b.BelowNexus != nil {
-		return (b.BelowNexus).SharedSeed()
+		return (*b.BelowNexus).SharedSeed()
 	}
 	return nil
 }

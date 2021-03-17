@@ -40,7 +40,7 @@ func (i *IncomingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msgBytes []byt
 }
 
 func (i *IncomingLocalNexus) Send(msg moneysocket_message.MoneysocketMessage) error {
-	belowNexus := (i.BelowNexus).(*JoinedLocalNexus)
+	belowNexus := (*i.BelowNexus).(*JoinedLocalNexus)
 
 	belowNexus.SendFromIncoming(msg)
 	return nil
