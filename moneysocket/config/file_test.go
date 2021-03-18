@@ -6,7 +6,7 @@ import (
 	"text/template"
 
 	"github.com/Flaque/filet"
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	. "github.com/stretchr/testify/assert"
 	nettest "github.com/xplorfin/netutils/testutils"
 	tlsmock "github.com/xplorfin/tlsutils/mock"

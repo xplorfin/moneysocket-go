@@ -7,7 +7,7 @@ import (
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/util"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 )
 
 // the test cases below were manually verified against the python version

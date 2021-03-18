@@ -2,7 +2,7 @@ package account
 
 import (
 	"github.com/Flaque/filet"
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 
