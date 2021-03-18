@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/dustin/go-humanize"
 	"github.com/kr/pretty"
 	"github.com/lightningnetwork/lnd/tlv"

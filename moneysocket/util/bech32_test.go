@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 )
 
 // make sure bech32 encodes

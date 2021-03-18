@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	nettest "github.com/xplorfin/netutils/testutils"
 	tlsmock "github.com/xplorfin/tlsutils/mock"
 )
