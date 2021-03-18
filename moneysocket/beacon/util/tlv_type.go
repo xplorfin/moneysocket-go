@@ -1,6 +1,3 @@
-// in a seperate package because this is used by beacon/locations and beacon/root
-// this should probably be moved to internal if moneysocket (socket) is ever moved to its
-// own package
 package util
 
 import "github.com/lightningnetwork/lnd/tlv"
