@@ -15,6 +15,7 @@ import (
 	nettest "github.com/xplorfin/netutils/testutils"
 )
 
+// makeConfig creates a mock config for e2e tests
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
@@ -28,6 +29,7 @@ func makeConfig(t *testing.T) *config.Config {
 	return testConfig
 }
 
+// TestE2E attempts to run an end-to-end test of the moneysockte opinion app
 func TestE2E(t *testing.T) {
 	cfg := makeConfig(t)
 	ctx := context.Background()
@@ -83,7 +85,7 @@ func TestE2E(t *testing.T) {
 	time.Sleep(time.Second * 20)
 }
 
-// get new beacon for account
+// getBeacon mocks a new beacon for a given account
 func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
 	accountBeacon, err := terminusClient.Listen(account)
 	if err != nil {
@@ -99,7 +101,7 @@ func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account str
 	return acc
 }
 
-// extract a beacon from a terminus response
+// extractBeacon extracts a beacon from a terminus response
 func extractBeacon(response string) string {
 	return strings.Split(response[strings.Index(response, beacon.MoneysocketHrp):], " ")[0]
 }

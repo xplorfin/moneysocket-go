@@ -13,16 +13,26 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
+// SellerApp is a prototype based on https://git.io/JmVLj designed to test interactions
+// between two accounts on terminus
 type SellerApp struct {
-	SellerStack    *stack.SellerStack
-	ConsumerStack  *stack.OutgoingConsumerStack
-	AccountUuid    string
-	SellerUuid     string
+	// SellerStack is a stack of layers to manage events in the seller provider app https://git.io/JmVq7
+	SellerStack *stack.SellerStack
+	// ConsumerStack is a stack of layers to manage events in the seller consumer app
+	ConsumerStack *stack.OutgoingConsumerStack
+	// AccountUuid is the uuid used to identify the (buyer?) account
+	AccountUuid string
+	// SellerUuid is the uuid used to identify the (seller) account
+	SellerUuid string
+	// RequestedItems is a list of items the buyer "checks out with"
 	RequestedItems map[string]string
-	StoreOpen      bool
-	ProviderInfo   seller.SellerInfo
+	// StoreOpen is whether or not the seller opens the store
+	StoreOpen bool
+	// ProviderInfo contains information about the state of the sale (who's paying who, the wad, account uuid)
+	ProviderInfo seller.SellerInfo
 }
 
+// NewSellerApp initializes a seller app with a beacon (that contains the location we communicate with)
 func NewSellerApp(beacon beacon.Beacon) *SellerApp {
 	walletConsumer := NewWalletConsumer(beacon)
 	sellerStack := stack.NewSellerStack()
@@ -36,20 +46,24 @@ func NewSellerApp(beacon beacon.Beacon) *SellerApp {
 	return &sa
 }
 
+// OpenStore opens the shop
 func (sa *SellerApp) OpenStore() {
 	sa.StoreOpen = true
 	sa.SellerStack.SellerNowReadyFromApp()
 }
 
+// CloseStore closes the shop
 func (sa *SellerApp) CloseStore() {
 	sa.StoreOpen = false
 	sa.SellerStack.DoDisconnect()
 }
 
+// UpdatePrices updates the prices in the state
 func (sa *SellerApp) UpdatePrices() {
 	sa.SellerStack.UpdatePrices()
 }
 
+// items names/prices/descriptions
 const (
 	// names
 	helloName   = "hello"
@@ -65,6 +79,7 @@ const (
 	marketOutlookDescription = "Market Outlook"
 )
 
+// SetupSellerStack creates eevent handlers on the seller stack for interacting w/ the consuer stack
 func (sa *SellerApp) SetupSellerStack() {
 	sa.SellerStack.SetOnAnnounce(func(nexus nexus.Nexus) {
 		log.Println("provider online")

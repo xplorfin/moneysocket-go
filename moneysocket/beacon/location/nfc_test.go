@@ -8,38 +8,42 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 )
 
-type NfcTestCase struct {
+// NFCTestCase is a test case to test out encoding/decoding an NFCLocation
+type NFCTestCase struct {
+	// PlaceholderString contains the placeholder string we test against
 	PlaceholderString string
-	EncodedTlv        string
+	// EncodedTLV contains the encoded tlv we're trying to parity
+	EncodedTLV string
 }
 
-var nfcTestCases = []NfcTestCase{
+var nfcTestCases = []NFCTestCase{
 	{
-		PlaceholderString: DefaultNfcPlaceholder,
-		EncodedTlv:        "fe000101c90e000c6e6663206865727061646572",
+		PlaceholderString: DefaultNFCPlaceholder,
+		EncodedTLV:        "fe000101c90e000c6e6663206865727061646572",
 	},
 }
 
-func TestNfcEncoding(t *testing.T) {
+// TestNFCEncoding makes sure that NFCLocation has parity with python test cases
+func TestNFCEncoding(t *testing.T) {
 	for _, testCase := range nfcTestCases {
-		nlc := NewNfcLocation()
-		if hex.EncodeToString(nlc.EncodedTlv()) != testCase.EncodedTlv {
-			t.Errorf("expected %s to equal %s", hex.EncodeToString(nlc.EncodedTlv()), testCase.EncodedTlv)
+		nlc := NewNFCLocation()
+		if hex.EncodeToString(nlc.EncodedTLV()) != testCase.EncodedTLV {
+			t.Errorf("expected %s to equal %s", hex.EncodeToString(nlc.EncodedTLV()), testCase.EncodedTLV)
 		}
 		// TODO
 		nlc.ToObject()
 
 		// fetch encoded tlv
-		decoded, err := hex.DecodeString(testCase.EncodedTlv)
+		decoded, err := hex.DecodeString(testCase.EncodedTLV)
 		if err != nil {
 			t.Error(err)
 		}
-		tlv, _, err := util.TlvPop(decoded)
+		tlv, _, err := util.TLVPop(decoded)
 		if err != nil {
 			t.Error(err)
 		}
 		// try to decode tlv
-		loc, err := NfcLocationFromTlv(tlv)
+		loc, err := NfcLocationFromTLV(tlv)
 		if err != nil {
 			t.Error(err)
 		}

@@ -14,12 +14,13 @@ import (
 // if we plan on support socket.money long term these integration tests should
 // be done through a harness
 
+// SharedSeedTestCase defines a test case to test the beacon package against
 type SharedSeedTestCase struct {
-	// seed used to generate the beacon
+	// Seed used to generate the beacon
 	Seed []byte
-	//input bytes for testing internal functions
+	// InputBytes for testing internal functions
 	InputBytes []byte
-	// generated sha-256 from input bytes
+	// Sha256 generated from input bytes
 	Sha256 string
 	// generated double sha-256 from input bytes
 	DoubleSha256 string
@@ -31,7 +32,6 @@ type SharedSeedTestCase struct {
 	EncodedTlv string
 }
 
-// see
 var testCases = []SharedSeedTestCase{
 	{
 		Seed:         []byte("hello from light"),
@@ -44,20 +44,21 @@ var testCases = []SharedSeedTestCase{
 	},
 }
 
+// TestSharedSeedParity will test encoding with SharedSeed against python test cases
 func TestSharedSeedParity(t *testing.T) {
 	for _, test := range testCases {
 		ss, err := BytesToSharedSeed(test.Seed)
 		if err != nil {
 			t.Error(err)
 		}
-		if test.Sha256 != ss.Sha256(test.InputBytes) {
-			t.Errorf("expected sha-256 key %s to match %s for seed %s", test.Sha256, ss.Sha256(test.InputBytes), test.Seed)
+		if test.Sha256 != ss.SHA256(test.InputBytes) {
+			t.Errorf("expected sha-256 key %s to match %s for seed %s", test.Sha256, ss.SHA256(test.InputBytes), test.Seed)
 		}
-		if test.DoubleSha256 != hex.EncodeToString(ss.DoubleSha256(test.InputBytes)) {
-			t.Errorf("expected double-sha256 key %s to match %s for seed %s", test.Sha256, hex.EncodeToString(ss.DoubleSha256(test.InputBytes)), test.Seed)
+		if test.DoubleSha256 != hex.EncodeToString(ss.DoubleSHA256(test.InputBytes)) {
+			t.Errorf("expected double-sha256 key %s to match %s for seed %s", test.Sha256, hex.EncodeToString(ss.DoubleSHA256(test.InputBytes)), test.Seed)
 		}
-		if test.Aes256Key != hex.EncodeToString(ss.DeriveAes256Key()) {
-			t.Errorf("expected aes-256 key %s to match %s for seed %s", test.Aes256Key, hex.EncodeToString(ss.DeriveAes256Key()), test.Seed)
+		if test.Aes256Key != hex.EncodeToString(ss.DeriveAES256Key()) {
+			t.Errorf("expected aes-256 key %s to match %s for seed %s", test.Aes256Key, hex.EncodeToString(ss.DeriveAES256Key()), test.Seed)
 		}
 		if test.RendezvousId != hex.EncodeToString(ss.DeriveRendezvousId()) {
 			t.Errorf("expected rendezvous id %s to match %s for seed %s", test.RendezvousId, hex.EncodeToString(ss.DeriveRendezvousId()), test.Seed)
@@ -95,8 +96,8 @@ func TestHexEquality(t *testing.T) {
 			t.Error("expected byte and hex seed to be equal for GetBytes()")
 		}
 
-		if byteSeed.Sha256(seedBytes) != hexSeed.Sha256(seedBytes) {
-			t.Error("expected byte and hex seed to be equal for Sha256()")
+		if byteSeed.SHA256(seedBytes) != hexSeed.SHA256(seedBytes) {
+			t.Error("expected byte and hex seed to be equal for SHA256()")
 		}
 
 		if byteSeed.Hex() != hexSeed.Hex() {
@@ -111,16 +112,16 @@ func TestHexEquality(t *testing.T) {
 			t.Error("expected byte and hex seed to be equal for ToString()")
 		}
 
-		if !bytes.Equal(byteSeed.DoubleSha256(seedBytes), hexSeed.DoubleSha256(seedBytes)) {
-			t.Error("expected byte and hex seed to be equal for DoubleSha256()")
+		if !bytes.Equal(byteSeed.DoubleSHA256(seedBytes), hexSeed.DoubleSHA256(seedBytes)) {
+			t.Error("expected byte and hex seed to be equal for DoubleSHA256()")
 		}
 
-		if !bytes.Equal(byteSeed.DeriveAes256Key(), hexSeed.DeriveAes256Key()) {
-			t.Error("expected byte and hex seed to be equal for DeriveAes256Key()")
+		if !bytes.Equal(byteSeed.DeriveAES256Key(), hexSeed.DeriveAES256Key()) {
+			t.Error("expected byte and hex seed to be equal for DeriveAES256Key()")
 		}
 
 		if !bytes.Equal(byteSeed.DeriveRendezvousId(), hexSeed.DeriveRendezvousId()) {
-			t.Error("expected byte and hex seed to be equal for DeriveAes256Key()")
+			t.Error("expected byte and hex seed to be equal for DeriveAES256Key()")
 		}
 
 		if !bytes.Equal(byteSeed.EncodedTLV(), hexSeed.EncodedTLV()) {

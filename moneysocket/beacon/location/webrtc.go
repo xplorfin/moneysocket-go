@@ -9,59 +9,69 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 )
 
-// see https://github.com/moneysocket/js-moneysocket/blob/76e533b59df1fcf03bd09c3e11813f016811fb71/moneysocket/beacon/location/webrtc.js#L21
+// see https://git.io/JmwkY
 
 const (
-	DefaultWebrtcPlaceholder = "webrtc herpader"
-	webrtcType               = "WebRTC"
+	// DefaultWebRTCPlaceholder temporarily defines an hrp header
+	// for the as-of-yet unused WebRTCLocation type
+	DefaultWebRTCPlaceholder = "webrtc herpader"
+	// WebRTCType defines a type
+	WebRTCType = "WebRTC"
 )
 
-type WebrtcLocation struct {
+type WebRTCLocation struct {
 	PlaceholderString string
 }
 
 // statically assert that this type binds to location interface
-var _ Location = WebrtcLocation{}
+var _ Location = WebRTCLocation{}
 
-func NewWebRtcLocation() WebrtcLocation {
-	return WebrtcLocation{
-		PlaceholderString: DefaultWebrtcPlaceholder,
+// NewWebRTCLocation creates a new WebRTCLocation
+func NewWebRTCLocation() WebRTCLocation {
+	return WebRTCLocation{
+		PlaceholderString: DefaultWebRTCPlaceholder,
 	}
 }
 
-func (loc WebrtcLocation) Type() tlv.Type {
-	return util.WebrtcLocationTlvType
+// Type gets the WebRTCLocation tlv.Type
+func (loc WebRTCLocation) Type() tlv.Type {
+	return util.WebRTCLocationTLVType
 }
 
-func (loc WebrtcLocation) Tlv() []tlv.Record {
-	placeHolder := EncodedPlaceHolderTlv(loc.PlaceholderString)
-	return []tlv.Record{tlv.MakePrimitiveRecord(util.WebrtcLocationTlvType, &placeHolder)}
+// TLV gets the tlv for a WebRTCLocation
+func (loc WebRTCLocation) TLV() []tlv.Record {
+	placeHolder := EncodedPlaceHolderTLV(loc.PlaceholderString)
+	return []tlv.Record{tlv.MakePrimitiveRecord(util.WebRTCLocationTLVType, &placeHolder)}
 }
 
-func (loc WebrtcLocation) EncodedTlv() []byte {
-	res := loc.Tlv()
-	return util2.TlvRecordToBytes(res...)
+// EncodedTLV gets the encoded tlv of a WebRTCLocation
+func (loc WebRTCLocation) EncodedTLV() []byte {
+	res := loc.TLV()
+	return util2.TLVRecordToBytes(res...)
 }
 
-func (loc WebrtcLocation) ToObject() map[string]interface{} {
+// ToObject converts WebRTCLocation to a json-serializable map
+func (loc WebRTCLocation) ToObject() map[string]interface{} {
 	m := make(map[string]interface{})
-	m["type"] = webrtcType
+	m["type"] = WebRTCType
 	m["placeholder_string"] = loc.PlaceholderString
 	return m
 }
 
-func WebRtcLocationFromTlv(tlv util.Tlv) (loc WebrtcLocation, err error) {
-	if tlv.Type() != util.WebrtcLocationTlvType {
-		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), util.BluetoothLocationTlvType)
+// WebRTCLocationFromTLV returns a WebRTCLocation based on an input tlv
+// returns an error
+func WebRTCLocationFromTLV(tlv util.TLV) (loc WebRTCLocation, err error) {
+	if tlv.Type() != util.WebRTCLocationTLVType {
+		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), util.BluetoothLocationTLVType)
 	}
-	tlvs, err := util.NamespaceIterTlvs(tlv.Value())
+	tlvs, err := util.NamespaceIterTLVs(tlv.Value())
 	if err != nil {
 		return loc, err
 	}
 	// wether or not the tlv has a placeholder string
 	hasPlaceholder := false
 	for _, subTlv := range tlvs {
-		if subTlv.Type() == PLACEHOLDER_TLV_TYPE {
+		if subTlv.Type() == PlaceholderTLVType {
 			loc.PlaceholderString = string(subTlv.Value())
 			hasPlaceholder = true
 		}

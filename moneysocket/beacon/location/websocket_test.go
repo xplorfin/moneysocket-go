@@ -55,8 +55,8 @@ func TestWebsocketEncoding(t *testing.T) {
 		} else {
 			ws = NewWebsocketLocationPort(testCase.Host, testCase.UseTls, *testCase.Port)
 		}
-		if hex.EncodeToString(ws.EncodedTlv()) != testCase.EncodedTlv {
-			t.Errorf("expected tlv %s to equal %s", hex.EncodeToString(ws.EncodedTlv()), testCase.EncodedTlv)
+		if hex.EncodeToString(ws.EncodedTLV()) != testCase.EncodedTlv {
+			t.Errorf("expected tlv %s to equal %s", hex.EncodeToString(ws.EncodedTLV()), testCase.EncodedTlv)
 		}
 
 		// make sure produced uri is avlid
@@ -74,12 +74,12 @@ func TestWebsocketEncoding(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		tlv, _, err := util.TlvPop(decoded)
+		tlv, _, err := util.TLVPop(decoded)
 		if err != nil {
 			t.Error(err)
 		}
 		// try to decode tlv
-		loc, err := WebsocketLocationFromTlv(tlv)
+		loc, err := WebsocketLocationFromTLV(tlv)
 		if err != nil {
 			t.Error(err)
 		}

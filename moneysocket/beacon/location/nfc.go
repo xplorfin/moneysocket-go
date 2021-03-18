@@ -3,65 +3,71 @@ package location
 import (
 	"fmt"
 
-	util2 "github.com/xplorfin/moneysocket-go/moneysocket/util"
+	moneysocketUtil "github.com/xplorfin/moneysocket-go/moneysocket/util"
 
 	"github.com/lightningnetwork/lnd/tlv"
-	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
+	beaconUtil "github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 )
 
-// see https://github.com/moneysocket/js-moneysocket/blob/76e533b59df1fcf03bd09c3e11813f016811fb71/moneysocket/beacon/location/Nfc.js#L21
+// see https://git.io/JmVpX
 
 const (
-	DefaultNfcPlaceholder = "nfc herpader"
-	NFCType               = "NFC"
+	// DefaultNFCPlaceholder defines the default value used by a placeholder
+	DefaultNFCPlaceholder = "nfc herpader"
+	// NFCType defines the name of the NFCLocation type
+	NFCType = "NFC"
 )
 
-type NfcLocation struct {
+// NFCLocation defines a Location type for nfc
+type NFCLocation struct {
 	PlaceholderString string
 }
 
-// statically assert that this type binds to location interface
-var _ Location = NfcLocation{}
-
-func NewNfcLocation() NfcLocation {
-	return NfcLocation{
-		PlaceholderString: DefaultNfcPlaceholder,
+// NewNFCLocation creates a new NFCLocation
+func NewNFCLocation() NFCLocation {
+	return NFCLocation{
+		PlaceholderString: DefaultNFCPlaceholder,
 	}
 }
 
-func (loc NfcLocation) Type() tlv.Type {
-	return util.NfcLocationTlvType
+// Type gets the type of NFCLocation
+func (loc NFCLocation) Type() tlv.Type {
+	return beaconUtil.NFCLocationTLVType
 }
 
-func (loc NfcLocation) Tlv() []tlv.Record {
-	placeHolder := EncodedPlaceHolderTlv(loc.PlaceholderString)
-	return []tlv.Record{tlv.MakePrimitiveRecord(util.NfcLocationTlvType, &placeHolder)}
+// TLV gets the tlv of a given NFCLocation
+func (loc NFCLocation) TLV() []tlv.Record {
+	placeHolder := EncodedPlaceHolderTLV(loc.PlaceholderString)
+	return []tlv.Record{tlv.MakePrimitiveRecord(beaconUtil.NFCLocationTLVType, &placeHolder)}
 }
 
-func (loc NfcLocation) EncodedTlv() []byte {
-	res := loc.Tlv()
-	return util2.TlvRecordToBytes(res...)
+// EncodedTLV gets the encoded tlv of a given NFCLocation
+func (loc NFCLocation) EncodedTLV() []byte {
+	res := loc.TLV()
+	return moneysocketUtil.TLVRecordToBytes(res...)
 }
 
-func (loc NfcLocation) ToObject() map[string]interface{} {
+// ToObject converts the NFCLocation to a json-serializable map
+func (loc NFCLocation) ToObject() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["type"] = NFCType
 	m["placeholder_string"] = loc.PlaceholderString
 	return m
 }
 
-func NfcLocationFromTlv(tlv util.Tlv) (loc NfcLocation, err error) {
-	if tlv.Type() != util.NfcLocationTlvType {
-		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), util.BluetoothLocationTlvType)
+// NfcLocationFromTLV converts a util.TLV from a tlv object
+func NfcLocationFromTLV(tlv beaconUtil.TLV) (loc NFCLocation, err error) {
+	if tlv.Type() != beaconUtil.NFCLocationTLVType {
+		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), beaconUtil.BluetoothLocationTLVType)
 	}
-	tlvs, err := util.NamespaceIterTlvs(tlv.Value())
+	tlvs, err := beaconUtil.NamespaceIterTLVs(tlv.Value())
 	if err != nil {
 		return loc, err
 	}
 	// wether or not the tlv has a placeholder string
 	hasPlaceholder := false
 	for _, subTlv := range tlvs {
-		if subTlv.Type() == PLACEHOLDER_TLV_TYPE {
+		if subTlv.Type() == PlaceholderTLVType {
 			loc.PlaceholderString = string(subTlv.Value())
 			hasPlaceholder = true
 		}
@@ -71,3 +77,6 @@ func NfcLocationFromTlv(tlv util.Tlv) (loc NfcLocation, err error) {
 	}
 	return loc, err
 }
+
+// statically assert that this type binds to location interface
+var _ Location = NFCLocation{}

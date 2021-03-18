@@ -5,17 +5,17 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/util"
 )
 
-// default tlv type for unimplemented location beacons
-const PLACEHOLDER_TLV_TYPE = 0
+// PlaceholderTLVType is the default tlv type for unimplemented location beacons
+const PlaceholderTLVType = 0
 
-// encode a placeholder tlv for python-parity tests
-func PlaceHolderTlv(placeholder string) tlv.Record {
+// PlaceHolderTLV encodes a placeholder tlv for python-parity tests
+func PlaceHolderTLV(placeholder string) tlv.Record {
 	byteHolder := []byte(placeholder)
-	return tlv.MakePrimitiveRecord(PLACEHOLDER_TLV_TYPE, &byteHolder)
+	return tlv.MakePrimitiveRecord(PlaceholderTLVType, &byteHolder)
 }
 
-// generate a placeholder tlv, return a byte slice representing tlv
-func EncodedPlaceHolderTlv(placeholder string) []byte {
-	placeholderTlv := PlaceHolderTlv(placeholder)
-	return util.TlvRecordToBytes(placeholderTlv)
+// EncodedPlaceHolderTLV generates a placeholder tlv, return a byte slice representing tlv
+func EncodedPlaceHolderTLV(placeholder string) []byte {
+	placeholderTlv := PlaceHolderTLV(placeholder)
+	return util.TLVRecordToBytes(placeholderTlv)
 }
