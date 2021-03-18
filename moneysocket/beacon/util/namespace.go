@@ -2,19 +2,18 @@ package util
 
 import "fmt"
 
-// Represents a specific namespace of TLVs as referred to in BOLT 1 and
+// NamespacePopTLVs Represents a specific namespace of TLVs as referred to in BOLT 1 and
 // provides generic pop helpers for the fundamental types defined here:
-// https://github.com/lightningnetwork/lightning-rfc/blob/master/01-messaging.md#fundamental-types
-// see: https://github.com/moneysocket/py-moneysocket/blob/main/moneysocket/utl/third_party/bolt/namespace.py#L9
-func NamespacePopTlvs(byteString []byte) (t Tlv, remainder []byte, err error) {
-	return TlvPop(byteString)
+// https://git.io/JmwOJ and https://git.io/JmwOk
+func NamespacePopTLVs(byteString []byte) (t TLV, remainder []byte, err error) {
+	return TLVPop(byteString)
 }
 
-// assert tlvs are valid
-func NamespaceTlvsAreValid(byteString []byte) bool {
+// NamespaceTLVsAreValid will determine if a bytestring contains valid tlvs
+func NamespaceTLVsAreValid(byteString []byte) bool {
 	bs := byteString
 	for len(bs) > 0 {
-		_, byteString, err := NamespacePopTlvs(bs)
+		_, byteString, err := NamespacePopTLVs(bs)
 		bs = byteString
 		if err != nil {
 			return false
@@ -23,14 +22,16 @@ func NamespaceTlvsAreValid(byteString []byte) bool {
 	return true
 }
 
-func NamespaceIterTlvs(byteString []byte) (tlvs []Tlv, err error) {
-	if !NamespaceTlvsAreValid(byteString) {
+// NamespaceIterTLVs will iterate over the namespaces in a byteString
+// returns error if all are not valid
+func NamespaceIterTLVs(byteString []byte) (tlvs []TLV, err error) {
+	if !NamespaceTLVsAreValid(byteString) {
 		return tlvs, fmt.Errorf("namespace tlvs may not be valid")
 	}
 	bs := byteString
 	for len(bs) > 0 {
 		// we validated error above
-		tlv, byteString, _ := NamespacePopTlvs(bs)
+		tlv, byteString, _ := NamespacePopTLVs(bs)
 		bs = byteString
 		tlvs = append(tlvs, tlv)
 	}

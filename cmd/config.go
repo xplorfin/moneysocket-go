@@ -5,6 +5,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 )
 
+// configOptions defines the flag used across commands to define a terminus config file
 var configOptions = []cli.Flag{
 	&cli.StringFlag{
 		Name:    "config",
@@ -13,6 +14,9 @@ var configOptions = []cli.Flag{
 	},
 }
 
+// fetchConfigFromPath fetches a config.Config from a path,
+//	validates it and returns an error if invalid otherwise it
+// will return the parsed config
 func fetchConfigFromPath(path string) (config.Config, error) {
 	cfg, err := config.ParseConfigFromFile(path)
 	if err != nil {
@@ -22,8 +26,9 @@ func fetchConfigFromPath(path string) (config.Config, error) {
 	return cfg, err
 }
 
-// global options must come before command options (https://git.io/Jt1Ij)
-// this is a workaround
+// fetchConfig gets the parsed config from a common "config" flag
+// this is a workaround to deal with a lack of global
+// options (see: https://git.io/Jt1Ij)
 func fetchConfig(c *cli.Context) (config.Config, error) {
 	return fetchConfigFromPath(c.String("config"))
 }

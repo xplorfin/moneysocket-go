@@ -52,7 +52,7 @@ func (o *OutgoingConsumerStack) DoConnect(connectBeacon beacon.Beacon) error {
 	log.Println("stack connect called")
 	loc := connectBeacon.Locations()[0]
 	sharedSeed := connectBeacon.GetSharedSeed()
-	if loc.Type() != util.WebsocketLocationTlvType {
+	if loc.Type() != util.WebsocketLocationTLVType {
 		panic(fmt.Errorf("location type %d not yet implemented", loc.Type()))
 	}
 	wsLocation := loc.(location.WebsocketLocation)

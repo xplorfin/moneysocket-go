@@ -15,28 +15,28 @@ type webrtcTestCase struct {
 
 var webrtcTestCases = []webrtcTestCase{
 	{
-		PlaceholderString: DefaultWebrtcPlaceholder,
+		PlaceholderString: DefaultWebRTCPlaceholder,
 		EncodedTlv:        "fe000101c511000f776562727463206865727061646572",
 	},
 }
 
 func TestWebrtcEncoding(t *testing.T) {
 	for _, testCase := range webrtcTestCases {
-		rlc := NewWebRtcLocation()
-		if hex.EncodeToString(rlc.EncodedTlv()) != testCase.EncodedTlv {
-			t.Errorf("expected %s to equal %s", hex.EncodeToString(rlc.EncodedTlv()), testCase.EncodedTlv)
+		rlc := NewWebRTCLocation()
+		if hex.EncodeToString(rlc.EncodedTLV()) != testCase.EncodedTlv {
+			t.Errorf("expected %s to equal %s", hex.EncodeToString(rlc.EncodedTLV()), testCase.EncodedTlv)
 		}
 		// fetch encoded tlv
 		decoded, err := hex.DecodeString(testCase.EncodedTlv)
 		if err != nil {
 			t.Error(err)
 		}
-		tlv, _, err := util.TlvPop(decoded)
+		tlv, _, err := util.TLVPop(decoded)
 		if err != nil {
 			t.Error(err)
 		}
 		// try to decode tlv
-		loc, err := WebRtcLocationFromTlv(tlv)
+		loc, err := WebRTCLocationFromTLV(tlv)
 		if err != nil {
 			t.Error(err)
 		}

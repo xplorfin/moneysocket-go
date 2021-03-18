@@ -134,8 +134,8 @@ func (t *Terminus) RetryConnectionLoop() {
 			disconnectedBeacons := acct.GetDisconnectedBeacons()
 			for _, disconnectedBeacon := range disconnectedBeacons {
 				loc := disconnectedBeacon.Locations()[0]
-				if loc.Type() != util.WebsocketLocationTlvType {
-					panic(fmt.Sprintf("location type %d is not supported", util.WebsocketLocationTlvType))
+				if loc.Type() != util.WebsocketLocationTLVType {
+					panic(fmt.Sprintf("location type %d is not supported", util.WebsocketLocationTLVType))
 				}
 				ss := disconnectedBeacon.GetSharedSeed()
 				_, err := t.stack.Connect(loc.(location.WebsocketLocation), &ss)
@@ -163,7 +163,7 @@ func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon s
 		sharedSeed = beacon.NewSharedSeed()
 	}
 
-	bcn := beacon.NewBeaconFromSeed(sharedSeed)
+	bcn := beacon.NewBeaconFromSharedSeed(sharedSeed)
 	for _, loc := range t.stack.GetListenLocation() {
 		bcn.AddLocation(loc)
 	}
@@ -180,7 +180,7 @@ func (t *Terminus) LoadPersisted() {
 		t.directory.AddAccount(adb)
 		for _, bcn := range adb.Details.Beacons {
 			loc := bcn.Locations()[0]
-			if loc.Type() != util.WebsocketLocationTlvType {
+			if loc.Type() != util.WebsocketLocationTLVType {
 				panic("non-websocket loc types not yet supported")
 			}
 			sharedSeed := bcn.GetSharedSeed()

@@ -23,7 +23,7 @@ func TestTlvRecordToBytes(t *testing.T) {
 		}
 		encoder := tlv.StubEncoder(tlvBytes)
 		record := tlv.MakeStaticRecord(1, nil, 4, encoder, nil)
-		producedBytes := TlvRecordToBytes(record)
+		producedBytes := TLVRecordToBytes(record)
 		if !bytes.Equal(tlvBytes, producedBytes[2:]) {
 			t.Errorf("bytes not correctly produced on %s run", humanize.Ordinal(i))
 			t.Error(pretty.Diff(tlvBytes, producedBytes))

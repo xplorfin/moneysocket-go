@@ -10,9 +10,10 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus"
 )
 
-// TODO go requires flags to appear before positional args
-// this should be fixed for parity
+// Start takes a list of args (from os.Args()), parse a command and runs it
 func Start(args []string) {
+	// TODO go requires flags to appear before positional args
+	// this should be fixed for parity w/ moneysocket-py
 	app := cli.NewApp()
 	app.Name = "terminus cli"
 	app.Version = messagebase.VERSION

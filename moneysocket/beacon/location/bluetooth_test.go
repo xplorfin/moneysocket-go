@@ -15,7 +15,7 @@ type BluetoothTestCase struct {
 
 var bluetoothTestCase = []BluetoothTestCase{
 	{
-		PlaceholderString: DEFAULT_BLUETOOTH_PLACEHOLDER,
+		PlaceholderString: DefaultBluetoothPlaceholder,
 		EncodedTlv:        "fe000101c7140012626c7565746f6f7468206865727061646572",
 	},
 }
@@ -23,20 +23,20 @@ var bluetoothTestCase = []BluetoothTestCase{
 func TestBluetoothEncoding(t *testing.T) {
 	for _, testCase := range bluetoothTestCase {
 		blc := NewBluetoothLocation()
-		if hex.EncodeToString(blc.EncodedTlv()) != testCase.EncodedTlv {
-			t.Errorf("expected %s to equal %s", hex.EncodeToString(blc.EncodedTlv()), testCase.EncodedTlv)
+		if hex.EncodeToString(blc.EncodedTLV()) != testCase.EncodedTlv {
+			t.Errorf("expected %s to equal %s", hex.EncodeToString(blc.EncodedTLV()), testCase.EncodedTlv)
 		}
 		// fetch encoded tlv
 		decoded, err := hex.DecodeString(testCase.EncodedTlv)
 		if err != nil {
 			t.Error(err)
 		}
-		tlv, _, err := util.TlvPop(decoded)
+		tlv, _, err := util.TLVPop(decoded)
 		if err != nil {
 			t.Error(err)
 		}
 		// try to decode tlv
-		loc, err := BluetoothLocationFromTlv(tlv)
+		loc, err := BluetoothLocationFromTLV(tlv)
 		if err != nil {
 			t.Error(err)
 		}

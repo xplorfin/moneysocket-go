@@ -164,7 +164,7 @@ func (a AccountDb) GetSummaryString(locations []location.Location) (summaryStr s
 	}
 
 	for _, sharedSeed := range a.Details.SharedSeeds {
-		seedBeacon := beacon.NewBeaconFromSeed(sharedSeed)
+		seedBeacon := beacon.NewBeaconFromSharedSeed(sharedSeed)
 		for _, loc := range locations {
 			seedBeacon.AddLocation(loc)
 		}

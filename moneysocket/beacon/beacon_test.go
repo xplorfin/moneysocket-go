@@ -13,14 +13,15 @@ import (
 )
 
 type BeaconTestCases struct {
-	// seed of string
+	// Seed of string
 	Seed []byte
-	// resulting bech32 string
+	// Bech32String that should result
 	Bech32String string
-	// list of locations we use for the beacon
+	// Locations list we use for the beacon
 	Locations []location.Location
 }
 
+// TestCases defines a list of test-cases to ensure python parity
 var TestCases = []BeaconTestCases{
 	{
 		Seed:         []byte("hello from light"),
@@ -31,14 +32,14 @@ var TestCases = []BeaconTestCases{
 		Bech32String: "moneysocket1lcqqzqdmstlqqqgph5gxsetvd3hjqenjdakjqmrfva58flsqqyquzeh7qqqsr0cpqnlqqqgpcv2qqynjv4kxz7fwwdhkx6m9wshx6mmwv4uluqqpq8z3zqq0wajkyun5vvsxsetjwpskgetjlcqqzqw8zsqpycnvw4jhgmm0w35zq6r9wfcxzer9wtlqqqgpey8qqrrwve3jq6r9wfcxzer9wgmv4l2e",
 		Locations: []location.Location{
 			location.NewWebsocketLocation("relay.socket.money", true),
-			location.NewWebRtcLocation(),
+			location.NewWebRTCLocation(),
 			location.NewBluetoothLocation(),
-			location.NewNfcLocation(),
+			location.NewNFCLocation(),
 		},
 	},
 }
 
-// test generated bech32 string against python
+// TestBeaconParity tests a generated bech32 string against python
 // TODO this can be automated with a python (or js) harness
 func TestBeaconParity(t *testing.T) {
 	for _, testCase := range TestCases {
@@ -47,7 +48,7 @@ func TestBeaconParity(t *testing.T) {
 			t.Error(err)
 		}
 
-		beacon := NewBeaconFromSeed(ss)
+		beacon := NewBeaconFromSharedSeed(ss)
 
 		for _, loc := range testCase.Locations {
 			beacon.AddLocation(loc)
@@ -67,12 +68,13 @@ func TestBeaconParity(t *testing.T) {
 	}
 }
 
+// TestRecord tests tlv encoding
 func TestRecord(t *testing.T) {
 	ss, err := BytesToSharedSeed([]byte("hello from light"))
 	if err != nil {
 		t.Error(err)
 	}
-	record := tlv.MakeStaticRecord(util.SharedSeedTlvType, &ss.seedBytes, uint64(len(ss.seedBytes)), tlv.EVarBytes, tlv.DVarBytes)
+	record := tlv.MakeStaticRecord(util.SharedSeedTLVType, &ss.seedBytes, uint64(len(ss.seedBytes)), tlv.EVarBytes, tlv.DVarBytes)
 	res, err := tlv.NewStream(record)
 	if err != nil {
 		panic(err)
@@ -84,7 +86,7 @@ func TestRecord(t *testing.T) {
 	}
 	h := w.Bytes()
 	pj := hex.EncodeToString(h) // this is equal to the output of encode_tlvs in python
-	if pj != hex.EncodeToString(util2.TlvRecordToBytes(record)) {
+	if pj != hex.EncodeToString(util2.TLVRecordToBytes(record)) {
 		t.Error("oops")
 	}
 }
