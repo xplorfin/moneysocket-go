@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 	moneysocket_message "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"

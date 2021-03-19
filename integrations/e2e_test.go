@@ -7,28 +7,35 @@ import (
 	"testing"
 	"time"
 
+	"github.com/xplorfin/moneysocket-go/relay"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
 	"github.com/Flaque/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
-	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
 
+// makeConfig creates a mock config for e2e tests
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
 	testConfig.ListenConfig.BindPort = nettest.GetFreePort(t)
-	testConfig.ListenConfig.BindHost = "localhost"
-	testConfig.ListenConfig.ExternalHost = testConfig.GetBindHost()
+	testConfig.ListenConfig.BindHost = "0.0.0.0"
+	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
 	testConfig.RpcConfig.BindHost = "localhost"
 	testConfig.RpcConfig.BindPort = nettest.GetFreePort(t)
+
+	testConfig.RelayConfig.BindHost = "localhost"
+	testConfig.RelayConfig.BindPort = nettest.GetFreePort(t)
+
 	return testConfig
 }
 
+// TestE2E attempts to run an end-to-end test of the moneysockte opinion app
 func TestE2E(t *testing.T) {
 	cfg := makeConfig(t)
 	ctx := context.Background()
@@ -81,10 +88,10 @@ func TestE2E(t *testing.T) {
 
 	// check if incoming socket is there
 	fmt.Print(terminusClient.GetInfo())
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 20)
 }
 
-// get new beacon for account
+// getBeacon mocks a new beacon for a given account
 func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
 	accountBeacon, err := terminusClient.Listen(account)
 	if err != nil {
@@ -100,7 +107,7 @@ func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account str
 	return acc
 }
 
-// extract a beacon from a terminus response
+// extractBeacon extracts a beacon from a terminus response
 func extractBeacon(response string) string {
 	return strings.Split(response[strings.Index(response, beacon.MoneysocketHrp):], " ")[0]
 }

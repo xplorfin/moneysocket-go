@@ -6,7 +6,7 @@ import (
 	"text/template"
 
 	"github.com/Flaque/filet"
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	. "github.com/stretchr/testify/assert"
 	nettest "github.com/xplorfin/netutils/testutils"
 	tlsmock "github.com/xplorfin/tlsutils/mock"
@@ -42,6 +42,12 @@ func TestConfigFromFile(t *testing.T) {
 		Equal(t, testConfig.RpcBindPort, cfg.RpcConfig.BindPort)
 		Equal(t, testConfig.RpcExternalHost, cfg.RpcConfig.ExternalHost)
 		Equal(t, testConfig.RpcExternalPort, cfg.RpcConfig.ExternalPort)
+		// relay config
+		Equal(t, testConfig.RelayUseTLS, cfg.RelayConfig.useTLS)
+		Equal(t, testConfig.RelayCertFile, cfg.RelayConfig.certFile)
+		Equal(t, testConfig.RelayCertKey, cfg.RelayConfig.certKey)
+		Equal(t, testConfig.RelaySelfSignedCert, cfg.RelayConfig.selfSignedCert)
+		Equal(t, testConfig.RelayCertChainFile, cfg.RelayConfig.certChainFile)
 
 		err = cfg.Validate()
 		if err != nil {
@@ -90,11 +96,20 @@ func MakeMockConfig(t *testing.T) TestFileConfig {
 		LndNetwork:           "bitcoin",
 		GrpcHost:             "127.0.0.1",
 		GrpcPort:             nettest.GetFreePort(t),
+		RelayBindHost:        "127.0.0.1",
+		RelayBindPort:        nettest.GetFreePort(t),
+		RelayUseTLS:          true,
+		RelayCertFile:        serverCertFile,
+		RelayCertKey:         serverKeyFile,
+		RelaySelfSignedCert:  true,
+		RelayCertChainFile:   chainFile,
 	}
 }
 
 type TestFileConfig struct {
+	// App
 	AppAccountPersistDir string `goconf:"App:AccountPersistDir"`
+	// Listen
 	ListenBindHost       string `goconf:"Listen:BindHost"`
 	ListenBindPort       int    `goconf:"Listen:BindPort"`
 	ListenExternalHost   string `goconf:"Listen:ExternalHost"`
@@ -106,19 +121,27 @@ type TestFileConfig struct {
 	ListenCertChainFile  string `goconf:"Listen:CertChainFile"`
 	ListenDefaultBind    string `goconf:"Listen:DefaultBind"`
 	ListenDefaultPort    int    `goconf:"Listen:DefaultPort"`
-
+	// Rpc
 	RpcBindHost     string `goconf:"Rpc:BindHost"`
 	RpcBindPort     int    `goconf:"Rpc:BindPort"`
 	RpcExternalHost string `goconf:"Rpc:BindHost"`
 	RpcExternalPort int    `goconf:"Rpc:ExternalPort"`
-
+	// LND
 	LndDir          string `goconf:"LND:LndDir"`
 	LndMacaroonPath string `goconf:"LND:LndMacaroonPath"`
 	LndTlsCertPath  string `goconf:"LND:LndTlsCertPath"`
 	LndNetwork      string `goconf:"LND:LndNetwork"`
+	GrpcHost        string `goconf:"LND:GrpcHost"`
+	GrpcPort        int    `goconf:"LND:GrpcPort"`
+	// Relay
+	RelayBindHost string `goconf:"Relay:ListenBind"`
+	RelayBindPort int    `goconf:"Relay:ListenPort"`
 
-	GrpcHost string `goconf:"LND:GrpcHost"`
-	GrpcPort int    `goconf:"LND:GrpcPort"`
+	RelayUseTLS         bool   `goconf:"Relay:UseTLS"`
+	RelayCertFile       string `goconf:"Relay:CertFile"`
+	RelayCertKey        string `goconf:"Relay:CertKey"`
+	RelaySelfSignedCert bool   `goconf:"Relay:SelfSignedCert"`
+	RelayCertChainFile  string `goconf:"Relay:CertChainFile"`
 }
 
 var TerminusClConf = `[App]
@@ -173,6 +196,28 @@ ExternalHost = {{.RpcExternalHost}}
 
 # port for client to connect
 ExternalPort = {{.RpcExternalPort}}
+
+[Relay]
+ListenBind = {{.RelayBindHost}}
+
+ListenPort = {{.RelayBindPort}}
+
+# Use TLS for websocket connections
+UseTLS = {{.RelayUseTLS}}
+
+# if UseTLS is True, use this cert file
+CertFile = {{.RelayCertFile}}
+
+# if UseTLS is True, use this key file
+CertKey = {{.RelayCertKey}}
+
+# if UseTLS is True and we have a self-made cert for testing use this key file
+# we don't need to provide a cert chain
+SelfSignedCert = {{.RelaySelfSignedCert}}
+
+# If we have a 'real' cert, we typically need to provide the cert chain file to
+# make the browser clients happy.
+CertChainFile = {{.RelayCertChainFile}}
 `
 
 // https://github.com/moneysocket/terminus/blob/main/config/terminus-lnd.conf
@@ -251,4 +296,26 @@ ExternalHost = {{.RpcExternalHost}}
 
 # port for client to connect
 ExternalPort = {{.RpcExternalPort}}
+
+[Relay]
+ListenBind = {{.RelayBindHost}}
+
+ListenPort = {{.RelayBindPort}}
+
+# Use TLS for websocket connections
+UseTLS = {{.RelayUseTLS}}
+
+# if UseTLS is True, use this cert file
+CertFile = {{.RelayCertFile}}
+
+# if UseTLS is True, use this key file
+CertKey = {{.RelayCertKey}}
+
+# if UseTLS is True and we have a self-made cert for testing use this key file
+# we don't need to provide a cert chain
+SelfSignedCert = {{.RelaySelfSignedCert}}
+
+# If we have a 'real' cert, we typically need to provide the cert chain file to
+# make the browser clients happy.
+CertChainFile = {{.RelayCertChainFile}}
 `

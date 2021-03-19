@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 	mock "github.com/xplorfin/lndmock"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"

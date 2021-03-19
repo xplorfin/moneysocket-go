@@ -15,8 +15,8 @@ import (
 var Bolt1MinTlv = tlv.Type(math.Pow(2, 16))
 
 func TestBolt1MinSpec(t *testing.T) {
-	if Bolt1MinTlv != TlvMinimum {
-		t.Errorf("bolt-1 specifies a minimum of 2^16 (%d), got %d", Bolt1MinTlv, TlvMinimum)
+	if Bolt1MinTlv != TLVMinimum {
+		t.Errorf("bolt-1 specifies a minimum of 2^16 (%d), got %d", Bolt1MinTlv, TLVMinimum)
 	}
 }
 
@@ -34,7 +34,7 @@ func (s TlvSlice) Contains(p tlv.Type) bool {
 
 func TestTypes(t *testing.T) {
 	prevItems := make(TlvSlice, 0)
-	for i, tlvType := range TlvTypes {
+	for i, tlvType := range TLVTypes {
 		if prevItems.Contains(tlvType) {
 			t.Errorf("tlv's are expected to be unique, found duplciate for value %d", tlvType)
 		}
@@ -44,8 +44,8 @@ func TestTypes(t *testing.T) {
 			t.Errorf("bolt-1 specifies a minimum of 2^16 (%d), got %d for %s item in array", Bolt1MinTlv, tlvType, humanize.Ordinal(i+1))
 		}
 
-		if tlvType < TlvMinimum {
-			t.Errorf("the socket.money specifies a minimum of 2^16+443 (%d), got %d for %s item in array", TlvMinimum, TlvMinimum, humanize.Ordinal(i))
+		if tlvType < TLVMinimum {
+			t.Errorf("the socket.money specifies a minimum of 2^16+443 (%d), got %d for %s item in array", TLVMinimum, TLVMinimum, humanize.Ordinal(i))
 		}
 	}
 }
@@ -54,8 +54,8 @@ func TestTlvTest(t *testing.T) {
 	test := []byte("random string")
 	var test1 uint32 = 2141242112
 	tlvStream, err := tlv.NewStream(
-		tlv.MakePrimitiveRecord(WebsocketLocationTlvType, &test1),
-		tlv.MakePrimitiveRecord(WebrtcLocationTlvType, &test),
+		tlv.MakePrimitiveRecord(WebsocketLocationTLVType, &test1),
+		tlv.MakePrimitiveRecord(WebRTCLocationTLVType, &test),
 	)
 	if err != nil {
 		t.Error(err)

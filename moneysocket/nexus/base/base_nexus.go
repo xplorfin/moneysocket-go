@@ -114,7 +114,7 @@ func (b *BaseNexus) InitiateClose() {
 	}
 }
 
-func (b *BaseNexus) SharedSeed() *beacon.SharedSeed {
+func (b BaseNexus) SharedSeed() *beacon.SharedSeed {
 	if b.BelowNexus != nil {
 		return (*b.BelowNexus).SharedSeed()
 	}

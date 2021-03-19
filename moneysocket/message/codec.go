@@ -26,7 +26,7 @@ func WireEncode(msg base.MoneysocketMessage, ss *beacon.SharedSeed) ([]byte, err
 		return encoded, nil
 	}
 	// encrypt
-	encryptedString, err := Encrypt(encoded, ss.DeriveAes256Key())
+	encryptedString, err := Encrypt(encoded, ss.DeriveAES256Key())
 	return encryptedString, err
 }
 
@@ -41,7 +41,7 @@ func WireDecode(msgBytes []byte, sharedSeed *beacon.SharedSeed) (msg base.Moneys
 
 	if isCypherText && sharedSeed != nil {
 		// nolint: todo fix, this has a high bug surface
-		raw, err := Decrypt(msgBytes, (*sharedSeed).DeriveAes256Key())
+		raw, err := Decrypt(msgBytes, (*sharedSeed).DeriveAES256Key())
 		if err != nil {
 			return msg, msgType, err
 		}
@@ -76,7 +76,7 @@ func LocalEncode(msg base.MoneysocketMessage, sharedSeed *beacon.SharedSeed) (en
 	if sharedSeed == nil {
 		panic("shared sed can't be null")
 	}
-	enc, err := Encrypt(msgBytes, sharedSeed.DeriveAes256Key())
+	enc, err := Encrypt(msgBytes, sharedSeed.DeriveAES256Key())
 	if err != nil {
 		panic(err)
 	}

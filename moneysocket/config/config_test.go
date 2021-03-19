@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	"github.com/Flaque/filet"
-	"github.com/brianvoe/gofakeit/v5"
+	"github.com/brianvoe/gofakeit/v6"
 	. "github.com/stretchr/testify/assert"
 	nettest "github.com/xplorfin/netutils/testutils"
 	tlsmock "github.com/xplorfin/tlsutils/mock"
 )
 
+// TestGetters tests the getter methods for the config files
 func TestGetters(t *testing.T) {
 	chainFile, serverCertFile, serverKeyFile := tlsmock.TemporaryCertInChain(t)
 	accountDir := filet.TmpDir(t, "")
