@@ -557,8 +557,8 @@ github.com/xplorfin/netutils v0.28.0 h1:VTNwUfrPlCMRq0IkZCDhT4gHMXXCyStcqwZDovDg
 github.com/xplorfin/netutils v0.28.0/go.mod h1:76o2O95Nb0zBmA+0RSnf49I7JsI6Ul4XqM/5f7VnK2E=
 github.com/xplorfin/netutils v0.29.0 h1:6gOjqaK6P/j1gUUf6OpkxVbyTcfm6wPiRPESOGFpkUs=
 github.com/xplorfin/netutils v0.29.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
-github.com/xplorfin/ozzo-validators v0.26.0 h1:hOORXftyz2kdgix9O2BUqNJ1BDzU5W3fz7g7eH8Cuhk=
-github.com/xplorfin/ozzo-validators v0.26.0/go.mod h1:Gmzc2TVKyrIgRutu7/RExUVt3BNRxCC6WB7OaM7ipbw=
+github.com/xplorfin/ozzo-validators v0.27.0 h1:4a8FtGczYPL7/mPFXN00XSbukVBmxjAD2VU//p/jfxM=
+github.com/xplorfin/ozzo-validators v0.27.0/go.mod h1:IBdqkYMkj9qxLxVUqZarRhlb+YGAencivPniWxtl2yU=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=
 github.com/xplorfin/tlsutils v0.18.0/go.mod h1:FfCO3B+0oyXkVyDNlPz35/tx8IBjTYT+erUC9z47MIQ=
 github.com/yudai/gojsondiff v1.0.0 h1:27cbfqXLVEJ1o8I6v3y9lg8Ydm53EKqHXAOMxEGlCOA=
