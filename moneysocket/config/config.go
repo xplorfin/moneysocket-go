@@ -142,7 +142,7 @@ func (c *Config) GetAddress() string {
 func (c *Config) GetRelayUrl() string {
 	u := url.URL{
 		Scheme: "ws",
-		Host:   fmt.Sprintf("%s:%d", c.GetBindHost(), c.GetBindPort()),
+		Host:   fmt.Sprintf("%s:%d", c.RelayConfig.BindHost, c.RelayConfig.BindPort),
 	}
 
 	if c.GetUseTls() {
