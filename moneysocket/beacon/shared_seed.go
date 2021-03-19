@@ -13,7 +13,7 @@ import (
 	beaconUtil "github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 )
 
-// SharedSeedLength defines the lenght of the shared seed
+// SharedSeedLength defines the length of the shared seed
 const SharedSeedLength = 16
 
 // SharedSeed is a seed used for end-to-end encryption
@@ -21,7 +21,7 @@ type SharedSeed struct {
 	seedBytes []byte
 }
 
-// generate a new random shared seed
+// NewSharedSeed generates a new random shared seed
 func NewSharedSeed() SharedSeed {
 	randBytes, err := moneysocketUtil.GenerateRandomBytes(16)
 	if err != nil {
@@ -61,12 +61,12 @@ func (s SharedSeed) GetBytes() []byte {
 	return s.seedBytes
 }
 
-// convert ints to hash
+// Hash converts the seed bytes to a big endian int
 func (s SharedSeed) Hash() uint64 {
 	return binary.BigEndian.Uint64(s.seedBytes)
 }
 
-// check if two seeds are equal
+// Equal check if two seeds are equal
 func (s SharedSeed) Equal(seed SharedSeed) bool {
 	return bytes.Equal(s.seedBytes, seed.seedBytes)
 }
@@ -107,7 +107,7 @@ func (s SharedSeed) TLV() tlv.Record {
 	return tlv.MakeStaticRecord(beaconUtil.SharedSeedTLVType, &s.seedBytes, 16, tlv.EVarBytes, tlv.DVarBytes)
 }
 
-// EncodedTLV() will encode the TLV() into a byte-slice
+// EncodedTLV will encode the TLV into a byte-slice
 // (See BOLT #1: https://git.io/JLCRq )
 func (s SharedSeed) EncodedTLV() []byte {
 	return moneysocketUtil.TLVRecordToBytes(s.TLV())

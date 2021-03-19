@@ -6,17 +6,13 @@ import (
 	"github.com/mvo5/goconfigparser"
 )
 
-// parse a config from a file. Note: this is meant for python parity only
-// and may be deprecated at some point. Since we validate in our setters
-// and not at runtime, we have to parse into an intermediary struct managed
-// by goconf
-
+// Section defines a section of the config
 type Section struct {
 	sectionName string
 	config      *goconfigparser.ConfigParser
 }
 
-// create a new section object that reads from a a section of the config
+// NewSection create a new section object that reads from a a section of the config
 func NewSection(name string, cfg *goconfigparser.ConfigParser) Section {
 	return Section{
 		sectionName: name,
@@ -24,7 +20,7 @@ func NewSection(name string, cfg *goconfigparser.ConfigParser) Section {
 	}
 }
 
-// get a string from the config section
+// GetString gets a string from the config section
 // handles python None types
 func (s Section) GetString(option string) string {
 	res, _ := s.config.Get(s.sectionName, option)
@@ -34,16 +30,22 @@ func (s Section) GetString(option string) string {
 	return res
 }
 
+// GetInt gets an int from the config section
+// handles python None types
 func (s Section) GetInt(option string) int {
 	res, _ := s.config.Getint(s.sectionName, option)
 	return res
 }
 
+// GetBool gets an bool from the config section
+// handles python None types (returning false)
 func (s Section) GetBool(option string) bool {
 	res, _ := s.config.Getbool(s.sectionName, option)
 	return res
 }
 
+// ParseConfig parses a Config from the file contents
+// returns an error if parsing fails. Validation can be done on the Config object
 func ParseConfig(fileContents string) (config Config, err error) {
 	cfg := goconfigparser.New()
 	err = cfg.ReadString(fileContents)
@@ -75,9 +77,20 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.RpcConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
 	config.RpcConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
 
+	relayConfig := NewSection("Relay", cfg)
+	config.RelayConfig.BindHost = relayConfig.GetString("ListenBind")
+	config.RelayConfig.BindPort = relayConfig.GetInt("ListenPort")
+	config.RelayConfig.useTLS = relayConfig.GetBool("UseTLS")
+	config.RelayConfig.certFile = relayConfig.GetString("CertFile")
+	config.RelayConfig.certKey = relayConfig.GetString("CertKey")
+	config.RelayConfig.selfSignedCert = relayConfig.GetBool("SelfSignedCert")
+	config.RelayConfig.certChainFile = relayConfig.GetString("CertChainFile")
+
 	return config, err
 }
 
+// ParseConfigFromFile is a wrapper around ParseConfig that also reads from the file
+// returns an error if parsing fails. Validation can be done on the Config object
 func ParseConfigFromFile(filePath string) (conf Config, err error) {
 	contents, err := ioutil.ReadFile(filePath)
 	if err != nil {

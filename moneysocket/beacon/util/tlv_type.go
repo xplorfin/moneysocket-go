@@ -43,5 +43,5 @@ const (
 	NFCLocationTLVType tlv.Type = TLVTypeStart + 14
 )
 
-// list of all custom implemented tlv types in the package
-var TlvTypes = []tlv.Type{BeaconTLVType, SharedSeedTLVType, LocationCountTLVType, LocationListTLVType, WebsocketLocationTLVType, WebRTCLocationTLVType, BluetoothLocationTLVType, NFCLocationTLVType}
+// TLVTypes is a list of all custom implemented tlv types in the package
+var TLVTypes = []tlv.Type{BeaconTLVType, SharedSeedTLVType, LocationCountTLVType, LocationListTLVType, WebsocketLocationTLVType, WebRTCLocationTLVType, BluetoothLocationTLVType, NFCLocationTLVType}

@@ -115,7 +115,7 @@ func DecodeTLV(b []byte) (beacon Beacon, err error) {
 		return beacon, fmt.Errorf("got unexpected shared seed tlv type %d, expected: %d", ssTlv.Type(), util.SharedSeedTLVType)
 	}
 
-	llTlv, remainder, err := util.TLVPop(remainder)
+	llTlv, _, err := util.TLVPop(remainder)
 	if err != nil {
 		return beacon, err
 	}
