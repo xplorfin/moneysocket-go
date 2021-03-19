@@ -3,10 +3,11 @@ package integrations
 import (
 	"context"
 	"fmt"
-	"github.com/xplorfin/moneysocket-go/relay"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/xplorfin/moneysocket-go/relay"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
