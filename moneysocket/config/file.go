@@ -77,6 +77,15 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.RpcConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
 	config.RpcConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
 
+	relayConfig := NewSection("Relay", cfg)
+	config.RelayConfig.BindHost = relayConfig.GetString("ListenBind")
+	config.RelayConfig.BindPort = relayConfig.GetInt("ListenPort")
+	config.RelayConfig.useTLS = relayConfig.GetBool("UseTLS")
+	config.RelayConfig.certFile = relayConfig.GetString("CertFile")
+	config.RelayConfig.certKey = relayConfig.GetString("CertKey")
+	config.RelayConfig.selfSignedCert = relayConfig.GetBool("SelfSignedCert")
+	config.RelayConfig.certChainFile = relayConfig.GetString("CertChainFile")
+
 	return config, err
 }
 

@@ -18,6 +18,8 @@ type Config struct {
 	ListenConfig ListenConfig
 	// RpcConfig defines the configuration for the rpc server to listen on
 	RpcConfig RpcConfig
+	// RelayConfig defines the configuration for the relay server (see: https://git.io/JmrYJ )
+	RelayConfig RelayConfig
 }
 
 // NewConfig creates a new config
@@ -34,6 +36,10 @@ func NewConfig() *Config {
 			BindPort:     5003,
 			ExternalHost: "localhost",
 			ExternalPort: 5004,
+		},
+		RelayConfig: RelayConfig{
+			BindHost: "localhost",
+			BindPort: 5004,
 		},
 	}
 }
