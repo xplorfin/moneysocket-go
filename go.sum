@@ -555,6 +555,8 @@ github.com/xplorfin/lndmock v0.17.0 h1:YLfZnNS8fh8QsdI7InJ02Y4y1Vj3+66mgFy9uTtDF
 github.com/xplorfin/lndmock v0.17.0/go.mod h1:ZapUgvf9ZVOP5XnE/J/B4PzvgCmlzcGlTW0F53M0HOc=
 github.com/xplorfin/netutils v0.28.0 h1:VTNwUfrPlCMRq0IkZCDhT4gHMXXCyStcqwZDovDgLqg=
 github.com/xplorfin/netutils v0.28.0/go.mod h1:76o2O95Nb0zBmA+0RSnf49I7JsI6Ul4XqM/5f7VnK2E=
+github.com/xplorfin/netutils v0.29.0 h1:6gOjqaK6P/j1gUUf6OpkxVbyTcfm6wPiRPESOGFpkUs=
+github.com/xplorfin/netutils v0.29.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/ozzo-validators v0.26.0 h1:hOORXftyz2kdgix9O2BUqNJ1BDzU5W3fz7g7eH8Cuhk=
 github.com/xplorfin/ozzo-validators v0.26.0/go.mod h1:Gmzc2TVKyrIgRutu7/RExUVt3BNRxCC6WB7OaM7ipbw=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=
