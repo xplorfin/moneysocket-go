@@ -10,7 +10,7 @@ import (
 
 // see https://github.com/moneysocket/py-moneysocket/blob/main/moneysocket/utl/third_party/bolt/tlv.py
 
-// TLV is sued for encoding/decoding values to/from TLV (Type-Length-Value) byte strings
+// TLV is used for encoding/decoding values to/from TLV (Type-Length-Value) byte strings
 // as defined in: https://git.io/JmwOl
 // note: I tried to use the golang implementation, but didn't quite get the streaming encodes/decodes to work.
 // this can be fixed in a future version

@@ -8,22 +8,18 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	ozzo_validators "github.com/xplorfin/ozzo-validators"
+	validators "github.com/xplorfin/ozzo-validators"
 	"github.com/xplorfin/tlsutils"
 )
 
-// ListenConfig specifies the configuration for terminus to listen on
-type ListenConfig struct {
+// RelayConfig defines the configuration for the relay
+type RelayConfig struct {
 	// BindHost defines listening bind setting. Defaults to 127.0.0.1 for localhost connections, 0.0.0.0
 	// for allowing connections from other hosts
 	BindHost string
 	// BindPort defines the default port to listen for websocket connections port not specified.
 	BindPort int
-	// ExternalHost defines the host for other devices to connect via the beacon
-	ExternalHost string
-	// ExternalPort for other devices to connect via the beacon
-	ExternalPort int
-	// useTLS for websocket connections
+	// useTLS for relay connections
 	useTLS bool
 	// certFile defines the file if useTLS is True, use this cert file
 	certFile string
@@ -35,20 +31,15 @@ type ListenConfig struct {
 	// certChainFile if we have a 'real' cert, we typically need to provide the cert chain file to
 	// make the browser clients happy.
 	certChainFile string
-	// defaultBind defines the default listening bind setting. 127.0.0.1 for localhost connections, 0.0.0.0
-	// for allowing connections from other hosts
-	defaultBind string
-	// defaultPort to listen for websocket connections port not specified.
-	defaultPort int
 }
 
 // getCertificate gets the certificate
 // Note: this function makes no guarantees about files being present
 // this should be verified separately. Reads certificates from filesystem
-func (l ListenConfig) getCertificate() tlsutils.TlsCert {
-	pub, _ := ioutil.ReadFile(l.certFile)
+func (r RelayConfig) getCertificate() tlsutils.TlsCert {
+	pub, _ := ioutil.ReadFile(r.certFile)
 
-	priv, _ := ioutil.ReadFile(l.certKey)
+	priv, _ := ioutil.ReadFile(r.certKey)
 
 	return tlsutils.TlsCert{
 		PublicKey:  string(pub),
@@ -57,40 +48,36 @@ func (l ListenConfig) getCertificate() tlsutils.TlsCert {
 }
 
 // Validate the configuration
-func (l ListenConfig) Validate() error {
-	err := validation.ValidateStruct(&l,
+func (r RelayConfig) Validate() error {
+	err := validation.ValidateStruct(&r,
 		// bind host cannot be null
-		validation.Field(&l.BindHost, validation.Required, is.Host),
+		validation.Field(&r.BindHost, validation.Required, is.Host),
 		// bind port cannot be null
-		validation.Field(&l.BindPort, validation.Required, ozzo_validators.IsPortAvailable),
-		// external host cannot be null and must be valid
-		validation.Field(&l.ExternalHost, validation.Required, is.Host),
-		// external port must be available
-		validation.Field(&l.ExternalPort, validation.Required, ozzo_validators.IsPortAvailable),
+		validation.Field(&r.BindPort, validation.Required, validators.IsPortAvailable),
 		// use tls must be set (should always be set)
-		validation.Field(&l.useTLS),
+		validation.Field(&r.useTLS),
 		// certFile is required when use tls is true
-		validation.Field(&l.certFile, validation.When(l.useTLS, validation.Required, ozzo_validators.IsValidPath)),
+		validation.Field(&r.certFile, validation.When(r.useTLS, validation.Required, validators.IsValidPath)),
 		// certKey is required when use tls is true
-		validation.Field(&l.certKey, validation.When(l.useTLS, validation.Required, ozzo_validators.IsValidPath)),
+		validation.Field(&r.certKey, validation.When(r.useTLS, validation.Required, validators.IsValidPath)),
 		// cert chain file must be a valid path
-		validation.Field(&l.certChainFile, ozzo_validators.IsValidPath),
+		validation.Field(&r.certChainFile, validators.IsValidPath),
 	)
 	if err != nil {
 		return err
 	}
 	// just validate the ssl certs
-	if l.useTLS && validation.IsEmpty(l.certChainFile) {
-		isValid, err := tlsutils.VerifyCertificate(l.getCertificate())
+	if r.useTLS && validation.IsEmpty(r.certChainFile) {
+		isValid, err := tlsutils.VerifyCertificate(r.getCertificate())
 		if !isValid {
 			return err
 		}
 	}
 	// validate root certificate
-	if l.useTLS && !validation.IsEmpty(l.certChainFile) {
-		rawCert := l.getCertificate()
+	if r.useTLS && !validation.IsEmpty(r.certChainFile) {
+		rawCert := r.getCertificate()
 		// we already validated this exists
-		chainFile, _ := ioutil.ReadFile(l.certChainFile)
+		chainFile, _ := ioutil.ReadFile(r.certChainFile)
 		block, _ := pem.Decode(chainFile)
 		if block == nil {
 			return fmt.Errorf("expected chainfile block to not be null")

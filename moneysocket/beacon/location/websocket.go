@@ -25,9 +25,9 @@ const (
 	WebsocketType = "WebSocket"
 	// HostTlvType position when encoding the TLV
 	HostTlvType = 0
-	// UseTlvType position when encoding the TLV
+	// UseTLSTLVType position when encoding the TLV
 	// bool, corollary to use_tls_enum_value https://git.io/JLgWa
-	UseTlsTlvType = 1
+	UseTLSTLVType = 1
 
 	// UseTlsEnumValueTrue indicates tls is used
 	UseTlsEnumValueTrue = 0
@@ -98,7 +98,7 @@ func (ws WebsocketLocation) TLV() []tlvHelper.Record {
 	encoded := moneysocketUtil.TLVRecordToBytes(record)
 	if !ws.IsTls() {
 		value := uint64(UseTlsEnumValueTrue)
-		encoded = append(encoded, moneysocketUtil.TLVRecordToBytes(tlvHelper.MakeStaticRecord(UseTlsTlvType, &value, tlvHelper.VarIntSize(uint64(UseTlsTlvType)), beaconUtil.EVarInt, beaconUtil.DVarInt))...)
+		encoded = append(encoded, moneysocketUtil.TLVRecordToBytes(tlvHelper.MakeStaticRecord(UseTLSTLVType, &value, tlvHelper.VarIntSize(uint64(UseTLSTLVType)), beaconUtil.EVarInt, beaconUtil.DVarInt))...)
 		if ws.port != DefaultNoTlsPort {
 			encoded = append(encoded, moneysocketUtil.TLVRecordToBytes(tlvHelper.MakeStaticRecord(PortTlvType, &ws.port, tlvHelper.VarIntSize(ws.port), beaconUtil.EVarInt, beaconUtil.DVarInt))...)
 		}
@@ -124,7 +124,7 @@ func WebsocketLocationFromTLV(tlv beaconUtil.TLV) (wsl WebsocketLocation, err er
 		case HostTlvType:
 			wsl.host = string(subTlv.Value())
 			hasHostTlv = true
-		case UseTlsTlvType:
+		case UseTLSTLVType:
 			wsl.tls = false
 		case PortTlvType:
 			wsl.port, _, err = bigsize.Pop(subTlv.Value())

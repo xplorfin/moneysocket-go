@@ -34,7 +34,7 @@ func (s TlvSlice) Contains(p tlv.Type) bool {
 
 func TestTypes(t *testing.T) {
 	prevItems := make(TlvSlice, 0)
-	for i, tlvType := range TlvTypes {
+	for i, tlvType := range TLVTypes {
 		if prevItems.Contains(tlvType) {
 			t.Errorf("tlv's are expected to be unique, found duplciate for value %d", tlvType)
 		}

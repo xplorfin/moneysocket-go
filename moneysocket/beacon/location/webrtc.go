@@ -19,7 +19,9 @@ const (
 	WebRTCType = "WebRTC"
 )
 
+// WebRTCLocation is a beacon location type placeholder
 type WebRTCLocation struct {
+	// PlaceholderString defines what gets encoded
 	PlaceholderString string
 }
 

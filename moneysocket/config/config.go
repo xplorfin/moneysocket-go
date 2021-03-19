@@ -10,15 +10,17 @@ import (
 	ozzo_validators "github.com/xplorfin/ozzo-validators"
 )
 
-// config for terminus
+// Config for terminus/relayd
 type Config struct {
-	// directory to store accounts in
+	// AccountPersistDir defines the directory to store accounts in
 	AccountPersistDir string
-	ListenConfig      ListenConfig
-	RpcConfig         RpcConfig
+	// ListenConfig defines the config to have generated beacons
+	ListenConfig ListenConfig
+	// RpcConfig defines the configuration for the rpc server to listen on
+	RpcConfig RpcConfig
 }
 
-// create a new terminus config
+// NewConfig creates a new config
 func NewConfig() *Config {
 	return &Config{
 		ListenConfig: ListenConfig{
@@ -36,6 +38,7 @@ func NewConfig() *Config {
 	}
 }
 
+// Validate validates the configuration
 func (c Config) Validate() error {
 	err := validation.ValidateStruct(&c,
 		validation.Field(&c.AccountPersistDir, validation.Required, ozzo_validators.IsValidPath),
@@ -56,74 +59,80 @@ func (c Config) Validate() error {
 	return nil
 }
 
-// port to listen for websocket connections
+// GetBindPort gets the port to listen for websocket connections
 func (c *Config) GetBindPort() int {
 	return c.ListenConfig.BindPort
 }
 
-// Default listening bind setting. 127.0.0.1 for localhost connections, 0.0.0.0
+// GetBindHost gets the listening bind setting
 // for allowing connections from other hosts
 func (c *Config) GetBindHost() string {
 	return c.ListenConfig.BindHost
 }
 
+// GetAccountPersistDir gets the account persist dir
 func (c *Config) GetAccountPersistDir() string {
 	return c.AccountPersistDir
 }
 
-//  host for other devices to connect via the beacon
+// GetExternalHost gets other devices to connect via the beacon
 func (c *Config) GetExternalHost() string {
 	return c.ListenConfig.ExternalHost
 }
 
-//  host for other devices to connect via the beacon
+// GetExternalPort gets the externally binded port
+// for other devices to connect via the beacon
 func (c *Config) GetExternalPort() int {
 	return c.ListenConfig.ExternalPort
 }
 
-// wether or not to use tls
+// GetUseTls determines wether or not to use tls
 func (c *Config) GetUseTls() bool {
 	return c.ListenConfig.useTLS
 }
 
-// ssl certificate file
+// GetCertFile fetches the ssl certificate file
 func (c *Config) GetCertFile() string {
 	return c.ListenConfig.certFile
 }
 
-// ssl certificate file
+// GetKeyFile gets the ssl certificate file
 func (c *Config) GetKeyFile() string {
 	return c.ListenConfig.certKey
 }
 
-// ssl certificate file
+// GetSelfSignedCert fetches the ssl certificate file
 func (c *Config) GetSelfSignedCert() bool {
 	return c.ListenConfig.selfSignedCert
 }
 
-// ssl certificate file
+// GetCertChainFile fetches the ssl certificate chain file
 func (c *Config) GetCertChainFile() string {
 	return c.ListenConfig.certChainFile
 }
 
-// get host:port
+// GetHostName fetches the hostname
 func (c *Config) GetHostName() string {
 	return fmt.Sprintf("%s:%d", c.GetBindHost(), c.GetBindPort())
 }
 
+// GetRpcHostname fetches the hostname of the rpc server
 func (c *Config) GetRpcHostname() string {
 	return fmt.Sprintf("%s:%d", c.RpcConfig.BindHost, c.RpcConfig.BindPort)
 
 }
 
+// GetRpcAddress fetches the address (w/ connection schema) of the rpc server
 func (c *Config) GetRpcAddress() string {
 	return fmt.Sprintf("http://%s", c.GetRpcHostname())
 }
 
+// GetAddress fetches the address of the rpc server
 func (c *Config) GetAddress() string {
 	return fmt.Sprintf("http://%s/", c.GetHostName())
 }
 
+// GetRelayUrl gets the relay url
 func (c *Config) GetRelayUrl() string {
 	u := url.URL{
 		Scheme: "ws",
@@ -137,6 +146,7 @@ func (c *Config) GetRelayUrl() string {
 	return u.String()
 }
 
+// RpcServerTimeout fetches the server timeout
 func (c *Config) RpcServerTimeout() time.Duration {
 	return time.Second * 10
 }
