@@ -3,15 +3,13 @@ package config
 import (
 	"context"
 	"fmt"
-	"testing"
-	"time"
-
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/jinzhu/copier"
 	"github.com/lightningnetwork/lnd/lnrpc"
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/filet"
 	mock "github.com/xplorfin/lndmock"
+	"testing"
 )
 
 // Copy copies the LndConfig for testing
@@ -59,10 +57,16 @@ func TestLndConfig(t *testing.T) {
 	aliceContainer, err := mocker.CreateLndContainer("alice")
 	Nil(t, err)
 
+	// get alices address to make sure container works
+	_, err = aliceContainer.Address()
+	Nil(t, err)
+
+
 	lndDir := filet.TmpDir(t, "")
 
 	// get alices macaroon
 	aliceMac, err := aliceContainer.GetAdminMacaroon()
+
 	Nil(t, err)
 	rawAliceMac, err := aliceMac.MarshalBinary()
 	Nil(t, err)
@@ -90,8 +94,6 @@ func TestLndConfig(t *testing.T) {
 	lnclient, err := config.RPCClient(context.Background())
 	Nil(t, err)
 
-	// wait for lnd boot. TODO add a getter to make sure lnd is unlocked
-	time.Sleep(time.Second * 10)
 
 	req := lnrpc.GetInfoRequest{}
 	_, err = lnclient.GetInfo(context.Background(), &req)
