@@ -42,8 +42,8 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Pull images (should fix race condition)
-        run: docker image pull ghcr.io/xplorfin/btcd:latest && docker image pull ghcr.io/xplorfin/lnd
+#      - name: Pull images (should fix race condition)
+#        run: docker image pull ghcr.io/xplorfin/btcd:latest && docker image pull ghcr.io/xplorfin/lnd
       - name: Test
         run: make ci-test
       - name: Send coverage
