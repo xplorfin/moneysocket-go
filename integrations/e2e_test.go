@@ -11,7 +11,7 @@ import (
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 
-	"github.com/Flaque/filet"
+	"github.com/xplorfin/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"

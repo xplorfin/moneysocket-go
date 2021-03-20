@@ -5,9 +5,9 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/Flaque/filet"
 	"github.com/brianvoe/gofakeit/v6"
 	. "github.com/stretchr/testify/assert"
+	"github.com/xplorfin/filet"
 	nettest "github.com/xplorfin/netutils/testutils"
 	tlsmock "github.com/xplorfin/tlsutils/mock"
 )
@@ -33,9 +33,17 @@ func TestConfigFromFile(t *testing.T) {
 		Equal(t, testConfig.ListenCertChainFile, cfg.GetCertChainFile())
 		Equal(t, testConfig.ListenCertKey, cfg.GetKeyFile())
 		Equal(t, testConfig.ListenSelfSignedCert, cfg.GetSelfSignedCert())
-		if i != 1 { // second file does not have default bind or port
+		if i != 1 { // second file does not have default bind or port/lnd config
 			Equal(t, testConfig.ListenDefaultBind, cfg.ListenConfig.defaultBind)
 			Equal(t, testConfig.ListenDefaultPort, cfg.ListenConfig.defaultPort)
+
+			// lnd config
+			Equal(t, testConfig.LndDir, cfg.LndConfig.LndDir)
+			Equal(t, testConfig.LndMacaroonPath, cfg.LndConfig.MacaroonPath)
+			Equal(t, testConfig.LndTlsCertPath, cfg.LndConfig.TLSCertPath)
+			Equal(t, testConfig.LndNetwork, cfg.LndConfig.Network)
+			Equal(t, testConfig.GrpcHost, cfg.LndConfig.GrpcHost)
+			Equal(t, testConfig.GrpcPort, cfg.LndConfig.GrpcPort)
 		}
 		// rpc config
 		Equal(t, testConfig.RpcBindHost, cfg.RpcConfig.BindHost)

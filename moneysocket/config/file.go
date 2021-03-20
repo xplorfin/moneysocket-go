@@ -86,6 +86,14 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.RelayConfig.selfSignedCert = relayConfig.GetBool("SelfSignedCert")
 	config.RelayConfig.certChainFile = relayConfig.GetString("CertChainFile")
 
+	lndConfig := NewSection("LND", cfg)
+	config.LndConfig.LndDir = lndConfig.GetString("LndDir")
+	config.LndConfig.MacaroonPath = lndConfig.GetString("MacaroonPath")
+	config.LndConfig.TLSCertPath = lndConfig.GetString("TlsCertPath")
+	config.LndConfig.Network = lndConfig.GetString("Network")
+	config.LndConfig.GrpcHost = lndConfig.GetString("GrpcHost")
+	config.LndConfig.GrpcPort = lndConfig.GetInt("GrpcPort")
+
 	return config, err
 }
 

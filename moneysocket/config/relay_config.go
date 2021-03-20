@@ -33,18 +33,12 @@ type RelayConfig struct {
 	certChainFile string
 }
 
-// getCertificate gets the certificate
-// Note: this function makes no guarantees about files being present
-// this should be verified separately. Reads certificates from filesystem
-func (r RelayConfig) getCertificate() tlsutils.TlsCert {
-	pub, _ := ioutil.ReadFile(r.certFile)
+func (r RelayConfig) certPath() string {
+	return r.certFile
+}
 
-	priv, _ := ioutil.ReadFile(r.certKey)
-
-	return tlsutils.TlsCert{
-		PublicKey:  string(pub),
-		PrivateKey: string(priv),
-	}
+func (r RelayConfig) certKeyPath() string {
+	return r.certKey
 }
 
 // Validate the configuration
@@ -68,14 +62,14 @@ func (r RelayConfig) Validate() error {
 	}
 	// just validate the ssl certs
 	if r.useTLS && validation.IsEmpty(r.certChainFile) {
-		isValid, err := tlsutils.VerifyCertificate(r.getCertificate())
+		isValid, err := tlsutils.VerifyCertificate(getCertificate(r))
 		if !isValid {
 			return err
 		}
 	}
 	// validate root certificate
 	if r.useTLS && !validation.IsEmpty(r.certChainFile) {
-		rawCert := r.getCertificate()
+		rawCert := getCertificate(r)
 		// we already validated this exists
 		chainFile, _ := ioutil.ReadFile(r.certChainFile)
 		block, _ := pem.Decode(chainFile)
@@ -99,3 +93,5 @@ func (r RelayConfig) Validate() error {
 	// TODO validate ssl certs
 	return nil
 }
+
+var _ certConfig = &RelayConfig{}

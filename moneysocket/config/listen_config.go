@@ -42,18 +42,14 @@ type ListenConfig struct {
 	defaultPort int
 }
 
-// getCertificate gets the certificate
-// Note: this function makes no guarantees about files being present
-// this should be verified separately. Reads certificates from filesystem
-func (l ListenConfig) getCertificate() tlsutils.TlsCert {
-	pub, _ := ioutil.ReadFile(l.certFile)
+// certPath is the path to the certificate file
+func (l ListenConfig) certPath() string {
+	return l.certFile
+}
 
-	priv, _ := ioutil.ReadFile(l.certKey)
-
-	return tlsutils.TlsCert{
-		PublicKey:  string(pub),
-		PrivateKey: string(priv),
-	}
+// certKeyPath is the path to the certificate key file
+func (l ListenConfig) certKeyPath() string {
+	return l.certKey
 }
 
 // Validate the configuration
@@ -81,14 +77,14 @@ func (l ListenConfig) Validate() error {
 	}
 	// just validate the ssl certs
 	if l.useTLS && validation.IsEmpty(l.certChainFile) {
-		isValid, err := tlsutils.VerifyCertificate(l.getCertificate())
+		isValid, err := tlsutils.VerifyCertificate(getCertificate(l))
 		if !isValid {
 			return err
 		}
 	}
 	// validate root certificate
 	if l.useTLS && !validation.IsEmpty(l.certChainFile) {
-		rawCert := l.getCertificate()
+		rawCert := getCertificate(l)
 		// we already validated this exists
 		chainFile, _ := ioutil.ReadFile(l.certChainFile)
 		block, _ := pem.Decode(chainFile)
@@ -112,3 +108,5 @@ func (l ListenConfig) Validate() error {
 	// TODO validate ssl certs
 	return nil
 }
+
+var _ certConfig = &ListenConfig{}

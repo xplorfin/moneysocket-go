@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Flaque/filet"
+	"github.com/xplorfin/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
