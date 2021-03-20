@@ -61,7 +61,6 @@ func TestLndConfig(t *testing.T) {
 	_, err = aliceContainer.Address()
 	Nil(t, err)
 
-
 	lndDir := filet.TmpDir(t, "")
 
 	// get alices macaroon
@@ -93,7 +92,6 @@ func TestLndConfig(t *testing.T) {
 
 	lnclient, err := config.RPCClient(context.Background())
 	Nil(t, err)
-
 
 	req := lnrpc.GetInfoRequest{}
 	_, err = lnclient.GetInfo(context.Background(), &req)
