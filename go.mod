@@ -3,7 +3,7 @@ module github.com/xplorfin/moneysocket-go
 go 1.15
 
 require (
-	github.com/brianvoe/gofakeit/v6 v6.2.2
+	github.com/brianvoe/gofakeit/v6 v6.3.0
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/buger/jsonparser v1.1.1
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
