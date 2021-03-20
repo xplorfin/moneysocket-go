@@ -19,15 +19,15 @@ type RpcConfig struct {
 }
 
 // Validate  validates the RpcConfig
-func (l RpcConfig) Validate() error {
-	return validation.ValidateStruct(&l,
+func (r RpcConfig) Validate() error {
+	return validation.ValidateStruct(&r,
 		// bind host cannot be null
-		validation.Field(&l.BindHost, validation.Required, is.Host),
+		validation.Field(&r.BindHost, validation.Required, is.Host),
 		// bind port cannot be null
-		validation.Field(&l.BindPort, validation.Required, ozzo_validators.IsValidPort),
+		validation.Field(&r.BindPort, validation.Required, ozzo_validators.IsValidPort),
 		// required when port is not null
-		validation.Field(&l.ExternalHost, validation.When(l.ExternalPort != 0, validation.Required), is.Host),
+		validation.Field(&r.ExternalHost, validation.When(r.ExternalPort != 0, validation.Required), is.Host),
 		// required when host is not null
-		validation.Field(&l.ExternalPort, validation.When(l.ExternalHost != "", validation.Required), ozzo_validators.IsValidPort),
+		validation.Field(&r.ExternalPort, validation.When(r.ExternalHost != "", validation.Required), ozzo_validators.IsValidPort),
 	)
 }

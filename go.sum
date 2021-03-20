@@ -276,6 +276,8 @@ github.com/jarcoal/httpmock v1.0.8/go.mod h1:ATjnClrvW/3tijVmpL/va5Z3aAyGvqU3gCT
 github.com/jedib0t/go-pretty v4.3.0+incompatible/go.mod h1:XemHduiw8R651AF9Pt4FwCTKeG3oo7hrHJAoznj9nag=
 github.com/jessevdk/go-flags v0.0.0-20141203071132-1679536dcc89/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
+github.com/jinzhu/copier v0.2.8 h1:N8MbL5niMwE3P4dOwurJixz5rMkKfujmMRFmAanSzWE=
+github.com/jinzhu/copier v0.2.8/go.mod h1:24xnZezI2Yqac9J61UC6/dG/k76ttpq0DdJI3QmUvro=
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/jonboulle/clockwork v0.1.0 h1:VKV+ZcuP6l3yW9doeqz6ziZGgcynBVQO+obU0+0hcPo=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
@@ -549,10 +551,13 @@ github.com/xplorfin/btcd v0.21.0-hotfix h1:zaab2dksut4t4J9jEMIOjSilMIhSuYVRUitLU
 github.com/xplorfin/btcd v0.21.0-hotfix/go.mod h1:Sv4JPQ3/M+teHz9Bo5jBpkNcP0x6r7rdihlNL/7tTAs=
 github.com/xplorfin/docker-utils v0.12.0 h1:vLEgF6JUHhD9iHmZVfpMHitlMS5deCpqZaIHi+cZFsY=
 github.com/xplorfin/docker-utils v0.12.0/go.mod h1:h96wChqVjb0V/uqCk+hxYkN3CMYyhmUsupbBCBX9bSo=
-github.com/xplorfin/lndmock v0.17.0 h1:YLfZnNS8fh8QsdI7InJ02Y4y1Vj3+66mgFy9uTtDFrI=
-github.com/xplorfin/lndmock v0.17.0/go.mod h1:ZapUgvf9ZVOP5XnE/J/B4PzvgCmlzcGlTW0F53M0HOc=
-github.com/xplorfin/netutils v0.28.0 h1:VTNwUfrPlCMRq0IkZCDhT4gHMXXCyStcqwZDovDgLqg=
+github.com/xplorfin/filet v0.1.0 h1:RjEd3J76Cpia+iQXPLymw5ttrtlTI9AByoUJTu0lLEY=
+github.com/xplorfin/filet v0.1.0/go.mod h1:yfDth5y4F/huKhVZIzmR1JjFA7JKVskJJMQoSIGlPQM=
+github.com/xplorfin/lndmock v0.19.0 h1:Ts5/phKmx3ND5Cm5EMqI352kwESz13pSNYABzYpSEzs=
+github.com/xplorfin/lndmock v0.19.0/go.mod h1:mOFzDWMhBnL5MQsvK0s0naJ4CdbzEn5lcMszwdVoUJE=
 github.com/xplorfin/netutils v0.28.0/go.mod h1:76o2O95Nb0zBmA+0RSnf49I7JsI6Ul4XqM/5f7VnK2E=
+github.com/xplorfin/netutils v0.29.0 h1:6gOjqaK6P/j1gUUf6OpkxVbyTcfm6wPiRPESOGFpkUs=
+github.com/xplorfin/netutils v0.29.0/go.mod h1:2dfFzI8bQH46AJ05vrpPpL2stupmNOmuH6X+LuPxUzo=
 github.com/xplorfin/ozzo-validators v0.26.0 h1:hOORXftyz2kdgix9O2BUqNJ1BDzU5W3fz7g7eH8Cuhk=
 github.com/xplorfin/ozzo-validators v0.26.0/go.mod h1:Gmzc2TVKyrIgRutu7/RExUVt3BNRxCC6WB7OaM7ipbw=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=

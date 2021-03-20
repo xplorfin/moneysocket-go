@@ -20,6 +20,8 @@ type Config struct {
 	RpcConfig RpcConfig
 	// RelayConfig defines the configuration for the relay server (see: https://git.io/JmrYJ )
 	RelayConfig RelayConfig
+	// LndConfig defines the configuration for hooking up with the lnd server
+	LndConfig LndConfig
 }
 
 // NewConfig creates a new config
