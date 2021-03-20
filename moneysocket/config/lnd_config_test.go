@@ -3,13 +3,14 @@ package config
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/jinzhu/copier"
 	"github.com/lightningnetwork/lnd/lnrpc"
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/filet"
 	mock "github.com/xplorfin/lndmock"
-	"testing"
 )
 
 // Copy copies the LndConfig for testing
