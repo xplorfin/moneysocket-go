@@ -20,11 +20,6 @@ type Lnd struct {
 	pendingPaymentHashes [][]byte
 }
 
-// RecvPaid receives an invoice payment
-func (l *Lnd) RecvPaid(preimage string, msats int) {
-	l.paidRecvCb(preimage, msats)
-}
-
 // NewLnd generates a new lnd client from a given config
 // TODO use streaming for invoices
 func NewLnd(config *config.Config) (lnd *Lnd, err error) {
@@ -38,6 +33,11 @@ func NewLnd(config *config.Config) (lnd *Lnd, err error) {
 		paidRecvCb: nil,
 		client:     client,
 	}, nil
+}
+
+// RecvPaid receives an invoice payment
+func (l *Lnd) RecvPaid(preimage string, msats int) {
+	l.paidRecvCb(preimage, msats)
 }
 
 // RegisterPaidRecvCb registers the callback
