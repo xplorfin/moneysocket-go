@@ -1,6 +1,9 @@
 package relay
 
 import (
+	"log"
+	"time"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer/relay"
@@ -8,21 +11,19 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer/websocket"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"log"
-	"time"
 )
 
 // Relay relays messages to/from terminus
 type Relay struct {
 	// config is the terminus config used for starting the relay.
 	// technically, we could use config.RelayConfig here, as nothing else is (should be) used
-	config          *config.Config
+	config *config.Config
 	// websocketLayer is the websocket layer used for communications with browsers
-	websocketLayer  *websocket.IncomingWebsocketLayer
+	websocketLayer *websocket.IncomingWebsocketLayer
 	// rendezvousLayer is responsible for rendezvousing with different nexuses
 	rendezvousLayer *rendezvous.IncomingRendezvousLayer
 	// relayLayer is responsible for relaying messages to their peer nexuses
-	relayLayer      *relay.RelayLayer
+	relayLayer *relay.RelayLayer
 }
 
 // NewRelay creates a new relay from a config and starts a looping info call

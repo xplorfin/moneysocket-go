@@ -40,18 +40,18 @@ type Layer interface {
 type BaseLayer struct {
 	// LayerName is the name of the current layer this is
 	// a string rather than a method call to make debugging easier
-	LayerName    string
+	LayerName string
 	// OnLayerEvent is a nullable function to be called when a layer
 	// event occurs
 	OnLayerEvent OnLayerEventFn
 	// OnAnnounce is called when a nexus is announced to the layer (from below)
-	OnAnnounce   OnAnnounceFn
+	OnAnnounce OnAnnounceFn
 	// OnRevoke is called when a nexus is revoked from the layer (from below)
-	OnRevoke     OnRevokeFn
+	OnRevoke OnRevokeFn
 	// Nexuses is a thread-safe map of Nexuses to their ids uuid[nexus]
-	Nexuses      NexusMap
+	Nexuses NexusMap
 	// Announced is a thread-safe map of Nexuses to their ids uuid[nexus]
-	Announced    NexusMap
+	Announced NexusMap
 	// BelowNexuses is a thread-safe map of BelowNexuses to their ids uuid[nexus]
 	BelowNexuses NexusMap
 	// NexusByBelow is a map of below nexuses by nexus[uuid]

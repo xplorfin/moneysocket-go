@@ -49,9 +49,10 @@ func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nex
 	}
 }
 
-func (o *IncomingRendezvousLayer) ToString() string  {
+func (o *IncomingRendezvousLayer) ToString() string {
 	return o.directory.ToString()
 }
+
 // RevokeNexus removes the nexus from directories/layers
 func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	belowUuid, _ := o.NexusByBelow.Get(belowNexus.UUID())
