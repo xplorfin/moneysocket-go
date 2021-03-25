@@ -19,13 +19,13 @@ require (
 	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
 	github.com/mvo5/goconfigparser v0.0.0-20201015074339-50f22f44deb5
 	github.com/posener/wstest v1.2.0
-	github.com/prometheus/common v0.19.0
+	github.com/prometheus/common v0.20.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/xplorfin/filet v0.1.0
-	github.com/xplorfin/lndmock v0.19.0
-	github.com/xplorfin/netutils v0.29.0
+	github.com/xplorfin/lndmock v0.21.0
+	github.com/xplorfin/netutils v0.34.0
 	github.com/xplorfin/ozzo-validators v0.26.0
 	github.com/xplorfin/tlsutils v0.18.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect

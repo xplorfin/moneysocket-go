@@ -3,13 +3,14 @@ package lightning
 import (
 	"context"
 	"crypto/tls"
+	"testing"
+
 	"github.com/lightningnetwork/lnd/lnrpc"
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/filet"
 	mock "github.com/xplorfin/lndmock"
 	terminusConfig "github.com/xplorfin/moneysocket-go/moneysocket/config"
 	"gopkg.in/macaroon.v2"
-	"testing"
 )
 
 type LndTestNode struct {
@@ -34,18 +35,17 @@ type LndTestNode struct {
 
 // NewLndTestNode generates a new lnd test node
 // note: the btcd container should be created and the mocker should be initialized before this step
-func NewLndTestNode(t *testing.T, mocker *mock.LightningMocker, name string)  LndTestNode {
+func NewLndTestNode(t *testing.T, mocker *mock.LightningMocker, name string) LndTestNode {
 	var err error
 	var tlsCert string
 	node := LndTestNode{
 		// LndContainer this will be replaced later in the function and is not usable
 		LndContainer: mock.LndContainer{},
-		t: t,
+		t:            t,
 	}
 	// start alice's lnd instance
 	node.LndContainer, err = mocker.CreateLndContainer(name)
 	Nil(t, err)
-
 
 	// get address
 	node.address, err = node.Address()
@@ -58,7 +58,6 @@ func NewLndTestNode(t *testing.T, mocker *mock.LightningMocker, name string)  Ln
 	node.mac, err = node.GetAdminMacaroon()
 	Nil(t, err)
 
-
 	rawMac, err := node.mac.MarshalBinary()
 	Nil(t, err)
 	node.macFile = filet.TmpBinFile(t, "", rawMac).Name()
@@ -70,7 +69,7 @@ func NewLndTestNode(t *testing.T, mocker *mock.LightningMocker, name string)  Ln
 	return node
 }
 
-func (l LndTestNode) LndConfig() terminusConfig.LndConfig  {
+func (l LndTestNode) LndConfig() terminusConfig.LndConfig {
 	return terminusConfig.LndConfig{
 		LndDir:       filet.TmpDir(l.t, ""),
 		MacaroonPath: l.macFile,
@@ -81,36 +80,32 @@ func (l LndTestNode) LndConfig() terminusConfig.LndConfig  {
 	}
 }
 
+func TestLnd(t *testing.T) {
+	mocker := mock.NewLightningMocker()
+	defer func() {
+		Nil(t, mocker.Teardown())
+	}()
 
-func TestLnd(t *testing.T)  {
-		mocker := mock.NewLightningMocker()
-		defer func() {
-			Nil(t, mocker.Teardown())
-		}()
+	err := mocker.Initialize()
+	Nil(t, err)
 
-		err := mocker.Initialize()
-		Nil(t, err)
+	// start btcd as a prereq to lnd
+	btcdContainer, err := mocker.CreateBtcdContainer()
+	Nil(t, err)
 
-		// start btcd as a prereq to lnd
-		btcdContainer, err := mocker.CreateBtcdContainer()
-		Nil(t, err)
+	alice := NewLndTestNode(t, &mocker, "alice")
 
+	err = btcdContainer.MineToAddress(alice.address, 500)
+	Nil(t, err)
 
-		alice := NewLndTestNode(t, &mocker, "alice")
+	aliceConfig := alice.LndConfig()
 
+	Nil(t, err)
 
-		err = btcdContainer.MineToAddress(alice.address, 500)
-		Nil(t, err)
+	lnclient, err := aliceConfig.RPCClient(context.Background())
+	Nil(t, err)
 
-
-		aliceConfig := alice.LndConfig()
-
-		Nil(t, err)
-
-		lnclient, err := aliceConfig.RPCClient(context.Background())
-		Nil(t, err)
-
-		req := lnrpc.GetInfoRequest{}
-		_, err = lnclient.GetInfo(context.Background(), &req)
-		Nil(t, err)
-	}
+	req := lnrpc.GetInfoRequest{}
+	_, err = lnclient.GetInfo(context.Background(), &req)
+	Nil(t, err)
+}
