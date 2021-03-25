@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/xplorfin/moneysocket-go/moneysocket/lightning"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
@@ -18,18 +20,33 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+// Terminus is the app
 type Terminus struct {
-	config    *config.Config
+	// config is the terminus app config
+	config *config.Config
+	// directory is the terminus directory
 	directory *TerminusDirectory
-	stack     *TerminusStack
+	// stack is the terminus stack
+	stack *TerminusStack
+	// lightning is the lightning driver used to interact with the lnd node
+	lightning *lightning.Lightning
 }
 
-func NewTerminus(config *config.Config) Terminus {
+// NewTerminus creates a Terminus node from a config
+func NewTerminus(config *config.Config) (terminus Terminus, err error) {
+	var lightningClient lightning.Lightning
+	if config.LndConfig.HasLndConfig() {
+		lightningClient, err = lightning.NewLnd(config)
+		if err != nil {
+			return terminus, err
+		}
+	}
 	return Terminus{
 		config:    config,
 		directory: NewTerminusDirectory(config),
 		stack:     NewTerminusStack(config),
-	}
+		lightning: &lightningClient,
+	}, err
 }
 
 // todo break this out into seperate methods

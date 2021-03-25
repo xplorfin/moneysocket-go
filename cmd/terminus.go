@@ -75,7 +75,10 @@ func Start(args []string) {
 					return err
 				}
 
-				server := terminus.NewTerminus(&cfg)
+				server, err := terminus.NewTerminus(&cfg)
+				if err != nil {
+					return err
+				}
 				return server.Start(context.Context)
 			},
 		},
