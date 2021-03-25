@@ -1,11 +1,9 @@
 package lightning
 
 import (
-	"context"
 	"crypto/tls"
 	"testing"
 
-	"github.com/lightningnetwork/lnd/lnrpc"
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/filet"
 	mock "github.com/xplorfin/lndmock"
@@ -13,6 +11,7 @@ import (
 	"gopkg.in/macaroon.v2"
 )
 
+// LndTestNode is a test node in lnd
 type LndTestNode struct {
 	mock.LndContainer
 	// t is a pointer to the tessting object
@@ -93,19 +92,46 @@ func TestLnd(t *testing.T) {
 	btcdContainer, err := mocker.CreateBtcdContainer()
 	Nil(t, err)
 
+	// create an alice node
 	alice := NewLndTestNode(t, &mocker, "alice")
 
+	err = btcdContainer.MineToAddress(alice.address, 100)
+	Nil(t, err)
+
+	// create an bob node
+	bob := NewLndTestNode(t, &mocker, "bob")
+
+	err = btcdContainer.MineToAddress(bob.address, 100)
+	Nil(t, err)
+
+	// open bob->alice channel
+	err = bob.OpenChannel(alice.pubkey, alice.address, 1000000)
+	Nil(t, err)
+	// open alice->bob channel
+	err = alice.OpenChannel(bob.pubkey, bob.address, 1000000)
+	Nil(t, err)
+
+	// mine blocks to process channels
 	err = btcdContainer.MineToAddress(alice.address, 500)
 	Nil(t, err)
 
-	aliceConfig := alice.LndConfig()
-
+	// create alice lnd node
+	aliceLnd, err := NewLnd(&terminusConfig.Config{LndConfig: alice.LndConfig()})
 	Nil(t, err)
 
-	lnclient, err := aliceConfig.RPCClient(context.Background())
+	// get an invoice from alice
+	payRequest, err := aliceLnd.GetInvoice(1000)
 	Nil(t, err)
 
-	req := lnrpc.GetInfoRequest{}
-	_, err = lnclient.GetInfo(context.Background(), &req)
+	// create alice lnd node
+	bobLnd, err := NewLnd(&terminusConfig.Config{LndConfig: bob.LndConfig()})
 	Nil(t, err)
+
+	// TODO, right now we get : channels cannot be created before the wallet is fully synced
+	// lndmock needs to be modified to fix this
+	// get an invoice from alice
+	_ = payRequest
+	_ = bobLnd
+	//_, _, err = bobLnd.PayInvoice(payRequest)
+	//Nil(t, err)
 }
