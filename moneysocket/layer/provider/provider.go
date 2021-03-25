@@ -18,11 +18,14 @@ type ProviderLayer struct {
 	WaitingForApp             compat.WaitingForApp
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (o *ProviderLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
+// AnnounceNexus creates a new provider.ProviderNexus and registers it
+// also registers the providerFinishedCb (cb = callback)
 func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus := provider.NewProviderNexus(belowNexus)
 	o.TrackNexus(providerNexus, belowNexus)
@@ -30,7 +33,7 @@ func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 }
 
 func (o *ProviderLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	res, _ := o.NexusByBelow.Get(belowNexus.Uuid())
+	res, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	providerNexus, _ := o.Nexuses.Get(res)
 	o.BaseLayer.RevokeNexus(providerNexus)
 	ss := providerNexus.SharedSeed()

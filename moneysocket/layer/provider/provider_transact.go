@@ -34,6 +34,7 @@ func (p *ProviderTransactLayer) SetHandleInvoiceRequest(request compat.HandleInv
 	p.handleInvoiceRequest = request
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (p *ProviderTransactLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(p.AnnounceNexus)
 	belowLayer.SetOnRevoke(p.OnRevoke)
@@ -72,13 +73,13 @@ func (p *ProviderTransactLayer) setupTransactNexus(belowNexus nexus.Nexus) *prov
 }
 
 func (p *ProviderTransactLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	belowUuid, _ := p.NexusByBelow.Get(belowNexus.Uuid())
+	belowUuid, _ := p.NexusByBelow.Get(belowNexus.UUID())
 	providerTransactNexus, _ := p.Nexuses.Get(belowUuid)
 	p.BaseLayer.RevokeNexus(providerTransactNexus)
 	sharedSeed := providerTransactNexus.SharedSeed()
 	var nexusIndex int
 	for i, nexusSeed := range p.NexusBySharedSeed[sharedSeed.ToString()] {
-		if nexusSeed.Uuid() == providerTransactNexus.Uuid() {
+		if nexusSeed.UUID() == providerTransactNexus.UUID() {
 			nexusIndex = i
 		}
 	}

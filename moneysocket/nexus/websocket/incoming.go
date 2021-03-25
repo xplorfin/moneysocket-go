@@ -134,7 +134,7 @@ func (i *IncomingSocket) Name() string {
 	return i.name
 }
 
-func (i IncomingSocket) Uuid() uuid.UUID {
+func (i IncomingSocket) UUID() uuid.UUID {
 	return i.uuid
 }
 

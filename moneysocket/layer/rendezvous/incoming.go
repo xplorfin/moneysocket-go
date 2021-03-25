@@ -7,6 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/rendezvous"
 )
 
+// IncomingRendezvousLayer is responsible for managing rendezvous' between peernexuses
+type IncomingRendezvousLayer struct {
+	*layer.BaseLayer
+	// directory is used for peering nexuses
+	directory *rendezvous.RendezvousDirectory
+}
+
+// NewIncomingRendezvousLayer creates an IncomingRendezvousLayer
 func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
 	baseLayer := layer.NewBaseLayer()
 	il := IncomingRendezvousLayer{
@@ -18,16 +26,7 @@ func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
 	return &il
 }
 
-type IncomingRendezvousLayer struct {
-	*layer.BaseLayer
-	directory *rendezvous.RendezvousDirectory
-}
-
-func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
-	belowLayer.SetOnAnnounce(o.AnnounceNexus)
-	belowLayer.SetOnRevoke(o.RevokeNexus)
-}
-
+// AnnounceNexus creates a new rendezvous.IncomingRendezvousNexus and registers it
 func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewIncomingRendezvousNexus(belowNexus, o, o.directory)
 
@@ -35,6 +34,13 @@ func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus.WaitForRendezvous(o.RendezvousFinishedCb)
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+	belowLayer.SetOnAnnounce(o.AnnounceNexus)
+	belowLayer.SetOnRevoke(o.RevokeNexus)
+}
+
+// RendezvousFinishedCb is the callback for after a rendezvous is finished
 func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nexus) {
 	o.TrackNexusAnnounced(rendezvousNexus)
 	o.SendLayerEvent(rendezvousNexus, message.NexusAnnounced)
@@ -43,10 +49,14 @@ func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nex
 	}
 }
 
+func (o *IncomingRendezvousLayer) ToString() string  {
+	return o.directory.ToString()
+}
+// RevokeNexus removes the nexus from directories/layers
 func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	belowUuid, _ := o.NexusByBelow.Get(belowNexus.Uuid())
+	belowUuid, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	rendezvousNexus, _ := o.Nexuses.Get(belowUuid)
-	peerRendezvousNexus := o.directory.GetPeerNexus(rendezvousNexus.Uuid())
+	peerRendezvousNexus := o.directory.GetPeerNexus(rendezvousNexus.UUID())
 	o.BaseLayer.RevokeNexus(belowNexus)
 	if peerRendezvousNexus != nil {
 		o.directory.RemoveNexus(*peerRendezvousNexus)
@@ -55,8 +65,9 @@ func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	}
 }
 
+// GetPeerNexus is the gets the peered nexus from the directory for a nexus (using uuid)
 func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) *nexus.Nexus {
-	return o.directory.GetPeerNexus(rendezvousNexus.Uuid())
+	return o.directory.GetPeerNexus(rendezvousNexus.UUID())
 }
 
 var _ layer.Layer = &IncomingRendezvousLayer{}

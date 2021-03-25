@@ -14,11 +14,14 @@ type OutgoingRendezvousLayer struct {
 	layer.BaseLayer
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (o *OutgoingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
+// AnnounceNexus creates a new rendezvous.OutgoingRendezvousNexus and registers it
+// a rendezvous is started and if completed OutgoingRendezvousLayer.RendezvousFinishedCb is called
 func (o *OutgoingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewOutgoingRendezvousNexus(belowNexus, o)
 	o.TrackNexus(rendezvousNexus, belowNexus)

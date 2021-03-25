@@ -16,6 +16,7 @@ type IncomingWebsocketLayer struct {
 	WebsocketNexus *websocket.WebsocketNexus
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(i.OnAnnounce)
 	belowLayer.SetOnRevoke(i.OnRevoke)
@@ -33,6 +34,7 @@ func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 	return &is
 }
 
+// AnnounceNexus creates a new websocket.WebsocketNexus and registers it
 func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	websocketNexus := websocket.NewWebsocketNexus(belowNexus, i)
 	i.WebsocketNexus = websocketNexus

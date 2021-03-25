@@ -124,6 +124,7 @@ func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
+// RevokeNexus removes the nexus from directories/layers. Calls OnRevoke
 func (c *ConsumerStack) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = nil
 	c.sharedSeed = &beacon.SharedSeed{}

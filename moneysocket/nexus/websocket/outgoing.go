@@ -107,7 +107,7 @@ func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
 	}
 }
 
-func (i *OutgoingSocket) Uuid() uuid.UUID {
+func (i *OutgoingSocket) UUID() uuid.UUID {
 	return i.uuid
 }
 
