@@ -6,42 +6,54 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// MoneysocketRequest is an interface for requests
 type MoneysocketRequest interface {
 	base.MoneysocketMessage
+	// UUID is the uuid of the of the request
 	UUID() string
+	// RequestName gets the request name
 	RequestName() string
+	// MessageType is the type of the message
 	MessageType() base.MessageType
 }
 
+// BaseMoneySocketRequest is a moneysocket request
 type BaseMoneySocketRequest struct {
 	base.MoneysocketMessage
-	BaseUUID    string
+	// BaseUUID is the uuid of the request
+	BaseUUID string
+	// RequestType is the request type
 	RequestType base.MessageType
 }
 
+// MessageClass is the base.MessageClass. This is always base.Request
 func (b BaseMoneySocketRequest) MessageClass() base.MessageClass {
 	return base.Request
 }
 
+// UUID is the uuid of the BaseMoneySocketRequest
 func (b BaseMoneySocketRequest) UUID() string {
 	return b.BaseUUID
 }
 
+// RequestName gets the request name from the MessageClass
 func (b BaseMoneySocketRequest) RequestName() string {
 	return b.MessageType().ToString()
 }
 
-// get the message type
+// MessageType gets the message type
 func (b BaseMoneySocketRequest) MessageType() base.MessageType {
 	return b.RequestType
 }
 
 const (
+	// UUIDKey is the key used when encoding json
 	UUIDKey = "request_uuid"
+	// NameKey is the key used for encoding json
 	NameKey = "request_name"
 )
 
-// create a moneysocket request
+// EncodeMoneysocketRequest creates a moneysocket request
 func EncodeMoneysocketRequest(msg MoneysocketRequest, toEncode map[string]interface{}) error {
 	err := base.EncodeMoneysocketMessage(msg, toEncode)
 	if err != nil {

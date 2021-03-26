@@ -154,7 +154,7 @@ func (t *Terminus) GetInfo() (res string) {
 }
 
 // Create creates an account with a given number of msats and add it to the directory
-func (t *Terminus) Create(msats int) account.Db {
+func (t *Terminus) Create(msats int) account.DB {
 	name := t.directory.GenerateAccountName()
 	acct := account.NewAccountDb(name, t.config)
 	acct.Details.Wad = wad.BitcoinWad(float64(msats))

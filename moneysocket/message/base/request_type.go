@@ -1,7 +1,6 @@
 package base
 
-// TODO: move to map
-//covers both request and notifications
+// MessageType is the message or notification type
 type MessageType int
 
 const (

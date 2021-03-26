@@ -15,7 +15,7 @@ type OutgoingRendezvousLayer struct {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *OutgoingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *OutgoingRendezvousLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -44,4 +44,4 @@ func NewOutgoingRendezvousLayer() *OutgoingRendezvousLayer {
 	}
 }
 
-var _ layer.Layer = &OutgoingRendezvousLayer{}
+var _ layer.LayerBase = &OutgoingRendezvousLayer{}

@@ -36,7 +36,7 @@ func NewOutgoingConsumerStack() *OutgoingConsumerStack {
 	return &outgoingConsumerStack
 }
 
-func (o *OutgoingConsumerStack) SetupRendezvousLayer(belowLayer layer.Layer) {
+func (o *OutgoingConsumerStack) SetupRendezvousLayer(belowLayer layer.LayerBase) {
 	o.rendezvousLayer = rendezvous.NewOutgoingRendezvousLayer()
 	o.rendezvousLayer.RegisterAboveLayer(belowLayer)
 	o.rendezvousLayer.RegisterLayerEvent(o.sendStackEvent, message.OutgoingRendezvous)

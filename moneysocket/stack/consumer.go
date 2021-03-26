@@ -38,15 +38,15 @@ func NewConsumerStack() *ConsumerStack {
 	return &c
 }
 
-func (c *ConsumerStack) SetupConsumerLayer(belowLayer layer.Layer) {
+func (c *ConsumerStack) SetupConsumerLayer(belowLayer layer.LayerBase) {
 	c.consumerLayer = consumer.NewConsumerLayer()
 	c.consumerLayer.RegisterAboveLayer(belowLayer)
 	c.consumerLayer.RegisterLayerEvent(c.sendStackEvent, message.Consumer)
 	c.consumerLayer.SetOnPing(c.onPing)
 }
 
-func (c *ConsumerStack) SetupTransactLayer(belowLayer layer.Layer) {
-	c.transactLayer = transact.NewConsumerTransactionLayer()
+func (c *ConsumerStack) SetupTransactLayer(belowLayer layer.LayerBase) {
+	c.transactLayer = transact.NewConsumerTransactLayer()
 	c.transactLayer.RegisterAboveLayer(belowLayer)
 	c.transactLayer.RegisterLayerEvent(c.sendStackEvent, message.Consumer)
 	c.transactLayer.SetOnInvoice(c.onInvoice)

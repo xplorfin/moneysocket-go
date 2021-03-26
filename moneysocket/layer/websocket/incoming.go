@@ -17,7 +17,7 @@ type IncomingWebsocketLayer struct {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(i.OnAnnounce)
 	belowLayer.SetOnRevoke(i.OnRevoke)
 }
@@ -56,4 +56,4 @@ func (i *IncomingWebsocketLayer) Listen(wsURL string, tlsInfo *server.TLSInfo) (
 	return server.Listen(wsURL, tlsInfo, i.IncomingSocket.ServeHTTP)
 }
 
-var _ layer.Layer = &IncomingWebsocketLayer{}
+var _ layer.LayerBase = &IncomingWebsocketLayer{}

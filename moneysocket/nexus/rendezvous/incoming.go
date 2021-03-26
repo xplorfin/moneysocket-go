@@ -22,7 +22,7 @@ type IncomingRendezvousNexus struct {
 
 const IncomingRendezvousNexusName = "IncomingRendezvousNexus"
 
-func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *Directory) *IncomingRendezvousNexus {
+func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.LayerBase, directory *Directory) *IncomingRendezvousNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingRendezvousNexusName, belowNexus, layer)
 	og := IncomingRendezvousNexus{
 		NexusBase: &baseNexus,

@@ -35,7 +35,7 @@ func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -71,4 +71,4 @@ func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) *nex
 	return o.directory.GetPeerNexus(rendezvousNexus.UUID())
 }
 
-var _ layer.Layer = &IncomingRendezvousLayer{}
+var _ layer.LayerBase = &IncomingRendezvousLayer{}

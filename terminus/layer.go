@@ -78,7 +78,7 @@ func (o *Layer) HandleProviderInfoRequest(ss beacon.SharedSeed) {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)
 }
@@ -89,4 +89,4 @@ func NewTerminusLayer() *Layer {
 	}
 }
 
-var _ layer.Layer = &Layer{}
+var _ layer.LayerBase = &Layer{}

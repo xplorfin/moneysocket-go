@@ -16,7 +16,7 @@ type IncomingLocalNexus struct {
 
 const IncomingLocalNexusName = "IncomingLocalNexus"
 
-func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) *IncomingLocalNexus {
+func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.LayerBase) *IncomingLocalNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingLocalNexusName, belowNexus, layer)
 	og := IncomingLocalNexus{
 		NexusBase: &baseNexus,

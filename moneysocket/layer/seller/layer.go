@@ -65,7 +65,7 @@ func (s *Layer) SetupSellerNexus(belowNexus nexus.Nexus) *seller.Nexus {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (s *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (s *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	s.SetOnAnnounce(belowLayer.AnnounceNexus)
 	s.SetOnRevoke(belowLayer.RevokeNexus)
 }
@@ -110,4 +110,4 @@ func (s *Layer) NexusWaitingForApp(seed *beacon.SharedSeed, sellerNexus nexus.Ne
 // make sure that the seller layer is compatible with interfaces used for calling
 // non-standard layer methods and standard layer methods
 var _ compat.SellingLayerInterface = &Layer{}
-var _ layer.Layer = &Layer{}
+var _ layer.LayerBase = &Layer{}

@@ -54,7 +54,7 @@ func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, se
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)
 }
@@ -66,4 +66,4 @@ func (o *OutgoingWebsocketLayer) InitiateCloseAll() {
 	})
 }
 
-var _ layer.Layer = &OutgoingWebsocketLayer{}
+var _ layer.LayerBase = &OutgoingWebsocketLayer{}

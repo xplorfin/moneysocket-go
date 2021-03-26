@@ -9,7 +9,8 @@ type OnLayerEventFn = func(layerName string, nexus nexusHelper.Nexus, event stri
 type OnAnnounceFn = func(nexus nexusHelper.Nexus)
 type OnRevokeFn = func(nexus nexusHelper.Nexus)
 
-type Layer interface {
+// nolint
+type LayerBase interface {
 	// set on layer event
 	SetOnLayerEvent(o OnLayerEventFn)
 	// set on announce event
@@ -19,7 +20,7 @@ type Layer interface {
 	// register above layer events with current layer
 	// must be done here since announce nexus
 	// is not available form base layer
-	RegisterAboveLayer(belowLayer Layer)
+	RegisterAboveLayer(belowLayer LayerBase)
 	// register layer event with nexuses
 	RegisterLayerEvent(fn OnLayerEventFn, layerName string)
 	// announce nexusHelper

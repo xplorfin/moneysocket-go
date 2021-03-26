@@ -31,7 +31,7 @@ type Info struct {
 	Items      []notification.Item `json:"items"`
 }
 
-func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) *Nexus {
+func NewSellerNexus(belowNexus nexus.Nexus, layer layer.LayerBase) *Nexus {
 	baseNexus := base.NewBaseNexusFull(SellerNexusName, belowNexus, layer)
 	sn := Nexus{
 		&baseNexus,

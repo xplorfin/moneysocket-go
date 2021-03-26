@@ -8,14 +8,16 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-// TODO handle invoices
+// OnInvoice handles an invoice request
 type OnInvoice func(transactNexus nexus.Nexus, invoice string, requestReferenceUuid string)
 
-// TODO handl epreimages
+// OnPreimage handles a preimage request
 type OnPreimage func(transactNexus nexus.Nexus, preimage string, requestReferenceUuid string)
 
+// OnProviderInfo handles a provider info request
 type OnProviderInfo func(consumerTransactNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage)
 
+// ConsumerTrackNexus is used for interacting with a consumer via the ConsumerLayer
 type ConsumerTrackNexus struct {
 	nexus.Nexus
 	// invoice event handler
@@ -28,6 +30,7 @@ type ConsumerTrackNexus struct {
 
 const ConsumerTrackNexusName = "ConsumerTrackNexus"
 
+// NewConsumerTransactNexus creates a ConsumerTrackNexus
 func NewConsumerTransactNexus(belowNexus nexus.Nexus) *ConsumerTrackNexus {
 	c := ConsumerTrackNexus{
 		base.NewBaseNexusBelow(ConsumerTrackNexusName, belowNexus),
@@ -40,6 +43,7 @@ func NewConsumerTransactNexus(belowNexus nexus.Nexus) *ConsumerTrackNexus {
 	return &c
 }
 
+// HandleLayerNotification handles Opinion specific notifications
 func (c ConsumerTrackNexus) HandleLayerNotification(msg notification.MoneysocketNotification) {
 	if msg.RequestType() == moneysocket_message.NotifyOpinionInvoice {
 		notifyMsg := msg.(notification.NotifyInvoice)
@@ -54,6 +58,7 @@ func (c ConsumerTrackNexus) HandleLayerNotification(msg notification.Moneysocket
 	}
 }
 
+// IsLayerMessage determines if a message needs to be handled by this layer
 func (c ConsumerTrackNexus) IsLayerMessage(msg moneysocket_message.MoneysocketMessage) bool {
 	if msg.MessageClass() != moneysocket_message.Notification {
 		return false
@@ -63,6 +68,7 @@ func (c ConsumerTrackNexus) IsLayerMessage(msg moneysocket_message.MoneysocketMe
 		notifyMsg.RequestType() == moneysocket_message.NotifyPreimage
 }
 
+// OnMessage handles the message if relevant to this alyer
 func (c ConsumerTrackNexus) OnMessage(belowNexus nexus.Nexus, message moneysocket_message.MoneysocketMessage) {
 	if !c.IsLayerMessage(message) {
 		c.Nexus.OnMessage(belowNexus, message)

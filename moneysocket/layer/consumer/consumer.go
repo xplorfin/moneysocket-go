@@ -39,7 +39,7 @@ func (c *Layer) SetupConsumerNexus(belowNexus nexus.Nexus) {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (c *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (c *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.RevokeNexus)
 }
@@ -71,4 +71,4 @@ func (c *Layer) ConsumerFinishedCb(consumerNexus consumer.Nexus) {
 	consumerNexus.StartPinging()
 }
 
-var _ layer.Layer = &Layer{}
+var _ layer.LayerBase = &Layer{}

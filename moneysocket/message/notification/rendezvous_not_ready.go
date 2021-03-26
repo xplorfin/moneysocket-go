@@ -26,7 +26,7 @@ func (r RendezvousNotReady) MustBeClearText() bool {
 
 func (r RendezvousNotReady) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(r, m)
+	err := EncodeMoneySocketNotification(r, m)
 	if err != nil {
 		return nil, err
 	}

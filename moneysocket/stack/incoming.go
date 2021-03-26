@@ -43,7 +43,7 @@ func (i *IncomingStack) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRend
 	i.relayLayer.RegisterLayerEvent(i.SendStackEvent, message.Relay)
 }
 
-func (i *IncomingStack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer2 layer.Layer) {
+func (i *IncomingStack) SetupRendezvousLayer(belowLayer1 layer.LayerBase, belowLayer2 layer.LayerBase) {
 	i.rendezvousLayer = rendezvous.NewIncomingRendezvousLayer()
 	i.rendezvousLayer.RegisterAboveLayer(belowLayer1)
 	i.rendezvousLayer.RegisterAboveLayer(belowLayer2)
@@ -67,7 +67,7 @@ func (i *IncomingStack) SendStackEvent(layerName string, nexus nexusHelper.Nexus
 
 // RegisterAboveLayer does nothing. It is here to satisfy the interface since IncomingStack must
 // act as a layer
-func (i *IncomingStack) RegisterAboveLayer(belowLayer layer.Layer) {
+func (i *IncomingStack) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	// do nothing
 }
 
@@ -102,4 +102,4 @@ func (i *IncomingStack) Listen() error {
 	return i.websocketLayer.Listen(i.GetListenURL(), nil)
 }
 
-var _ layer.Layer = &IncomingStack{}
+var _ layer.LayerBase = &IncomingStack{}

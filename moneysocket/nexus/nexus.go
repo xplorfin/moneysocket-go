@@ -6,7 +6,10 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// OnMessage is a handler function for processing a base.MoneysocketMessage
 type OnMessage = func(belowNexus Nexus, msg base.MoneysocketMessage)
+
+// OnBinMessage is a handler function for processing a binary message
 type OnBinMessage = func(belowNexus Nexus, msg []byte)
 
 type Nexus interface {

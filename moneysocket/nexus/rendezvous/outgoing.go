@@ -18,7 +18,7 @@ type OutgoingRendezvousNexus struct {
 
 const OutgoingRendezvousNexusName = "OutgoingRendezvousNexus"
 
-func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) *OutgoingRendezvousNexus {
+func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.LayerBase) *OutgoingRendezvousNexus {
 	bnf := base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer)
 	og := OutgoingRendezvousNexus{
 		NexusBase: &bnf,

@@ -7,12 +7,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// RendezvousEnd ends a rendezvous of a given id
 type RendezvousEnd struct {
 	BaseMoneySocketNotification
 	rendezvousID string
 }
 
-// create a new rendezvous end notification with a given rendezvous id
+// NewRendezvousEnd creates a new rendezvous end notification with a given rendezvous id
 func NewRendezvousEnd(rid, requestUUID string) RendezvousEnd {
 	return RendezvousEnd{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvousEndNotification, requestUUID),
@@ -20,15 +21,17 @@ func NewRendezvousEnd(rid, requestUUID string) RendezvousEnd {
 	}
 }
 
+// MustBeClearText determines wether or not the message must be clear text
 func (r RendezvousEnd) MustBeClearText() bool {
 	return true
 }
 
 const rendezvousIDKey = "rendezvous_id"
 
+// ToJSON converts a RendezvousEnd message to a json payload
 func (r RendezvousEnd) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(r, m)
+	err := EncodeMoneySocketNotification(r, m)
 	if err != nil {
 		return nil, err
 	}
@@ -36,6 +39,7 @@ func (r RendezvousEnd) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
+// DecodeRendezvousEnd decodes a rendezvous message
 func DecodeRendezvousEnd(payload []byte) (RendezvousEnd, error) {
 	notiification, err := DecodeRequest(payload)
 	if err != nil {

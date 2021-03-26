@@ -65,7 +65,7 @@ func (o *Nexus) NotifyProviderInfo(ss beacon.SharedSeed) {
 	_ = o.Send(m)
 }
 
-func NewTerminusNexus(below nexus.Nexus, layer layer.Layer) Nexus {
+func NewTerminusNexus(below nexus.Nexus, layer layer.LayerBase) Nexus {
 	bn := base.NewBaseNexusFull(NexusName, below, layer)
 	return Nexus{
 		NexusBase:                 &bn,

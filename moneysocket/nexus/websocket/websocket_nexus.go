@@ -16,7 +16,7 @@ type Nexus struct {
 	*base.NexusBase
 }
 
-func NewWebsocketNexus(belowNexus nexus.Nexus, layer layer.Layer) *Nexus {
+func NewWebsocketNexus(belowNexus nexus.Nexus, layer layer.LayerBase) *Nexus {
 	bnf := base.NewBaseNexusFull(WebsocketNexusName, belowNexus, layer)
 	n := Nexus{&bnf}
 	n.BelowNexus = &belowNexus

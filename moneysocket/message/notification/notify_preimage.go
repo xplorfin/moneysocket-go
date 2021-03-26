@@ -33,7 +33,7 @@ const (
 
 func (n NotifyPreimage) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(n, m)
+	err := EncodeMoneySocketNotification(n, m)
 	if err != nil {
 		return nil, err
 	}

@@ -21,7 +21,7 @@ func NewNotifyOpinionInvoice(requestUUID, bolt11 string) NotifyOpinionInvoice {
 
 func (n NotifyOpinionInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(n, m)
+	err := EncodeMoneySocketNotification(n, m)
 	if err != nil {
 		return nil, err
 	}

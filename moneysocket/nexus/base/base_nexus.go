@@ -18,7 +18,7 @@ type NexusBase struct {
 	name         string
 	uuid         uuid.UUID
 	BelowNexus   *nexus.Nexus
-	Layer        layer.Layer
+	Layer        layer.LayerBase
 	onMessage    nexus.OnMessage
 	onBinMessage nexus.OnBinMessage
 }
@@ -41,7 +41,7 @@ func NewBaseNexusBelow(name string, belowNexus nexus.Nexus) *NexusBase {
 	}
 }
 
-func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) NexusBase {
+func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.LayerBase) NexusBase {
 	return NexusBase{
 		name:       name,
 		uuid:       uuid.NewV4(),

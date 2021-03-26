@@ -124,7 +124,6 @@ func (c *Nexus) StartPinging() {
 			// reset done state
 			c.donePinging = make(chan bool, 1)
 			c.isPinging = false
-			break
 		// Got a tick, we should check on doSomething()
 		case <-ticker.C:
 			c.SendPing()

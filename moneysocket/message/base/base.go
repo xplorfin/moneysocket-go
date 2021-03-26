@@ -23,30 +23,7 @@ type MessageBase struct {
 	BaseMessageClass MessageClass
 }
 
-func (m MessageBase) CryptLevel() string {
-	return "AES"
-}
-
-func (m MessageBase) ProtocolVersion() string {
-	return m.BaseProtocolVersion
-}
-
-func (m MessageBase) MessageClass() MessageClass {
-	return m.BaseMessageClass
-}
-
-func (m MessageBase) MustBeClearText() bool {
-	return false
-}
-
-func (m MessageBase) ToJSON() ([]byte, error) {
-	panic("must be implemented in children classes. You can use EncodeBaseMoneysocketMessage as a helper method")
-}
-
-func (m MessageBase) IsValid() (bool, error) {
-	panic("must be implemented in children classes")
-}
-
+// NewBaseBaseMoneysocketMessage creates a new MessageBase from a given MessageClass
 func NewBaseBaseMoneysocketMessage(messageType MessageClass) MessageBase {
 	return MessageBase{
 		Time:                time.Now(),
@@ -56,15 +33,50 @@ func NewBaseBaseMoneysocketMessage(messageType MessageClass) MessageBase {
 	}
 }
 
+// CryptLevel is the cryptography level of the message
+// this can be override in the sub-class
+func (m MessageBase) CryptLevel() string {
+	return "AES"
+}
+
+// ProtocolVersion determines the version of MessageBase
+func (m MessageBase) ProtocolVersion() string {
+	return m.BaseProtocolVersion
+}
+
+// MessageClass returns the MessageClass of the message
+func (m MessageBase) MessageClass() MessageClass {
+	return m.BaseMessageClass
+}
+
+// MustBeClearText determines whether or not a message can be unencrypted
+// this can be overrided in the message class
+func (m MessageBase) MustBeClearText() bool {
+	return false
+}
+
+// ToJSON marshals the message to json
+func (m MessageBase) ToJSON() ([]byte, error) {
+	panic("must be implemented in children classes. You can use EncodeBaseMoneysocketMessage as a helper method")
+}
+
+// IsValid determines wether or not a message is valid
+// this is implemented in a sub-class
+func (m MessageBase) IsValid() (bool, error) {
+	panic("must be implemented in children classes")
+}
+
+// Timestamp is the timestamp fo the message
 func (m MessageBase) Timestamp() time.Time {
 	return m.Time
 }
 
+// Protocol is the protocol of the message
 func (m MessageBase) Protocol() string {
 	return m.BaseProtocol
 }
 
-// decode a moneysocket message from json
+// DecodeBaseBaseMoneysocketMessage decodes a moneysocket message from json
 func DecodeBaseBaseMoneysocketMessage(payload []byte) (b MessageBase, err error) {
 	// TODO get float
 	parsedTime, err := jsonparser.GetFloat(payload, timestampKey)

@@ -57,7 +57,7 @@ func (s *Stack) AnnounceNexus(terminusNexus Nexus) {
 	}
 }
 
-func (s *Stack) SetupTerminusLayer(belowLayer layer.Layer) *Layer {
+func (s *Stack) SetupTerminusLayer(belowLayer layer.LayerBase) *Layer {
 	l := NewTerminusLayer()
 	l.RegisterAboveLayer(belowLayer)
 	l.RegisterLayerEvent(s.onStackEvent, message.Terminus)
@@ -78,7 +78,7 @@ func (s *Stack) SetupWebsocketLayer() *websocket.OutgoingWebsocketLayer {
 	return l
 }
 
-func (s *Stack) SetupProviderLayer(belowLayer layer.Layer) *provider.Layer {
+func (s *Stack) SetupProviderLayer(belowLayer layer.LayerBase) *provider.Layer {
 	l := provider.NewProviderLayer()
 	l.RegisterAboveLayer(belowLayer)
 	l.RegisterLayerEvent(s.SendStackEvent, message.Provider)
@@ -86,7 +86,7 @@ func (s *Stack) SetupProviderLayer(belowLayer layer.Layer) *provider.Layer {
 	return l
 }
 
-func (s *Stack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer2 layer.Layer) *rendezvous.OutgoingRendezvousLayer {
+func (s *Stack) SetupRendezvousLayer(belowLayer1 layer.LayerBase, belowLayer2 layer.LayerBase) *rendezvous.OutgoingRendezvousLayer {
 	l := rendezvous.NewOutgoingRendezvousLayer()
 	l.RegisterAboveLayer(belowLayer1)
 	l.RegisterAboveLayer(belowLayer2)

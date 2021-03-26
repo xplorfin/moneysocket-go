@@ -21,7 +21,7 @@ type OutgoingSocket struct {
 	client.WebsocketClientProtocol
 	wasAnnounced bool
 	// protocol layer coorespond to the socket interface
-	FactoryMsProtocolLayer layer.Layer
+	FactoryMsProtocolLayer layer.LayerBase
 	// add an outgoing shared seed modules
 	OutgoingSharedSeed *beacon.SharedSeed
 	// name of the nexus (stored for debugging)

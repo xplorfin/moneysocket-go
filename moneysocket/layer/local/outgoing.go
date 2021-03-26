@@ -10,7 +10,7 @@ import (
 
 type OutgoingLocalLayer struct {
 	layer.BaseLayer
-	IncomingLocalLayer   layer.Layer
+	IncomingLocalLayer   layer.LayerBase
 	OutgoingBySharedSeed map[string]nexus.Nexus
 	IncomingBySharedSeed map[string]nexus.Nexus
 }
@@ -24,7 +24,7 @@ func NewOutgoingLocalLayer() OutgoingLocalLayer {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *OutgoingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *OutgoingLocalLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -41,7 +41,7 @@ func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-func (o *OutgoingLocalLayer) SetIncomingLayer(incomingLayer layer.Layer) {
+func (o *OutgoingLocalLayer) SetIncomingLayer(incomingLayer layer.LayerBase) {
 	o.IncomingLocalLayer = incomingLayer
 }
 
@@ -68,4 +68,4 @@ func (o *OutgoingLocalLayer) Disconnect(sharedSeed beacon.SharedSeed) {
 }
 
 // statically assert outgoing layer matches layer interface
-var _ layer.Layer = &OutgoingLocalLayer{}
+var _ layer.LayerBase = &OutgoingLocalLayer{}

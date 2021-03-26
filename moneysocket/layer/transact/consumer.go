@@ -20,7 +20,8 @@ type ConsumerTransactLayer struct {
 	consumerTransactNexus *transact.ConsumerTrackNexus
 }
 
-func NewConsumerTransactionLayer() *ConsumerTransactLayer {
+// NewConsumerTransactLayer creates a ConsumerTransactLayer
+func NewConsumerTransactLayer() *ConsumerTransactLayer {
 	c := ConsumerTransactLayer{
 		layer.NewBaseLayer(),
 		nil,
@@ -32,7 +33,7 @@ func NewConsumerTransactionLayer() *ConsumerTransactLayer {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.OnRevoke)
 }
@@ -49,7 +50,7 @@ func (c *ConsumerTransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-// setup the consumer transaction enxus
+// SetupConsumerTransactionNexus registers the consumer.ConsumerTransactNexus
 func (c *ConsumerTransactLayer) SetupConsumerTransactionNexus(belowNexus nexus.Nexus) {
 	ctn := transact.NewConsumerTransactNexus(belowNexus)
 	c.consumerTransactNexus = ctn
@@ -58,30 +59,31 @@ func (c *ConsumerTransactLayer) SetupConsumerTransactionNexus(belowNexus nexus.N
 	c.consumerTransactNexus.SetOnProviderInfo(c.onProviderInfo)
 }
 
-// call on invoice function
+// OnInvoice calls an OnInvoice function
 func (c *ConsumerTransactLayer) OnInvoice(transactNexus nexus.Nexus, invoice string, requestReferenceUUID string) {
 	if c.onInvoice != nil {
 		c.onInvoice(transactNexus, invoice, requestReferenceUUID)
 	}
 }
 
-// set function to be called when on invoice is called
+// SetOnInvoice sets a function to be called when on invoice is called
 func (c *ConsumerTransactLayer) SetOnInvoice(invoice transact.OnInvoice) {
 	c.onInvoice = invoice
 }
 
-// call on preimage function
+// OnPreImage calls the registered on preimage function
 func (c *ConsumerTransactLayer) OnPreImage(transactNexus nexus.Nexus, preimage string, requestReferenceUUID string) {
 	if c.onPreimage != nil {
 		c.onPreimage(transactNexus, preimage, requestReferenceUUID)
 	}
 }
 
-// set function to be called when onPreImage is called
+// SetOnPreimage sets a function to be called when onPreImage is called
 func (c *ConsumerTransactLayer) SetOnPreimage(preimage transact.OnPreimage) {
 	c.onPreimage = preimage
 }
 
+// OnProviderInfo calls the registered ConsumerTransactLayer.OnProviderInfo
 func (c *ConsumerTransactLayer) OnProviderInfo(consumerTransactNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	if c.onProviderInfo != nil {
 		c.onProviderInfo(consumerTransactNexus, msg)

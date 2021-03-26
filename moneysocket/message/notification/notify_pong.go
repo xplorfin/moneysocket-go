@@ -16,7 +16,7 @@ func NewNotifyPong(requestUUID string) NotifyPong {
 
 func (n NotifyPong) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(n, m)
+	err := EncodeMoneySocketNotification(n, m)
 	if err != nil {
 		return nil, err
 	}

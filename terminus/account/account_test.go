@@ -14,7 +14,7 @@ func TestGetPersistedAccounts(t *testing.T) {
 	configuration := config.NewConfig()
 	configuration.AccountPersistDir = filet.TmpDir(t, "")
 
-	testAccounts := make(map[string]Db)
+	testAccounts := make(map[string]DB)
 	for i := 0; i < testIteratons; i++ {
 		accountName := gofakeit.BeerAlcohol()
 		adb := NewAccountDb(accountName, configuration)

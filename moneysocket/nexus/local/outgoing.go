@@ -20,7 +20,7 @@ type OutgoingLocalNexus struct {
 
 const OutgoingLocalNexusName = "OutgoingLocalNexus"
 
-func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
+func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.LayerBase, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
 	bnf := base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer)
 	og := OutgoingLocalNexus{
 		NexusBase:  &bnf,

@@ -11,53 +11,62 @@ import (
 )
 
 const (
-	// get info rpc method
+	// GetInfoMethod is the rpc method for getting info
 	GetInfoMethod = "getinfo"
-	// create account rpc method
+	// CreateAccountMethod is the create account rpc method
 	CreateAccountMethod = "create"
-	// connect rpc method
+	// ConnectMethod is the connect rpc method
 	ConnectMethod = "connect"
-	// listen rpc method
+	// ListenMethod is the listen rpc method
 	ListenMethod = "listen"
 )
 
-type Client struct {
-	config *config.Config // terminus client config
-}
-
+// RPCMessage is used for getting messages from the terminus client
 type RPCMessage struct {
-	Method string     `json:"method"`
+	// Method is the rpc method (e.g. connect, listen, etc)
+	Method string `json:"method"`
+	// Params are any parameters passed in RPCMessage
 	Params [][]string `json:"params"`
 }
 
+// Client is the terminus client
+type Client struct {
+	// config is used for the terminus client
+	config *config.Config
+}
+
+// NewClient creates a new Client for querying the rpc clint
 func NewClient(config *config.Config) Client {
 	return Client{
 		config: config,
 	}
 }
 
-// get list of beacons, accounts, etc
+// GetInfo gets a list of beacons, accounts, etc
 func (t Client) GetInfo() (res string, err error) {
 	resp, err := t.ExecCmd(GetInfoMethod, []string{})
 	return t.decodeJSONResponse(resp), err
 }
 
-// create account with a given number of sats
+// CreateAccount creates account with a given number of sats
 func (t Client) CreateAccount(msats int) (res string, err error) {
 	resp, err := t.ExecCmd(CreateAccountMethod, []string{strconv.Itoa(msats)})
 	return t.decodeJSONResponse(resp), err
 }
 
+// Listen listens on a given account
 func (t Client) Listen(accountName string) (res string, err error) {
 	resp, err := t.ExecCmd(ListenMethod, []string{accountName})
 	return t.decodeJSONResponse(resp), err
 }
 
+// Connect connects an account to a beacon
 func (t Client) Connect(accountName, beacon string) (res string, err error) {
 	resp, err := t.ExecCmd(ConnectMethod, []string{accountName, beacon})
 	return t.decodeJSONResponse(resp), err
 }
 
+// ExecCmd executes a command from the Client
 func (t Client) ExecCmd(method string, argv []string) (res []byte, err error) {
 	message := RPCMessage{
 		Method: method,
@@ -88,7 +97,7 @@ func (t Client) ExecCmd(method string, argv []string) (res []byte, err error) {
 	return responseReader.Bytes(), nil
 }
 
-// decode terminus response
+// decodeJSONResponse decodes a terminus response for the client
 func (t Client) decodeJSONResponse(res []byte) string {
 	jsonRes := []string{}
 	err := json.Unmarshal(res, &jsonRes)

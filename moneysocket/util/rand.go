@@ -5,8 +5,8 @@ import (
 	"io"
 )
 
-// Adapted from https://git.io/Jt9mW
-
+// PrngIsAvailable determines wether or not pseudo-random number generation is available
+// on this device. Adapted from https://git.io/Jt9mW
 func PrngIsAvailable() bool {
 	// Assert that a cryptographically secure PRNG is available.
 	// Panic otherwise.

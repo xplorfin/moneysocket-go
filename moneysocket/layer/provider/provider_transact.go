@@ -18,7 +18,7 @@ type TransactLayer struct {
 	NexusBySharedSeed         compat.NexusBySharedSeed
 }
 
-func (p *TransactLayer) HandleProviderInfoRequest(seed beacon.SharedSeed) account.Db {
+func (p *TransactLayer) HandleProviderInfoRequest(seed beacon.SharedSeed) account.DB {
 	return p.handleProviderInfoRequest(seed)
 }
 
@@ -35,7 +35,7 @@ func (p *TransactLayer) SetHandleInvoiceRequest(request compat.HandleInvoiceRequ
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (p *TransactLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (p *TransactLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(p.AnnounceNexus)
 	belowLayer.SetOnRevoke(p.OnRevoke)
 }
@@ -119,7 +119,7 @@ func (p *TransactLayer) NotifyProviderInfo(sharedSeeds []beacon.SharedSeed) {
 	}
 }
 
-var _ layer.Layer = &TransactLayer{}
+var _ layer.LayerBase = &TransactLayer{}
 
 // use an interface to call methods in the nexus
 var _ compat.ProviderTransactLayerInterface = &TransactLayer{}

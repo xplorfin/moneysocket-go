@@ -14,12 +14,12 @@ import (
 // TODO this needs to be fully implemented
 type Layer struct {
 	layer.BaseLayer
-	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.Db
+	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.DB
 	WaitingForApp             compat.WaitingForApp
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -47,7 +47,7 @@ func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	delete(o.WaitingForApp, ss.ToString())
 }
 
-func (o *Layer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.Db {
+func (o *Layer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.DB {
 	return o.handlerProvideInfoRequest(seed)
 }
 
@@ -74,4 +74,4 @@ func NewProviderLayer() *Layer {
 	}
 }
 
-var _ layer.Layer = &Layer{}
+var _ layer.LayerBase = &Layer{}

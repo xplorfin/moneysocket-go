@@ -37,10 +37,12 @@ func NewRelay(config *config.Config) Relay {
 	return r
 }
 
+// OnStackEvent is used for any events that bubble up to Relay
 func (r *Relay) OnStackEvent(layerName string, nexus nexusHelper.Nexus, event string) {
 	// do nothing for now
 }
 
+// OutputInfo gets nexus count on a relay
 func (r *Relay) OutputInfo() {
 	for {
 		<-time.After(2 * time.Second)
@@ -56,7 +58,7 @@ func (r *Relay) SetupWebsocketLayer() *Relay {
 }
 
 // SetupRendezvousLayer sets up a rendezvous.Rendezvous layer and registers it
-func (r *Relay) SetupRendezvousLayer(belowLayer layer.Layer) *Relay {
+func (r *Relay) SetupRendezvousLayer(belowLayer layer.LayerBase) *Relay {
 	r.rendezvousLayer = rendezvous.NewIncomingRendezvousLayer()
 	r.rendezvousLayer.RegisterAboveLayer(belowLayer)
 	r.rendezvousLayer.RegisterLayerEvent(r.OnStackEvent, message.IncomingRendezvous)

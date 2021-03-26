@@ -27,7 +27,7 @@ type IncomingSocket struct {
 	// on bin message
 	onBinMessage nexusHelper.OnBinMessage
 	// protocol layer coorespond to the socket interface
-	FactoryMsProtocolLayer layer.Layer
+	FactoryMsProtocolLayer layer.LayerBase
 	FactoryMsSharedSeed    *beacon.SharedSeed
 }
 

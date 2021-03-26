@@ -35,7 +35,7 @@ const (
 	MessageClassKey = "message_class"
 )
 
-// maps are passed by reference by default https://bit.ly/35KrDps
+// EncodeMoneysocketMessage maps are passed by reference by default https://bit.ly/35KrDps
 func EncodeMoneysocketMessage(msg MoneysocketMessage, toEncode map[string]interface{}) error {
 	if toEncode == nil {
 		return fmt.Errorf("map must be initialized")

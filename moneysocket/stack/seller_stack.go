@@ -96,7 +96,7 @@ func (s *SellerStack) SetupProviderLayer() {
 	s.providerLayer.SetOnLayerEvent(func(layerName string, nexus nexus.Nexus, event string) {
 		s.OnLayerEvent(message.Provider, nexus, event)
 	})
-	s.providerLayer.SetHandlerProvideInfoRequest(func(seed beacon.SharedSeed) account.Db {
+	s.providerLayer.SetHandlerProvideInfoRequest(func(seed beacon.SharedSeed) account.DB {
 		return s.handleProviderInfoRequest(seed)
 	})
 	s.providerLayer.RegisterAboveLayer(s.rendezvousLayer)

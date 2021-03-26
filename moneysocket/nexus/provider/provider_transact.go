@@ -22,7 +22,7 @@ type TransactNexus struct {
 	HandlePayRequest     compat.HandlePayRequest
 }
 
-func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) *TransactNexus {
+func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.LayerBase) *TransactNexus {
 	nx := base.NewBaseNexusFull(TransactNexusName, belowNexus, layer)
 	pn := TransactNexus{&nx, nil, nil}
 

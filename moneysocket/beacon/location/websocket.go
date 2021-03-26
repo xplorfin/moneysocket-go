@@ -38,7 +38,7 @@ const (
 	PortTLVType = 2
 	// DefaultTLSPort defined the default wss (secure websocket, see: https://tools.ietf.org/html/rfc6455#page-55 ) port
 	DefaultTLSPort = 443
-	// Default ws port (unsecure websocket, see; https://tools.ietf.org/html/rfc6455#page-54 )
+	// DefaultNoTLSPort is the default ws port (unsecure websocket, see; https://tools.ietf.org/html/rfc6455#page-54 )
 	DefaultNoTLSPort = 80
 )
 

@@ -11,14 +11,16 @@ import (
 )
 
 const (
-	SecurePrefix   = "wss://"
+	// SecurePrefix is used for secure websocket connections
+	SecurePrefix = "wss://"
+	// UnsecurePrefix is used for unsecured websocket connetions
 	UnsecurePrefix = "ws://"
 )
 
-// listener for websocket
+// WebsocketListener is the listener for websocket
 type WebsocketListener struct{}
 
-// TODO
+// TLSInfo is a struct that contains ssl serving data
 type TLSInfo struct{}
 
 // helper for serving http and http servers

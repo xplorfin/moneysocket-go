@@ -15,7 +15,7 @@ type Nexus struct {
 
 const LocalNexusName = "LocalNexusName"
 
-func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) *Nexus {
+func NewLocalNexus(belowNexus nexus.Nexus, layer layer.LayerBase) *Nexus {
 	bnf := base.NewBaseNexusFull(LocalNexusName, belowNexus, layer)
 	ln := Nexus{
 		&bnf,
