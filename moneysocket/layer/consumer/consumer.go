@@ -21,7 +21,7 @@ func NewConsumerLayer() *ConsumerLayer {
 	}
 }
 
-// announce the nexus and start the handshake
+// AnnounceNexus creates a new consumer.ConsumerNexus and starts the handshake
 func (c *ConsumerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	c.SetupConsumerNexus(belowNexus)
 	c.TrackNexus(c.consumerNexus, belowNexus)
@@ -38,6 +38,7 @@ func (c *ConsumerLayer) SetupConsumerNexus(belowNexus nexus.Nexus) {
 	c.consumerNexus.SetOnPing(c.OnPing)
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (c *ConsumerLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.RevokeNexus)
@@ -45,7 +46,7 @@ func (c *ConsumerLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 
 func (c *ConsumerLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	// TODO add error handling
-	belowUuid, _ := c.NexusByBelow.Get(belowNexus.Uuid())
+	belowUuid, _ := c.NexusByBelow.Get(belowNexus.UUID())
 	consumerNexus, _ := c.Nexuses.Get(belowUuid)
 	c.BaseLayer.RevokeNexus(consumerNexus)
 	castedNexus := consumerNexus.(*consumer.ConsumerNexus)

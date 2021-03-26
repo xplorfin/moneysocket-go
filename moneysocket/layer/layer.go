@@ -36,16 +36,27 @@ type Layer interface {
 	RevokeNexus(belowNexus nexusHelper.Nexus)
 }
 
+// BaseLayer is used as a superclass for layers
 type BaseLayer struct {
-	LayerName    string
+	// LayerName is the name of the current layer this is
+	// a string rather than a method call to make debugging easier
+	LayerName string
+	// OnLayerEvent is a nullable function to be called when a layer
+	// event occurs
 	OnLayerEvent OnLayerEventFn
-	OnAnnounce   OnAnnounceFn
-	OnRevoke     OnRevokeFn
-
-	Nexuses      NexusMap
-	Announced    NexusMap
+	// OnAnnounce is called when a nexus is announced to the layer (from below)
+	OnAnnounce OnAnnounceFn
+	// OnRevoke is called when a nexus is revoked from the layer (from below)
+	OnRevoke OnRevokeFn
+	// Nexuses is a thread-safe map of Nexuses to their ids uuid[nexus]
+	Nexuses NexusMap
+	// Announced is a thread-safe map of Nexuses to their ids uuid[nexus]
+	Announced NexusMap
+	// BelowNexuses is a thread-safe map of BelowNexuses to their ids uuid[nexus]
 	BelowNexuses NexusMap
+	// NexusByBelow is a map of below nexuses by nexus[uuid]
 	NexusByBelow NexusUuidMap
+	// BelowByNexus is a map of nexus->uuid
 	BelowByNexus NexusUuidMap
 }
 
@@ -67,27 +78,27 @@ func (l *BaseLayer) RegisterLayerEvent(fn OnLayerEventFn, layerName string) {
 }
 
 func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
-	l.Nexuses.Store(nexus.Uuid(), nexus)
-	l.BelowNexuses.Store(belowNexus.Uuid(), belowNexus)
-	l.NexusByBelow.Store(belowNexus.Uuid(), nexus.Uuid())
-	l.BelowByNexus.Store(nexus.Uuid(), belowNexus.Uuid())
+	l.Nexuses.Store(nexus.UUID(), nexus)
+	l.BelowNexuses.Store(belowNexus.UUID(), belowNexus)
+	l.NexusByBelow.Store(belowNexus.UUID(), nexus.UUID())
+	l.BelowByNexus.Store(nexus.UUID(), belowNexus.UUID())
 	l.SendLayerEvent(nexus, message.NexusCreated)
 }
 
 func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
-	l.Nexuses.Delete(nexus.Uuid())
-	l.BelowByNexus.Delete(belowNexus.Uuid())
-	l.NexusByBelow.Delete(belowNexus.Uuid())
-	l.BelowByNexus.Delete(belowNexus.Uuid())
+	l.Nexuses.Delete(nexus.UUID())
+	l.BelowByNexus.Delete(belowNexus.UUID())
+	l.NexusByBelow.Delete(belowNexus.UUID())
+	l.BelowByNexus.Delete(belowNexus.UUID())
 	l.SendLayerEvent(nexus, message.NexusDestroyed)
 }
 
 func (l *BaseLayer) TrackNexusAnnounced(nexus nexusHelper.Nexus) {
-	l.Announced.Store(nexus.Uuid(), nexus)
+	l.Announced.Store(nexus.UUID(), nexus)
 }
 
 func (l *BaseLayer) IsNexusAnnounced(nexus nexusHelper.Nexus) bool {
-	if _, ok := l.Announced.Get(nexus.Uuid()); ok {
+	if _, ok := l.Announced.Get(nexus.UUID()); ok {
 		return true
 	}
 	return false
@@ -101,12 +112,13 @@ func (l *BaseLayer) SendLayerEvent(nexus nexusHelper.Nexus, status string) {
 
 func (l *BaseLayer) TrackNexusRevoked(nexus nexusHelper.Nexus) {
 	if l.IsNexusAnnounced(nexus) {
-		l.Announced.Delete(nexus.Uuid())
+		l.Announced.Delete(nexus.UUID())
 	}
 }
 
+// RevokeNexus removes the nexus from directories/layers
 func (l *BaseLayer) RevokeNexus(belowNexus nexusHelper.Nexus) {
-	belowUuid, _ := l.NexusByBelow.Get(belowNexus.Uuid())
+	belowUuid, _ := l.NexusByBelow.Get(belowNexus.UUID())
 	nexus, _ := l.Nexuses.Get(belowUuid)
 	l.UntrackNexus(nexus, belowNexus)
 	if l.IsNexusAnnounced(nexus) {

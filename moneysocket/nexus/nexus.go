@@ -11,7 +11,7 @@ type OnBinMessage = func(belowNexus Nexus, msg []byte)
 
 type Nexus interface {
 	// get the id for a given nexus
-	Uuid() uuid.UUID
+	UUID() uuid.UUID
 	// wether or not two nexuses are equal
 	IsEqual(n Nexus) bool
 	// called on a message, set in constructor

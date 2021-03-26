@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/xplorfin/moneysocket-go/relay"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
@@ -45,7 +47,8 @@ func TestE2E(t *testing.T) {
 	go testRelay.RunApp()
 
 	// setup test rpc server
-	testRpcServer := terminus.NewTerminus(cfg)
+	testRpcServer, err := terminus.NewTerminus(cfg)
+	assert.Nil(t, err)
 	go testRpcServer.Start(ctx)
 
 	// test rpc server hostname

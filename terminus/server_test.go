@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/xplorfin/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	nettest "github.com/xplorfin/netutils/testutils"
@@ -18,7 +20,8 @@ func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config)
 	configuration.RpcConfig.BindHost = "localhost"
 	configuration.RpcConfig.BindPort = nettest.GetFreePort(t)
 
-	server = NewTerminus(configuration)
+	server, err := NewTerminus(configuration)
+	assert.Nil(t, err)
 	return server, configuration
 }
 

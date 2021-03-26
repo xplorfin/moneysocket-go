@@ -23,11 +23,13 @@ func NewOutgoingLocalLayer() OutgoingLocalLayer {
 	}
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (o *OutgoingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
+// AnnounceNexus creates a new local.LocalNexus and registers it
 func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, o)
 

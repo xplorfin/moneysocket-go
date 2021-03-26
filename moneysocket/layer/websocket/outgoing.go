@@ -29,6 +29,7 @@ func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 	return &os
 }
 
+// AnnounceNexus creates a new nws.WebsocketNexus and registers it
 func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	websocketNexus := nws.NewWebsocketNexus(belowNexus, o)
 	o.TrackNexus(websocketNexus, belowNexus)
@@ -52,8 +53,10 @@ func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, se
 	return o.OutgoingSocketProtocol, nil
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
-	panic("implement me")
+	belowLayer.SetOnAnnounce(o.OnAnnounce)
+	belowLayer.SetOnRevoke(o.OnRevoke)
 }
 
 func (o *OutgoingWebsocketLayer) InitiateCloseAll() {

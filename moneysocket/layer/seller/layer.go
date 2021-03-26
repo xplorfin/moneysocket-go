@@ -64,13 +64,14 @@ func (s *SellerLayer) SetupSellerNexus(belowNexus nexus.Nexus) *seller.SellerNex
 	return n
 }
 
-// set the on AnnounceNexus/RevokeNexus methods in belowLayer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (s *SellerLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	s.SetOnAnnounce(belowLayer.AnnounceNexus)
 	s.SetOnRevoke(belowLayer.RevokeNexus)
 }
 
-// initializes the handshake with the buyer nexus
+// AnnounceNexus creates a new SellerNexus and registers it
+// also registers the sellerFinished callback
 func (s *SellerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	log.Println("buyer layer got nexus, starting handshake")
 	s.SellerNexus = s.SetupSellerNexus(belowNexus)

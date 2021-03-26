@@ -20,11 +20,6 @@ type Lnd struct {
 	pendingPaymentHashes [][]byte
 }
 
-// RecvPaid receives an invoice payment
-func (l *Lnd) RecvPaid(preimage string, msats int) {
-	l.paidRecvCb(preimage, msats)
-}
-
 // NewLnd generates a new lnd client from a given config
 // TODO use streaming for invoices
 func NewLnd(config *config.Config) (lnd *Lnd, err error) {
@@ -40,6 +35,11 @@ func NewLnd(config *config.Config) (lnd *Lnd, err error) {
 	}, nil
 }
 
+// RecvPaid receives an invoice payment
+func (l *Lnd) RecvPaid(preimage string, msats int) {
+	l.paidRecvCb(preimage, msats)
+}
+
 // RegisterPaidRecvCb registers the callback
 func (l *Lnd) RegisterPaidRecvCb(callback PaidCallback) {
 	l.paidRecvCb = callback
@@ -48,12 +48,10 @@ func (l *Lnd) RegisterPaidRecvCb(callback PaidCallback) {
 // GetInvoice gets an invoice (paymentRequest) fora given amount msatAmount
 func (l *Lnd) GetInvoice(msatAmount int) (paymentRequest string, err error) {
 	log.Printf("getting invoice %d msats", msatAmount)
-	satAmount := int64(msatAmount / 1000.0)
 
 	invoice := &lnrpc.Invoice{
 		Memo:      "",
-		Value:     satAmount,
-		ValueMsat: satAmount,
+		ValueMsat: int64(msatAmount),
 		Expiry:    3600,
 		Private:   false,
 	}
@@ -82,7 +80,6 @@ func (l *Lnd) PayInvoice(bolt11 string) (preimage []byte, msatAmount int, err er
 	log.Printf("paid %s", payReq.PaymentRequest)
 	log.Printf("route %s", resp.PaymentRoute)
 	return resp.PaymentPreimage, int(resp.PaymentRoute.TotalAmtMsat), nil
-
 }
 
 var _ Lightning = &Lnd{}

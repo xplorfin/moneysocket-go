@@ -31,13 +31,13 @@ func NewConsumerTransactionLayer() *ConsumerTransactLayer {
 	return &c
 }
 
-// register the layer above
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.OnRevoke)
 }
 
-// announce a nexus and create the consumer transaction layer
+// AnnounceNexus creates a new transact.ConsumerTransactNexus and registers it
 func (c *ConsumerTransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	cn := transact.NewConsumerTransactNexus(belowNexus)
 	c.consumerTransactNexus = cn

@@ -57,7 +57,7 @@ func TestBaseNexusMsgUuidOperations(t *testing.T) {
 	AssertUuidV4(n2, t)
 
 	if n1.IsEqual(n2) {
-		t.Errorf("expected nexus n1 with uuid %s to be different from n2", n1.Uuid())
+		t.Errorf("expected nexus n1 with uuid %s to be different from n2", n1.UUID())
 	}
 
 }
@@ -102,7 +102,7 @@ func TestBaseNexus(t *testing.T) {
 }
 
 func AssertUuidV4(nexus nexus.Nexus, t *testing.T) {
-	if nexus.Uuid().Version() != uuid.V4 {
-		t.Errorf("expected uuid version %b to equal %b", nexus.Uuid().Version(), uuid.V4)
+	if nexus.UUID().Version() != uuid.V4 {
+		t.Errorf("expected uuid version %b to equal %b", nexus.UUID().Version(), uuid.V4)
 	}
 }

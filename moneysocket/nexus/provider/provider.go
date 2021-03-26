@@ -38,7 +38,7 @@ func (o *ProviderNexus) IsLayerMessage(message message_base.MoneysocketMessage) 
 func (o *ProviderNexus) NotifyProvider() {
 	ss := o.SharedSeed()
 	providerInfo := o.handleProviderInfoRequest(*ss)
-	o.Send(notification.NewNotifyProvider(o.Uuid().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
 }
 
 func (o *ProviderNexus) NotifyProviderNotReady() {
@@ -87,7 +87,7 @@ func (o *ProviderNexus) NotifyProviderReady() {
 	if !providerInfo.Details.Ready() {
 		panic("expected provider to be ready")
 	}
-	o.Send(notification.NewNotifyProvider(o.Uuid().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
 }
 func (o *ProviderNexus) ProviderNowReady() {
 	o.NotifyProviderReady()

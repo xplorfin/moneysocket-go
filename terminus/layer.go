@@ -26,6 +26,7 @@ func (o *TerminusLayer) SetupTerminusNexus(belowNexus nexus.Nexus) *TerminusNexu
 	return &terminusNexus
 }
 
+// AnnounceNexus creates a new TerminusNexus and registers it
 func (o *TerminusLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	terminusNexus := o.SetupTerminusNexus(belowNexus)
 	o.TrackNexus(terminusNexus, belowNexus)
@@ -38,11 +39,11 @@ func (o *TerminusLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	if _, ok := o.NexusesBySharedSeed[ss.ToString()]; !ok {
 		o.NexusesBySharedSeed[ss.ToString()] = []string{}
 	}
-	o.NexusesBySharedSeed[ss.ToString()] = append(o.NexusesBySharedSeed[ss.ToString()], terminusNexus.Uuid().String())
+	o.NexusesBySharedSeed[ss.ToString()] = append(o.NexusesBySharedSeed[ss.ToString()], terminusNexus.UUID().String())
 }
 
 func (o *TerminusLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	nexusUuid, _ := o.NexusByBelow.Get(belowNexus.Uuid())
+	nexusUuid, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	terminusNexus, _ := o.Nexuses.Get(nexusUuid)
 	o.BaseLayer.RevokeNexus(terminusNexus)
 	ss := terminusNexus.SharedSeed()
@@ -76,6 +77,7 @@ func (o *TerminusLayer) HandleProviderInfoRequest(ss beacon.SharedSeed) {
 	panic("method not yet implemented")
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (o *TerminusLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)

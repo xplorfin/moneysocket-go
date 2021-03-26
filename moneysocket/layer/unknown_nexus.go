@@ -15,7 +15,7 @@ func NewUnknownNexus() UnknownNexus {
 }
 
 // TODO disable
-func (u UnknownNexus) Uuid() uuid.UUID {
+func (u UnknownNexus) UUID() uuid.UUID {
 	panic("this is not a real nexus, did a getter return an error?")
 }
 

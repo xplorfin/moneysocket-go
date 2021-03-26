@@ -21,11 +21,13 @@ func NewRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *RelayLa
 	}
 }
 
+// AnnounceNexus registers the message handlers for the rendezvousNexus to RelayLayer
 func (r *RelayLayer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
 	rendezvousNexus.SetOnMessage(r.OnMessage)
 	rendezvousNexus.SetOnBinMessage(r.OnBinMessage)
 }
 
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
 func (r *RelayLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(r.AnnounceNexus)
 	belowLayer.SetOnRevoke(r.RevokeNexus)

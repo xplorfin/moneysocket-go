@@ -65,14 +65,20 @@ func (i *IncomingStack) SendStackEvent(layerName string, nexus nexusHelper.Nexus
 	// do nothing
 }
 
+// RegisterAboveLayer does nothing. It is here to satisfy the interface since IncomingStack must
+// act as a layer
 func (i *IncomingStack) RegisterAboveLayer(belowLayer layer.Layer) {
 	// do nothing
 }
 
+// AnnounceNexus does nothing. It is here to satisfy the interface since IncomingStack must
+// act as a layer
 func (i *IncomingStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	log.Println("announced from below")
 }
 
+// RevokeNexus does nothing. It is here to satisfy the interface since IncomingStack
+// acts as a layer
 func (i *IncomingStack) RevokeNexus(nexus nexusHelper.Nexus) {
 	log.Println("revoked from below")
 }

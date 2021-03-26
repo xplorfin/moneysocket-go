@@ -51,13 +51,13 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 
 func (b *BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	if b.IsEqual(belowNexus) {
-		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.Uuid(), b.Name(), b.Uuid())
+		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.UUID(), b.Name(), b.UUID())
 		log.Print(b.GetDownwardNexusList())
 		panic("crossed nexus?")
 	}
 }
 
-func (b *BaseNexus) Uuid() uuid.UUID {
+func (b *BaseNexus) UUID() uuid.UUID {
 	return b.uuid
 }
 
@@ -66,7 +66,7 @@ func (b *BaseNexus) Name() string {
 }
 
 func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
-	return n.Uuid() == b.Uuid()
+	return n.UUID() == b.UUID()
 }
 
 func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {

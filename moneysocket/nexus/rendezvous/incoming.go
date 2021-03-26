@@ -63,7 +63,7 @@ func (i *IncomingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_
 	}
 
 	i.directory.AddNexus(i, i.rendezvousId)
-	peer := i.directory.GetPeerNexus(i.Uuid())
+	peer := i.directory.GetPeerNexus(i.UUID())
 	if peer != nil {
 		_ = i.Send(notification.NewNotifyRendezvous(i.rendezvousId, i.requestReferenceUuid))
 		i.rendezvousFinishedCb(i)
