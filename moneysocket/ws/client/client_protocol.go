@@ -1,4 +1,4 @@
-package ws_client
+package client
 
 import (
 	"errors"

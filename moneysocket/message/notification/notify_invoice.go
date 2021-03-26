@@ -13,9 +13,9 @@ type NotifyInvoice struct {
 	Bolt11 string
 }
 
-func NewNotifyInvoice(bolt11, requestUuid string) NotifyInvoice {
+func NewNotifyInvoice(bolt11, requestUUID string) NotifyInvoice {
 	return NotifyInvoice{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyInvoiceNotification, requestUuid),
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyInvoiceNotification, requestUUID),
 		Bolt11:                      bolt11,
 	}
 }
@@ -26,7 +26,7 @@ func (o NotifyInvoice) MustBeClearText() bool {
 	return false
 }
 
-func (o NotifyInvoice) ToJson() ([]byte, error) {
+func (o NotifyInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(o, m)
 	if err != nil {

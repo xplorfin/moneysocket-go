@@ -7,21 +7,21 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-type RequestInvoice struct {
+type Invoice struct {
 	BaseMoneySocketRequest
 	Msats int64
 }
 
 const msatsKey = "msats"
 
-func NewRequestInvoice(msats int64) RequestInvoice {
-	return RequestInvoice{
+func NewRequestInvoice(msats int64) Invoice {
+	return Invoice{
 		NewBaseMoneySocketRequest(base.InvoiceRequest),
 		msats,
 	}
 }
 
-func (r RequestInvoice) ToJson() ([]byte, error) {
+func (r Invoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	m[msatsKey] = r.Msats
 	err := EncodeMoneysocketRequest(r, m)
@@ -33,18 +33,18 @@ func (r RequestInvoice) ToJson() ([]byte, error) {
 }
 
 // turn a byte slice into a request invoice, return an error if not possible
-func DecodeRequestInvoice(payload []byte) (r RequestInvoice, err error) {
+func DecodeRequestInvoice(payload []byte) (r Invoice, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {
-		return RequestInvoice{}, err
+		return Invoice{}, err
 	}
 
 	msats, err := jsonparser.GetInt(payload, msatsKey)
 	if err != nil {
-		return RequestInvoice{}, err
+		return Invoice{}, err
 	}
-	r = RequestInvoice{request, msats}
+	r = Invoice{request, msats}
 	return r, nil
 }
 
-var _ MoneysocketRequest = &RequestInvoice{}
+var _ MoneysocketRequest = &Invoice{}

@@ -9,25 +9,29 @@ import (
 type MoneysocketNotification interface {
 	base.MoneysocketMessage
 	// get the notification uuid
-	NotificationUuid() string
-	RequestReferenceUuid() string
+	NotificationUUID() string
+	RequestReferenceUUID() string
 	NotificationName() string
 	RequestType() base.MessageType
 }
 
+// BaseMoneySocketNotification is the notification type
 type BaseMoneySocketNotification struct {
-	base.BaseMoneysocketMessage
-	BaseNotificationUuid     string
-	BaseRequestReferenceUuid string
-	requestType              base.MessageType
+	base.MoneysocketMessage
+	// BaseNotificationUUID is the uuid for this message
+	BaseNotificationUUID string
+	// BaseRequestReferenceUUID is the request reference id
+	BaseRequestReferenceUUID string
+	// requestType is the base.MessageType
+	requestType base.MessageType
 }
 
-func NewBaseMoneySocketNotification(notificationType base.MessageType, requestUuid string) BaseMoneySocketNotification {
+func NewBaseMoneySocketNotification(notificationType base.MessageType, requestUUID string) BaseMoneySocketNotification {
 	return BaseMoneySocketNotification{
-		BaseMoneysocketMessage:   base.NewBaseMoneysocketMessage(base.Notification),
-		BaseNotificationUuid:     uuid.NewV4().String(),
+		MoneysocketMessage:       base.NewBaseBaseMoneysocketMessage(base.Notification),
+		BaseNotificationUUID:     uuid.NewV4().String(),
 		requestType:              notificationType,
-		BaseRequestReferenceUuid: requestUuid,
+		BaseRequestReferenceUUID: requestUUID,
 	}
 }
 
@@ -39,12 +43,12 @@ func (b BaseMoneySocketNotification) MessageClass() base.MessageClass {
 	return base.Notification
 }
 
-func (b BaseMoneySocketNotification) NotificationUuid() string {
-	return b.BaseNotificationUuid
+func (b BaseMoneySocketNotification) NotificationUUID() string {
+	return b.BaseNotificationUUID
 }
 
-func (b BaseMoneySocketNotification) RequestReferenceUuid() string {
-	return b.BaseRequestReferenceUuid
+func (b BaseMoneySocketNotification) RequestReferenceUUID() string {
+	return b.BaseRequestReferenceUUID
 }
 
 func (b BaseMoneySocketNotification) NotificationName() string {
@@ -52,9 +56,9 @@ func (b BaseMoneySocketNotification) NotificationName() string {
 }
 
 const (
-	NotificationUuidKey     = "notification_uuid"
-	RequestReferenceUuidKey = "request_reference_uuid"
-	NotificationNameKey     = "notification_name"
+	UUIDKey                 = "notification_uuid"
+	RequestReferenceUUIDKey = "request_reference_uuid"
+	NameKey                 = "notification_name"
 )
 
 func EncodeMoneysocketNotification(msg MoneysocketNotification, toEncode map[string]interface{}) error {
@@ -62,33 +66,33 @@ func EncodeMoneysocketNotification(msg MoneysocketNotification, toEncode map[str
 	if err != nil {
 		return err
 	}
-	toEncode[NotificationUuidKey] = msg.NotificationUuid()
-	toEncode[RequestReferenceUuidKey] = msg.RequestReferenceUuid()
-	toEncode[NotificationNameKey] = msg.NotificationName()
+	toEncode[UUIDKey] = msg.NotificationUUID()
+	toEncode[RequestReferenceUUIDKey] = msg.RequestReferenceUUID()
+	toEncode[NameKey] = msg.NotificationName()
 	return nil
 }
 
 func DecodeRequest(request []byte) (b BaseMoneySocketNotification, err error) {
-	baseMessage, err := base.DecodeBaseMoneysocketMessage(request)
+	baseMessage, err := base.DecodeBaseBaseMoneysocketMessage(request)
 	if err != nil {
 		return b, err
 	}
-	reqUuid, err := jsonparser.GetString(request, NotificationUuidKey)
+	reqUUID, err := jsonparser.GetString(request, UUIDKey)
 	if err != nil {
 		return b, err
 	}
-	reqType, err := jsonparser.GetString(request, NotificationNameKey)
+	reqType, err := jsonparser.GetString(request, NameKey)
 	if err != nil {
 		return b, err
 	}
-	refUuid, err := jsonparser.GetString(request, RequestReferenceUuidKey)
+	refUUID, err := jsonparser.GetString(request, RequestReferenceUUIDKey)
 	if err != nil {
 		return b, err
 	}
 	return BaseMoneySocketNotification{
-		BaseMoneysocketMessage:   baseMessage,
-		BaseNotificationUuid:     reqUuid,
-		BaseRequestReferenceUuid: refUuid,
+		MoneysocketMessage:       baseMessage,
+		BaseNotificationUUID:     reqUUID,
+		BaseRequestReferenceUUID: refUUID,
 		requestType:              base.MessageTypeFromString(reqType),
 	}, nil
 }

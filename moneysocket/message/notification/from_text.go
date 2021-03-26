@@ -8,8 +8,8 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-func NotificationFromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
-	rawType, err := jsonparser.GetString(payload, NotificationNameKey)
+func FromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
+	rawType, err := jsonparser.GetString(payload, NameKey)
 	if err != nil {
 		return nil, 0, err
 	}

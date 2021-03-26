@@ -26,7 +26,7 @@ func TestConfigFromFile(t *testing.T) {
 		// listen config
 		Equal(t, testConfig.ListenBindHost, cfg.GetBindHost())
 		Equal(t, testConfig.ListenBindPort, cfg.GetBindPort())
-		Equal(t, testConfig.ListenUseTLS, cfg.GetUseTls())
+		Equal(t, testConfig.ListenUseTLS, cfg.GetUseTLS())
 		Equal(t, testConfig.ListenExternalHost, cfg.GetExternalHost())
 		Equal(t, testConfig.ListenExternalPort, cfg.GetExternalPort())
 		Equal(t, testConfig.ListenCertFile, cfg.GetCertFile())
@@ -38,18 +38,18 @@ func TestConfigFromFile(t *testing.T) {
 			Equal(t, testConfig.ListenDefaultPort, cfg.ListenConfig.defaultPort)
 
 			// lnd config
-			Equal(t, testConfig.LndDir, cfg.LndConfig.LndDir)
-			Equal(t, testConfig.LndMacaroonPath, cfg.LndConfig.MacaroonPath)
-			Equal(t, testConfig.LndTlsCertPath, cfg.LndConfig.TLSCertPath)
-			Equal(t, testConfig.LndNetwork, cfg.LndConfig.Network)
-			Equal(t, testConfig.GrpcHost, cfg.LndConfig.GrpcHost)
-			Equal(t, testConfig.GrpcPort, cfg.LndConfig.GrpcPort)
+			Equal(t, testConfig.LNDDir, cfg.LndConfig.LndDir)
+			Equal(t, testConfig.LNDMacaroonPath, cfg.LndConfig.MacaroonPath)
+			Equal(t, testConfig.LNDTlsCertPath, cfg.LndConfig.TLSCertPath)
+			Equal(t, testConfig.LNDNetwork, cfg.LndConfig.Network)
+			Equal(t, testConfig.GRPCHost, cfg.LndConfig.GrpcHost)
+			Equal(t, testConfig.GRPCPort, cfg.LndConfig.GrpcPort)
 		}
 		// rpc config
-		Equal(t, testConfig.RpcBindHost, cfg.RpcConfig.BindHost)
-		Equal(t, testConfig.RpcBindPort, cfg.RpcConfig.BindPort)
-		Equal(t, testConfig.RpcExternalHost, cfg.RpcConfig.ExternalHost)
-		Equal(t, testConfig.RpcExternalPort, cfg.RpcConfig.ExternalPort)
+		Equal(t, testConfig.RPCBindHost, cfg.RPCConfig.BindHost)
+		Equal(t, testConfig.RPCBindPort, cfg.RPCConfig.BindPort)
+		Equal(t, testConfig.RPCExternalHost, cfg.RPCConfig.ExternalHost)
+		Equal(t, testConfig.RPCExternalPort, cfg.RPCConfig.ExternalPort)
 		// relay config
 		Equal(t, testConfig.RelayUseTLS, cfg.RelayConfig.useTLS)
 		Equal(t, testConfig.RelayCertFile, cfg.RelayConfig.certFile)
@@ -94,16 +94,16 @@ func MakeMockConfig(t *testing.T) TestFileConfig {
 		ListenCertChainFile:  chainFile,
 		ListenDefaultBind:    "127.0.0.1",
 		ListenDefaultPort:    nettest.GetFreePort(t),
-		RpcBindHost:          "127.0.0.1",
-		RpcBindPort:          nettest.GetFreePort(t),
-		RpcExternalHost:      gofakeit.DomainName(),
-		RpcExternalPort:      nettest.GetFreePort(t),
-		LndDir:               lndDir,
-		LndMacaroonPath:      macaroonPath.Name(),
-		LndTlsCertPath:       lndCert,
-		LndNetwork:           "bitcoin",
-		GrpcHost:             "127.0.0.1",
-		GrpcPort:             nettest.GetFreePort(t),
+		RPCBindHost:          "127.0.0.1",
+		RPCBindPort:          nettest.GetFreePort(t),
+		RPCExternalHost:      gofakeit.DomainName(),
+		RPCExternalPort:      nettest.GetFreePort(t),
+		LNDDir:               lndDir,
+		LNDMacaroonPath:      macaroonPath.Name(),
+		LNDTlsCertPath:       lndCert,
+		LNDNetwork:           "bitcoin",
+		GRPCHost:             "127.0.0.1",
+		GRPCPort:             nettest.GetFreePort(t),
 		RelayBindHost:        "127.0.0.1",
 		RelayBindPort:        nettest.GetFreePort(t),
 		RelayUseTLS:          true,
@@ -130,17 +130,17 @@ type TestFileConfig struct {
 	ListenDefaultBind    string `goconf:"Listen:DefaultBind"`
 	ListenDefaultPort    int    `goconf:"Listen:DefaultPort"`
 	// Rpc
-	RpcBindHost     string `goconf:"Rpc:BindHost"`
-	RpcBindPort     int    `goconf:"Rpc:BindPort"`
-	RpcExternalHost string `goconf:"Rpc:BindHost"`
-	RpcExternalPort int    `goconf:"Rpc:ExternalPort"`
+	RPCBindHost     string `goconf:"Rpc:BindHost"`
+	RPCBindPort     int    `goconf:"Rpc:BindPort"`
+	RPCExternalHost string `goconf:"Rpc:BindHost"`
+	RPCExternalPort int    `goconf:"Rpc:ExternalPort"`
 	// LND
-	LndDir          string `goconf:"LND:LndDir"`
-	LndMacaroonPath string `goconf:"LND:LndMacaroonPath"`
-	LndTlsCertPath  string `goconf:"LND:LndTlsCertPath"`
-	LndNetwork      string `goconf:"LND:LndNetwork"`
-	GrpcHost        string `goconf:"LND:GrpcHost"`
-	GrpcPort        int    `goconf:"LND:GrpcPort"`
+	LNDDir          string `goconf:"LND:LNDDir"`
+	LNDMacaroonPath string `goconf:"LND:LNDMacaroonPath"`
+	LNDTlsCertPath  string `goconf:"LND:LNDTlsCertPath"`
+	LNDNetwork      string `goconf:"LND:LNDNetwork"`
+	GRPCHost        string `goconf:"LND:GRPCHost"`
+	GRPCPort        int    `goconf:"LND:GRPCPort"`
 	// Relay
 	RelayBindHost string `goconf:"Relay:ListenBind"`
 	RelayBindPort int    `goconf:"Relay:ListenPort"`
@@ -194,16 +194,16 @@ CertChainFile = {{.ListenCertChainFile}}
 [Rpc]
 
 # host for client to connect
-BindHost = {{.RpcBindHost}}
+BindHost = {{.RPCBindHost}}
 
 # port for client to connect
-BindPort = {{.RpcBindPort}}
+BindPort = {{.RPCBindPort}}
 
 # host for client to connect
-ExternalHost = {{.RpcExternalHost}}
+ExternalHost = {{.RPCExternalHost}}
 
 # port for client to connect
-ExternalPort = {{.RpcExternalPort}}
+ExternalPort = {{.RPCExternalPort}}
 
 [Relay]
 ListenBind = {{.RelayBindHost}}
@@ -276,34 +276,34 @@ CertChainFile = {{.ListenCertChainFile}}
 [LND]
 
 # LND settings directory
-LndDir = {{.LndDir}}
+LNDDir = {{.LNDDir}}
 
 # path to macaroon for grpc permissions
-MacaroonPath = {{.LndMacaroonPath}}
+MacaroonPath = {{.LNDMacaroonPath}}
 
 # TLS cert for LND, which is different from the websocket listening TLS
-TlsCertPath = {{.LndTlsCertPath}}
+TlsCertPath = {{.LNDTlsCertPath}}
 
 # LND network
-Network = {{.LndNetwork}}
+Network = {{.LNDNetwork}}
 
 # GRPC connection
-GrpcHost = {{.GrpcHost}}
-GrpcPort = {{.GrpcPort}}
+GRPCHost = {{.GRPCHost}}
+GRPCPort = {{.GRPCPort}}
 
 [Rpc]
 
 # host for client to connect
-BindHost = {{.RpcBindHost}}
+BindHost = {{.RPCBindHost}}
 
 # port for client to connect
-BindPort = {{.RpcBindPort}}
+BindPort = {{.RPCBindPort}}
 
 # host for client to connect
-ExternalHost = {{.RpcExternalHost}}
+ExternalHost = {{.RPCExternalHost}}
 
 # port for client to connect
-ExternalPort = {{.RpcExternalPort}}
+ExternalPort = {{.RPCExternalPort}}
 
 [Relay]
 ListenBind = {{.RelayBindHost}}

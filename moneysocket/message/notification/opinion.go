@@ -12,14 +12,14 @@ type NotifyOpinionInvoice struct {
 	Bolt11 string
 }
 
-func NewNotifyOpinionInvoice(requestUuid, bolt11 string) NotifyOpinionInvoice {
+func NewNotifyOpinionInvoice(requestUUID, bolt11 string) NotifyOpinionInvoice {
 	return NotifyOpinionInvoice{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyOpinionInvoice, requestUuid),
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyOpinionInvoice, requestUUID),
 		Bolt11:                      bolt11,
 	}
 }
 
-func (n NotifyOpinionInvoice) ToJson() ([]byte, error) {
+func (n NotifyOpinionInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(n, m)
 	if err != nil {

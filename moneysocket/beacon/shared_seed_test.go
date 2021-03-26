@@ -27,7 +27,7 @@ type SharedSeedTestCase struct {
 	// generated aes-256
 	Aes256Key string
 	// generated rendezvous id
-	RendezvousId string
+	RendezvousID string
 	// generated encoded-tlv
 	EncodedTlv string
 }
@@ -39,7 +39,7 @@ var testCases = []SharedSeedTestCase{
 		Sha256:       "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
 		DoubleSha256: "954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4",
 		Aes256Key:    "48dacfc16eed1b0a40891c73655ae8137960de419841432c4bbeea2bcaeacd83",
-		RendezvousId: "d678c107fe2913ae1ab79bfba00694aaed75b5a2b0187ea0719919cbfedf9758",
+		RendezvousID: "d678c107fe2913ae1ab79bfba00694aaed75b5a2b0187ea0719919cbfedf9758",
 		EncodedTlv:   "fe000101bd1068656c6c6f2066726f6d206c69676874",
 	},
 }
@@ -60,8 +60,8 @@ func TestSharedSeedParity(t *testing.T) {
 		if test.Aes256Key != hex.EncodeToString(ss.DeriveAES256Key()) {
 			t.Errorf("expected aes-256 key %s to match %s for seed %s", test.Aes256Key, hex.EncodeToString(ss.DeriveAES256Key()), test.Seed)
 		}
-		if test.RendezvousId != hex.EncodeToString(ss.DeriveRendezvousId()) {
-			t.Errorf("expected rendezvous id %s to match %s for seed %s", test.RendezvousId, hex.EncodeToString(ss.DeriveRendezvousId()), test.Seed)
+		if test.RendezvousID != hex.EncodeToString(ss.DeriveRendezvousID()) {
+			t.Errorf("expected rendezvous id %s to match %s for seed %s", test.RendezvousID, hex.EncodeToString(ss.DeriveRendezvousID()), test.Seed)
 		}
 		if test.EncodedTlv != hex.EncodeToString(ss.EncodedTLV()) {
 			t.Errorf("expected encodedtlv %s to match %s", test.EncodedTlv, hex.EncodeToString(ss.EncodedTLV()))
@@ -120,7 +120,7 @@ func TestHexEquality(t *testing.T) {
 			t.Error("expected byte and hex seed to be equal for DeriveAES256Key()")
 		}
 
-		if !bytes.Equal(byteSeed.DeriveRendezvousId(), hexSeed.DeriveRendezvousId()) {
+		if !bytes.Equal(byteSeed.DeriveRendezvousID(), hexSeed.DeriveRendezvousID()) {
 			t.Error("expected byte and hex seed to be equal for DeriveAES256Key()")
 		}
 

@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"html/template"

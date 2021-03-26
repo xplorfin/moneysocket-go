@@ -59,9 +59,9 @@ func (c *ConsumerTransactLayer) SetupConsumerTransactionNexus(belowNexus nexus.N
 }
 
 // call on invoice function
-func (c *ConsumerTransactLayer) OnInvoice(transactNexus nexus.Nexus, invoice string, requestReferenceUuid string) {
+func (c *ConsumerTransactLayer) OnInvoice(transactNexus nexus.Nexus, invoice string, requestReferenceUUID string) {
 	if c.onInvoice != nil {
-		c.onInvoice(transactNexus, invoice, requestReferenceUuid)
+		c.onInvoice(transactNexus, invoice, requestReferenceUUID)
 	}
 }
 
@@ -71,9 +71,9 @@ func (c *ConsumerTransactLayer) SetOnInvoice(invoice transact.OnInvoice) {
 }
 
 // call on preimage function
-func (c *ConsumerTransactLayer) OnPreImage(transactNexus nexus.Nexus, preimage string, requestReferenceUuid string) {
+func (c *ConsumerTransactLayer) OnPreImage(transactNexus nexus.Nexus, preimage string, requestReferenceUUID string) {
 	if c.onPreimage != nil {
-		c.onPreimage(transactNexus, preimage, requestReferenceUuid)
+		c.onPreimage(transactNexus, preimage, requestReferenceUUID)
 	}
 }
 
@@ -92,22 +92,22 @@ func (c *ConsumerTransactLayer) SetOnProviderInfo(info transact.OnProviderInfo) 
 	c.onProviderInfo = info
 }
 
-func (c *ConsumerTransactLayer) RequestPay(nexusUuid uuid.UUID, bolt11 string) (requestUuid uuid.UUID, err error) {
-	if val, ok := c.Nexuses.Get(nexusUuid); !ok {
+func (c *ConsumerTransactLayer) RequestPay(nexusUUID uuid.UUID, bolt11 string) (requestUUID uuid.UUID, err error) {
+	if val, ok := c.Nexuses.Get(nexusUUID); !ok {
 		consumerNexus := val.(*transact.ConsumerTrackNexus)
 		res := consumerNexus.RequestPay(bolt11)
 		return uuid.FromString(res)
-	} else {
-		return requestUuid, fmt.Errorf("nexus %s not online", nexusUuid)
 	}
+
+	return requestUUID, fmt.Errorf("nexus %s not online", nexusUUID)
 }
 
-func (c *ConsumerTransactLayer) RequestInvoice(nexusUuid uuid.UUID, msats int64, description string) (requestUuid uuid.UUID, err error) {
-	if val, ok := c.Nexuses.Get(nexusUuid); !ok {
+func (c *ConsumerTransactLayer) RequestInvoice(nexusUUID uuid.UUID, msats int64, description string) (requestUUID uuid.UUID, err error) {
+	if val, ok := c.Nexuses.Get(nexusUUID); !ok {
 		consumerNexus := val.(*transact.ConsumerTrackNexus)
 		res := consumerNexus.RequestInvoice(msats, description)
 		return uuid.FromString(res)
-	} else {
-		return requestUuid, fmt.Errorf("nexus %s not online", nexusUuid)
 	}
+	return requestUUID, fmt.Errorf("nexus %s not online", nexusUUID)
+
 }

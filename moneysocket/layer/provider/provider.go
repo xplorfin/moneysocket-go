@@ -12,20 +12,20 @@ import (
 
 // ProviderLayer handles app waiting
 // TODO this needs to be fully implemented
-type ProviderLayer struct {
+type Layer struct {
 	layer.BaseLayer
-	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.AccountDb
+	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.Db
 	WaitingForApp             compat.WaitingForApp
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *ProviderLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
 // ProviderFinishedCb is the callback for the provider finished callback
-func (o *ProviderLayer) ProviderFinishedCb(providerNexus nexus.Nexus) {
+func (o *Layer) ProviderFinishedCb(providerNexus nexus.Nexus) {
 	o.TrackNexusAnnounced(providerNexus)
 	o.SendLayerEvent(providerNexus, message.NexusAnnounced)
 	o.OnAnnounce(providerNexus)
@@ -33,13 +33,13 @@ func (o *ProviderLayer) ProviderFinishedCb(providerNexus nexus.Nexus) {
 
 // AnnounceNexus creates a new provider.ProviderNexus and registers it
 // also registers the providerFinishedCb (cb = callback)
-func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
+func (o *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus := provider.NewProviderNexus(belowNexus)
 	o.TrackNexus(providerNexus, belowNexus)
 	providerNexus.WaitForConsumer(o.ProviderFinishedCb)
 }
 
-func (o *ProviderLayer) RevokeNexus(belowNexus nexus.Nexus) {
+func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	res, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	providerNexus, _ := o.Nexuses.Get(res)
 	o.BaseLayer.RevokeNexus(providerNexus)
@@ -47,31 +47,31 @@ func (o *ProviderLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	delete(o.WaitingForApp, ss.ToString())
 }
 
-func (o *ProviderLayer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.AccountDb {
+func (o *Layer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.Db {
 	return o.handlerProvideInfoRequest(seed)
 }
 
-func (o *ProviderLayer) SetHandlerProvideInfoRequest(hpir compat.HandleProviderInfoRequest) {
+func (o *Layer) SetHandlerProvideInfoRequest(hpir compat.HandleProviderInfoRequest) {
 	o.handlerProvideInfoRequest = hpir
 }
 
-func (o *ProviderLayer) NexusWaitingForApp(ss beacon.SharedSeed, providerNexus nexus.Nexus) {
+func (o *Layer) NexusWaitingForApp(ss beacon.SharedSeed, providerNexus nexus.Nexus) {
 	o.WaitingForApp[ss.ToString()] = providerNexus
 }
 
-func (o *ProviderLayer) ProviderNowReadyFromApp() {
+func (o *Layer) ProviderNowReadyFromApp() {
 	for sharedSeed, _ := range o.WaitingForApp { // nolint
 		providerNexus := o.WaitingForApp[sharedSeed]
 		delete(o.WaitingForApp, sharedSeed)
-		providerNexus.(*provider.ProviderNexus).ProviderNowReady()
+		providerNexus.(*provider.Nexus).ProviderNowReady()
 	}
 }
 
-func NewProviderLayer() *ProviderLayer {
-	return &ProviderLayer{
+func NewProviderLayer() *Layer {
+	return &Layer{
 		BaseLayer:     layer.NewBaseLayer(),
 		WaitingForApp: make(map[string]nexus.Nexus),
 	}
 }
 
-var _ layer.Layer = &ProviderLayer{}
+var _ layer.Layer = &Layer{}

@@ -12,13 +12,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	moneysocket_message "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_client"
+	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
 const OutgoingSocketName = "OutgoingSocket"
 
 type OutgoingSocket struct {
-	ws_client.WebsocketClientProtocol
+	client.WebsocketClientProtocol
 	wasAnnounced bool
 	// protocol layer coorespond to the socket interface
 	FactoryMsProtocolLayer layer.Layer
@@ -37,7 +37,7 @@ type OutgoingSocket struct {
 // create a new incoming websocket nexus (accepts request)
 func NewOutgoingSocket() *OutgoingSocket {
 	return &OutgoingSocket{
-		WebsocketClientProtocol: ws_client.NewBaseWebsocketClient(),
+		WebsocketClientProtocol: client.NewBaseWebsocketClient(),
 		wasAnnounced:            false,
 		OutgoingSharedSeed:      nil,
 		name:                    OutgoingSocketName,
@@ -144,7 +144,7 @@ func (i *OutgoingSocket) OnClose(wasClean bool, code int, reason string) {
 }
 
 // assert type is valid socket
-var _ ws_client.WebsocketClientProtocol = &OutgoingSocket{}
+var _ client.WebsocketClientProtocol = &OutgoingSocket{}
 
 // assert type is valid nexus
 var _ nexusHelper.Nexus = &OutgoingSocket{}

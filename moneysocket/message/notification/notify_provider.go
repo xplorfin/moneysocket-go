@@ -10,7 +10,7 @@ import (
 type NotifyProvider struct {
 	BaseMoneySocketNotification
 	// account uuid
-	AccountUuid string
+	AccountUUID string
 	// provider pay outgoing invoice
 	Payer bool
 	// provider generates invoices for incoming payments
@@ -19,10 +19,10 @@ type NotifyProvider struct {
 	Wad wad.Wad
 }
 
-func NewNotifyProvider(accountUuid string, payer, payee bool, wad wad.Wad, requestUuid string) NotifyProvider {
+func NewNotifyProvider(accountUUID string, payer, payee bool, wad wad.Wad, requestUUID string) NotifyProvider {
 	return NotifyProvider{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyProvider, requestUuid),
-		AccountUuid:                 accountUuid,
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyProvider, requestUUID),
+		AccountUUID:                 accountUUID,
 		Payer:                       payer,
 		Payee:                       payee,
 		Wad:                         wad,
@@ -34,19 +34,19 @@ func (n NotifyProvider) MustBeClearText() bool {
 }
 
 const (
-	accountUuidKey = "account_uuid"
+	accountUUIDKey = "account_uuid"
 	payerKey       = "payer"
 	payeeKey       = "payee"
 	wadKey         = "wad"
 )
 
-func (n NotifyProvider) ToJson() ([]byte, error) {
+func (n NotifyProvider) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(n, m)
 	if err != nil {
 		return nil, err
 	}
-	m[accountUuidKey] = n.AccountUuid
+	m[accountUUIDKey] = n.AccountUUID
 	m[payerKey] = n.Payer
 	m[payeeKey] = n.Payee
 	m[wadKey] = n.Wad

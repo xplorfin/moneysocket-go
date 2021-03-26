@@ -16,26 +16,26 @@ import (
 )
 
 // represents the data store for a single account
-type AccountDb struct {
+type Db struct {
 	Details Account
 	config  *config.Config
 	// map of beacon string to most recent error when trying to connect
 	ConnectionAttempts map[string]error
 }
 
-func GetPersistedAccounts(config *config.Config) (accts []AccountDb) {
+func GetPersistedAccounts(config *config.Config) (accts []Db) {
 	persistedDbs := GetAccountDbs(config)
 	accts = append(accts, persistedDbs...)
 	return accts
 }
 
-func NewAccountDb(accountName string, config *config.Config) (adb AccountDb) {
-	adb = AccountDb{
+func NewAccountDb(accountName string, config *config.Config) (adb Db) {
+	adb = Db{
 		ConnectionAttempts: make(map[string]error),
 		config:             config,
 		Details: Account{
 			AccountName: accountName,
-			AccountUuid: uuid.New().String(),
+			AccountUUID: uuid.New().String(),
 			Wad:         wad.BitcoinWad(0),
 		},
 	}
@@ -56,7 +56,7 @@ func NewAccountDb(accountName string, config *config.Config) (adb AccountDb) {
 // get a list of accoutdbs from our config file
 // in python this is an iter, but I can only assume we're not using this
 // for a large number of accounts (hopefully)
-func GetAccountDbs(configuration *config.Config) (adList []AccountDb) {
+func GetAccountDbs(configuration *config.Config) (adList []Db) {
 	fmt.Println(configuration.GetAccountPersistDir())
 	err := filepath.Walk(configuration.GetAccountPersistDir(), func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
@@ -64,7 +64,7 @@ func GetAccountDbs(configuration *config.Config) (adList []AccountDb) {
 			if err != nil {
 				return err
 			}
-			adList = append(adList, AccountDb{Details: adb, config: configuration})
+			adList = append(adList, Db{Details: adb, config: configuration})
 		}
 		return err
 	})
@@ -96,11 +96,11 @@ func AdbFromFile(filename string) (adb Account, err error) {
 }
 
 // read account details from file
-func (a AccountDb) readDetails() (adb Account, err error) {
+func (a Db) readDetails() (adb Account, err error) {
 	return AdbFromFile(a.filename())
 }
 
-func (a AccountDb) Persist() error {
+func (a Db) Persist() error {
 	file, err := os.Create(a.filename())
 	if err != nil {
 		return err
@@ -116,28 +116,28 @@ func (a AccountDb) Persist() error {
 }
 
 // create the account db file if it doesn't already exist
-func (a AccountDb) makeDbIfNotExists() error {
+func (a Db) makeDbIfNotExists() error {
 	if rules.IsFile(a.filename()) {
 		return nil
 	}
 	return a.Persist()
 }
 
-func (a AccountDb) Depersist() error {
+func (a Db) Depersist() error {
 	return os.Remove(a.filename())
 }
 
-func (a AccountDb) filename() string {
+func (a Db) filename() string {
 	return fmt.Sprintf("%s/%s.json", a.config.GetAccountPersistDir(), a.Details.AccountName)
 }
 
 // add a connection attempt for the current account
-func (a *AccountDb) AddConnectionAttempt(attemptedBeacon beacon.Beacon, err error) {
+func (a *Db) AddConnectionAttempt(attemptedBeacon beacon.Beacon, err error) {
 	a.ConnectionAttempts[attemptedBeacon.ToBech32Str()] = err
 }
 
 // get array of beacons which have disconnected
-func (a *AccountDb) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
+func (a *Db) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
 	for _, detailBeacon := range a.Details.Beacons {
 		beaconStr := detailBeacon.ToBech32Str()
 		if val, ok := a.ConnectionAttempts[beaconStr]; ok {
@@ -151,7 +151,7 @@ func (a *AccountDb) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
 	return beacons
 }
 
-func (a AccountDb) GetSummaryString(locations []location.Location) (summaryStr string) {
+func (a Db) GetSummaryString(locations []location.Location) (summaryStr string) {
 	summaryStr += fmt.Sprintf("\n%s: wad: %s\n", a.Details.AccountName, a.Details.Wad.FmtLong())
 	for _, detailBeacon := range a.Details.Beacons {
 		beaconStr := detailBeacon.ToBech32Str()

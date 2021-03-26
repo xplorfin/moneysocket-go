@@ -8,7 +8,7 @@ import (
 )
 
 func TestEncodeDecode(t *testing.T) {
-	testBaseMessage := NewBaseMoneysocketMessage(Notification)
+	testBaseMessage := NewBaseBaseMoneysocketMessage(Notification)
 	testMap := make(map[string]interface{})
 	err := EncodeMoneysocketMessage(testBaseMessage, testMap)
 	if err != nil {
@@ -27,7 +27,7 @@ func TestEncodeDecode(t *testing.T) {
 		t.Error(err)
 	}
 
-	b, err := DecodeBaseMoneysocketMessage(res)
+	b, err := DecodeBaseBaseMoneysocketMessage(res)
 	if err != nil {
 		t.Error(err)
 	}

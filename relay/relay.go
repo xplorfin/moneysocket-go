@@ -23,7 +23,7 @@ type Relay struct {
 	// rendezvousLayer is responsible for rendezvousing with different nexuses
 	rendezvousLayer *rendezvous.IncomingRendezvousLayer
 	// relayLayer is responsible for relaying messages to their peer nexuses
-	relayLayer *relay.RelayLayer
+	relayLayer *relay.Layer
 }
 
 // NewRelay creates a new relay from a config and starts a looping info call
@@ -73,5 +73,5 @@ func (r *Relay) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLa
 
 // RunApp listens on the relay url
 func (r *Relay) RunApp() error {
-	return r.websocketLayer.Listen(r.config.GetRelayUrl(), nil)
+	return r.websocketLayer.Listen(r.config.GetRelayURL(), nil)
 }

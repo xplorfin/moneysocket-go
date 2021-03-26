@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.

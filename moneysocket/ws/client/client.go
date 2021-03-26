@@ -1,4 +1,4 @@
-package ws_client
+package client
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ import (
 const UnknownStatusCode = -1
 
 // TODO make this do things
-func NewWsClient(p WebsocketClientProtocol, wsUrl string) {
+func NewWsClient(p WebsocketClientProtocol, wsURL string) {
 	p.OnConnecting()
 
 	dialer := &websocket.Dialer{
@@ -21,7 +21,7 @@ func NewWsClient(p WebsocketClientProtocol, wsUrl string) {
 		HandshakeTimeout: 45 * time.Second,
 	}
 
-	c, res, err := dialer.Dial(wsUrl, nil)
+	c, res, err := dialer.Dial(wsURL, nil)
 	if err != nil {
 		statusCode := UnknownStatusCode
 		// handle cases where no response code is returned

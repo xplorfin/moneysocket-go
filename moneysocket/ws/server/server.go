@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"fmt"
@@ -19,27 +19,27 @@ const (
 type WebsocketListener struct{}
 
 // TODO
-type TlsInfo struct{}
+type TLSInfo struct{}
 
 // helper for serving http and http servers
-func Listen(rawWsUrl string, tlsInfo *TlsInfo, handler http.HandlerFunc) error {
-	wsUrl, err := url.Parse(rawWsUrl)
+func Listen(rawWsURL string, tlsInfo *TLSInfo, handler http.HandlerFunc) error {
+	wsURL, err := url.Parse(rawWsURL)
 	if err != nil {
 		return err
 	}
-	if tlsInfo != nil && wsUrl.Scheme == SecurePrefix {
+	if tlsInfo != nil && wsURL.Scheme == SecurePrefix {
 		return fmt.Errorf("must specify tlsInfo to listen with TLS, change the '%s' prefix to '%s' in '%s' or pass in a tls config",
 			SecurePrefix,
 			UnsecurePrefix,
-			wsUrl)
+			wsURL)
 	}
 
 	if tlsInfo != nil {
 		// TODO
 	} else {
 		// start insecurely
-		log.Println(fmt.Sprintf("starting without TLS on %s", wsUrl.Host))
-		err = http.ListenAndServe(wsUrl.Host, handler)
+		log.Println(fmt.Sprintf("starting without TLS on %s", wsURL.Host))
+		err = http.ListenAndServe(wsURL.Host, handler)
 		if err != nil {
 			return err
 		}

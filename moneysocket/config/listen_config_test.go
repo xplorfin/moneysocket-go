@@ -18,7 +18,7 @@ type ListenConfigTest struct {
 }
 
 // test variations where tls is false
-func makeListenTlsFalseVariations(t *testing.T) []ListenConfigTest {
+func makeListenTLSFalseVariations(t *testing.T) []ListenConfigTest {
 	return []ListenConfigTest{
 		{
 			isValid:  true,
@@ -197,7 +197,7 @@ func makeListenCertVariations(t *testing.T) []ListenConfigTest {
 }
 
 func makeListenConfigTests(t *testing.T) (configs []ListenConfigTest) {
-	configs = append(configs, makeListenTlsFalseVariations(t)...)
+	configs = append(configs, makeListenTLSFalseVariations(t)...)
 	configs = append(configs, makeListenCertVariations(t)...)
 	return configs
 }

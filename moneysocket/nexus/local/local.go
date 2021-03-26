@@ -9,15 +9,15 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-type LocalNexus struct {
-	*base.BaseNexus
+type Nexus struct {
+	*base.NexusBase
 }
 
 const LocalNexusName = "LocalNexusName"
 
-func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) *LocalNexus {
+func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) *Nexus {
 	bnf := base.NewBaseNexusFull(LocalNexusName, belowNexus, layer)
-	ln := LocalNexus{
+	ln := Nexus{
 		&bnf,
 	}
 	belowNexus.SetOnBinMessage(ln.OnBinMessage)
@@ -26,14 +26,14 @@ func NewLocalNexus(belowNexus nexus.Nexus, layer layer.Layer) *LocalNexus {
 	return &ln
 }
 
-func (l *LocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {
+func (l *Nexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {
 	log.Println("local nexus got msg")
-	l.BaseNexus.OnMessage(belowNexus, msg)
+	l.NexusBase.OnMessage(belowNexus, msg)
 }
 
-func (l *LocalNexus) SendBin(msg []byte) error {
+func (l *Nexus) SendBin(msg []byte) error {
 	log.Println("local nexus sent bin")
-	return l.BaseNexus.SendBin(msg)
+	return l.NexusBase.SendBin(msg)
 }
 
-var _ nexus.Nexus = &LocalNexus{}
+var _ nexus.Nexus = &Nexus{}

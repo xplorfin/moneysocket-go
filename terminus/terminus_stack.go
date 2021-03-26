@@ -17,7 +17,7 @@ import (
 
 type OnStackEvent func(layerName string, nexus nexus.Nexus, status string)
 
-type TerminusStack struct {
+type Stack struct {
 	Config       *config.Config
 	onAnnounce   layer.OnAnnounceFn
 	onRevoke     layer.OnRevokeFn
@@ -26,15 +26,15 @@ type TerminusStack struct {
 	localLayer      *local.OutgoingLocalLayer
 	websocketLayer  *websocket.OutgoingWebsocketLayer
 	rendezvousLayer *rendezvous.OutgoingRendezvousLayer
-	providerLayer   *provider.ProviderLayer
-	terminusLayer   *TerminusLayer
+	providerLayer   *provider.Layer
+	terminusLayer   *Layer
 	incomingStack   *stack.IncomingStack
 
 	// TODO add event listeners
 }
 
-func NewTerminusStack(config *config.Config) *TerminusStack {
-	s := TerminusStack{Config: config}
+func NewTerminusStack(config *config.Config) *Stack {
+	s := Stack{Config: config}
 	s.localLayer = s.SetupLocalLayer()
 	s.websocketLayer = s.SetupWebsocketLayer()
 	s.rendezvousLayer = s.SetupRendezvousLayer(s.websocketLayer, s.localLayer)
@@ -45,19 +45,19 @@ func NewTerminusStack(config *config.Config) *TerminusStack {
 	return &s
 }
 
-func (s *TerminusStack) SetupLocalLayer() *local.OutgoingLocalLayer {
+func (s *Stack) SetupLocalLayer() *local.OutgoingLocalLayer {
 	l := local.NewOutgoingLocalLayer()
 	l.RegisterLayerEvent(s.SendStackEvent, message.OutgoingLocal)
 	return &l
 }
 
-func (s *TerminusStack) AnnounceNexus(terminusNexus TerminusNexus) {
+func (s *Stack) AnnounceNexus(terminusNexus Nexus) {
 	if s.onAnnounce != nil {
 		s.onAnnounce(&terminusNexus)
 	}
 }
 
-func (s *TerminusStack) SetupTerminusLayer(belowLayer layer.Layer) *TerminusLayer {
+func (s *Stack) SetupTerminusLayer(belowLayer layer.Layer) *Layer {
 	l := NewTerminusLayer()
 	l.RegisterAboveLayer(belowLayer)
 	l.RegisterLayerEvent(s.onStackEvent, message.Terminus)
@@ -67,18 +67,18 @@ func (s *TerminusStack) SetupTerminusLayer(belowLayer layer.Layer) *TerminusLaye
 	return l
 }
 
-func (s *TerminusStack) SetupIncomingStack(config *config.Config, localLayer *local.OutgoingLocalLayer) *stack.IncomingStack {
+func (s *Stack) SetupIncomingStack(config *config.Config, localLayer *local.OutgoingLocalLayer) *stack.IncomingStack {
 	incomingStack := stack.NewIncomingStack(config, localLayer)
 	return incomingStack
 }
 
-func (s *TerminusStack) SetupWebsocketLayer() *websocket.OutgoingWebsocketLayer {
+func (s *Stack) SetupWebsocketLayer() *websocket.OutgoingWebsocketLayer {
 	l := websocket.NewOutgoingWebsocketLayer()
 	l.RegisterLayerEvent(s.SendStackEvent, message.OutgoingWebsocket)
 	return l
 }
 
-func (s *TerminusStack) SetupProviderLayer(belowLayer layer.Layer) *provider.ProviderLayer {
+func (s *Stack) SetupProviderLayer(belowLayer layer.Layer) *provider.Layer {
 	l := provider.NewProviderLayer()
 	l.RegisterAboveLayer(belowLayer)
 	l.RegisterLayerEvent(s.SendStackEvent, message.Provider)
@@ -86,7 +86,7 @@ func (s *TerminusStack) SetupProviderLayer(belowLayer layer.Layer) *provider.Pro
 	return l
 }
 
-func (s *TerminusStack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer2 layer.Layer) *rendezvous.OutgoingRendezvousLayer {
+func (s *Stack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer2 layer.Layer) *rendezvous.OutgoingRendezvousLayer {
 	l := rendezvous.NewOutgoingRendezvousLayer()
 	l.RegisterAboveLayer(belowLayer1)
 	l.RegisterAboveLayer(belowLayer2)
@@ -94,25 +94,25 @@ func (s *TerminusStack) SetupRendezvousLayer(belowLayer1 layer.Layer, belowLayer
 	return l
 }
 
-func (s *TerminusStack) SendStackEvent(layerName string, nexus nexus.Nexus, status string) {
+func (s *Stack) SendStackEvent(layerName string, nexus nexus.Nexus, status string) {
 	if s.onStackEvent != nil {
 		s.onStackEvent(layerName, nexus, status)
 	}
 }
 
 // get ws listen locations from the config
-func (s *TerminusStack) GetListenLocation() []location.Location {
+func (s *Stack) GetListenLocation() []location.Location {
 	return s.incomingStack.GetListenLocations()
 }
 
-func (s *TerminusStack) Connect(location location.WebsocketLocation, sharedSeed *beacon.SharedSeed) (*websocket2.OutgoingSocket, error) {
+func (s *Stack) Connect(location location.WebsocketLocation, sharedSeed *beacon.SharedSeed) (*websocket2.OutgoingSocket, error) {
 	return s.websocketLayer.Connect(location, sharedSeed)
 }
 
-func (s *TerminusStack) LocalConnect(sharedSeed beacon.SharedSeed) {
+func (s *Stack) LocalConnect(sharedSeed beacon.SharedSeed) {
 	s.localLayer.Connect(sharedSeed)
 }
 
-func (s *TerminusStack) Listen() error {
+func (s *Stack) Listen() error {
 	return s.incomingStack.Listen()
 }

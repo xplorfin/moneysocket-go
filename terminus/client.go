@@ -21,45 +21,45 @@ const (
 	ListenMethod = "listen"
 )
 
-type TerminusClient struct {
+type Client struct {
 	config *config.Config // terminus client config
 }
 
-type RpcMessage struct {
+type RPCMessage struct {
 	Method string     `json:"method"`
 	Params [][]string `json:"params"`
 }
 
-func NewClient(config *config.Config) TerminusClient {
-	return TerminusClient{
+func NewClient(config *config.Config) Client {
+	return Client{
 		config: config,
 	}
 }
 
 // get list of beacons, accounts, etc
-func (t TerminusClient) GetInfo() (res string, err error) {
+func (t Client) GetInfo() (res string, err error) {
 	resp, err := t.ExecCmd(GetInfoMethod, []string{})
-	return t.decodeJsonResponse(resp), err
+	return t.decodeJSONResponse(resp), err
 }
 
 // create account with a given number of sats
-func (t TerminusClient) CreateAccount(msats int) (res string, err error) {
+func (t Client) CreateAccount(msats int) (res string, err error) {
 	resp, err := t.ExecCmd(CreateAccountMethod, []string{strconv.Itoa(msats)})
-	return t.decodeJsonResponse(resp), err
+	return t.decodeJSONResponse(resp), err
 }
 
-func (t TerminusClient) Listen(accountName string) (res string, err error) {
+func (t Client) Listen(accountName string) (res string, err error) {
 	resp, err := t.ExecCmd(ListenMethod, []string{accountName})
-	return t.decodeJsonResponse(resp), err
+	return t.decodeJSONResponse(resp), err
 }
 
-func (t TerminusClient) Connect(accountName, beacon string) (res string, err error) {
+func (t Client) Connect(accountName, beacon string) (res string, err error) {
 	resp, err := t.ExecCmd(ConnectMethod, []string{accountName, beacon})
-	return t.decodeJsonResponse(resp), err
+	return t.decodeJSONResponse(resp), err
 }
 
-func (t TerminusClient) ExecCmd(method string, argv []string) (res []byte, err error) {
-	message := RpcMessage{
+func (t Client) ExecCmd(method string, argv []string) (res []byte, err error) {
+	message := RPCMessage{
 		Method: method,
 		Params: [][]string{argv},
 	}
@@ -69,7 +69,7 @@ func (t TerminusClient) ExecCmd(method string, argv []string) (res []byte, err e
 		return res, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, t.config.GetRpcAddress(), bytes.NewBuffer(msg))
+	req, err := http.NewRequest(http.MethodPost, t.config.GetRPCAddress(), bytes.NewBuffer(msg))
 	if err != nil {
 		return res, err
 	}
@@ -89,7 +89,7 @@ func (t TerminusClient) ExecCmd(method string, argv []string) (res []byte, err e
 }
 
 // decode terminus response
-func (t TerminusClient) decodeJsonResponse(res []byte) string {
+func (t Client) decodeJSONResponse(res []byte) string {
 	jsonRes := []string{}
 	err := json.Unmarshal(res, &jsonRes)
 	if err != nil {

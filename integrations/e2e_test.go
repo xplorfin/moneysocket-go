@@ -28,8 +28,8 @@ func makeConfig(t *testing.T) *config.Config {
 	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
-	testConfig.RpcConfig.BindHost = "localhost"
-	testConfig.RpcConfig.BindPort = nettest.GetFreePort(t)
+	testConfig.RPCConfig.BindHost = "localhost"
+	testConfig.RPCConfig.BindPort = nettest.GetFreePort(t)
 
 	testConfig.RelayConfig.BindHost = "localhost"
 	testConfig.RelayConfig.BindPort = nettest.GetFreePort(t)
@@ -50,15 +50,15 @@ func TestE2E(t *testing.T) {
 	}()
 
 	// setup test rpc server
-	testRpcServer, err := terminus.NewTerminus(cfg)
+	testRPCServer, err := terminus.NewTerminus(cfg)
 	Nil(t, err)
 	go func() {
-		err = testRpcServer.Start(ctx)
+		err = testRPCServer.Start(ctx)
 		Nil(t, err)
 	}()
 
 	// test rpc server hostname
-	nettest.AssertConnected(cfg.GetRpcHostname(), t)
+	nettest.AssertConnected(cfg.GetRPCHostname(), t)
 
 	terminusClient := terminus.NewClient(cfg)
 	// create two accounts
@@ -86,7 +86,7 @@ func TestE2E(t *testing.T) {
 	Nil(t, err)
 
 	// generate a new beacon and call connect
-	providerBeacon := generateNewBeacon(cfg.GetExternalHost(), cfg.GetUseTls(), cfg.GetExternalPort())
+	providerBeacon := generateNewBeacon(cfg.GetExternalHost(), cfg.GetUseTLS(), cfg.GetExternalPort())
 	_, err = terminusClient.Connect("0", providerBeacon.ToBech32Str())
 	Nil(t, err)
 
@@ -96,7 +96,7 @@ func TestE2E(t *testing.T) {
 }
 
 // getBeacon mocks a new beacon for a given account
-func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
+func getBeacon(t *testing.T, terminusClient terminus.Client, account string) beacon.Beacon {
 	accountBeacon, err := terminusClient.Listen(account)
 	Nil(t, err)
 

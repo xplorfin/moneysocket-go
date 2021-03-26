@@ -9,14 +9,14 @@ import (
 
 type Rendezvous struct {
 	BaseMoneySocketNotification
-	rendezvousId string
+	rendezvousID string
 }
 
 // create a new rendezvous end notification with a given rendezvous id
-func NewNotifyRendezvous(rid, requestUuid string) Rendezvous {
+func NewNotifyRendezvous(rid, requestUUID string) Rendezvous {
 	return Rendezvous{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvous, requestUuid),
-		rendezvousId:                rid,
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvous, requestUUID),
+		rendezvousID:                rid,
 	}
 }
 
@@ -24,13 +24,13 @@ func (r Rendezvous) MustBeClearText() bool {
 	return true
 }
 
-func (r Rendezvous) ToJson() ([]byte, error) {
+func (r Rendezvous) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(r, m)
 	if err != nil {
 		return nil, err
 	}
-	m[rendezvousIdKey] = r.rendezvousId
+	m[rendezvousIDKey] = r.rendezvousID
 	return json.Marshal(&m)
 }
 
@@ -39,11 +39,11 @@ func DecodeRendezvous(payload []byte) (Rendezvous, error) {
 	if err != nil {
 		return Rendezvous{}, err
 	}
-	rendezvousId, err := jsonparser.GetString(payload, rendezvousIdKey)
+	rendezvousID, err := jsonparser.GetString(payload, rendezvousIDKey)
 	if err != nil {
 		return Rendezvous{}, err
 	}
-	return Rendezvous{notiification, rendezvousId}, nil
+	return Rendezvous{notiification, rendezvousID}, nil
 }
 
 var _ MoneysocketNotification = &Rendezvous{}

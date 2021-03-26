@@ -97,8 +97,8 @@ func (s SharedSeed) DeriveAES256Key() []byte {
 	return s.DoubleSHA256(s.seedBytes)
 }
 
-// DeriveRendezvousId will generate a DoubleSHA256 of the DeriveAES256Key
-func (s SharedSeed) DeriveRendezvousId() []byte {
+// DeriveRendezvousID will generate a DoubleSHA256 of the DeriveAES256Key
+func (s SharedSeed) DeriveRendezvousID() []byte {
 	return moneysocketUtil.CreateDoubleSha256(s.DeriveAES256Key())
 }
 

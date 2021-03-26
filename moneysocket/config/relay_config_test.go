@@ -17,7 +17,7 @@ type RelayConfigTest struct {
 }
 
 // test variations where tls is false
-func makeTlsFalseVariations(t *testing.T) []RelayConfigTest {
+func makeTLSFalseVariations(t *testing.T) []RelayConfigTest {
 	return []RelayConfigTest{
 		{
 			isValid:  true,
@@ -148,7 +148,7 @@ func makeCertVariations(t *testing.T) []RelayConfigTest {
 }
 
 func makeRelayConfigTests(t *testing.T) (configs []RelayConfigTest) {
-	configs = append(configs, makeTlsFalseVariations(t)...)
+	configs = append(configs, makeTLSFalseVariations(t)...)
 	configs = append(configs, makeCertVariations(t)...)
 	return configs
 }

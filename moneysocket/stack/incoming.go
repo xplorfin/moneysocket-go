@@ -22,7 +22,7 @@ type IncomingStack struct {
 	localLayer      *local.IncomingLocalLayer
 	websocketLayer  *websocket.IncomingWebsocketLayer
 	rendezvousLayer *rendezvous.IncomingRendezvousLayer
-	relayLayer      *relay.RelayLayer
+	relayLayer      *relay.Layer
 }
 
 func NewIncomingStack(config *config.Config, outgoingLocalLayer *local.OutgoingLocalLayer) *IncomingStack {
@@ -85,12 +85,12 @@ func (i *IncomingStack) RevokeNexus(nexus nexusHelper.Nexus) {
 
 // return websocket location object from config
 func (i *IncomingStack) GetListenLocations() []location.Location {
-	return []location.Location{location.NewWebsocketLocationPort(i.config.GetExternalHost(), i.config.GetUseTls(), i.config.GetExternalPort())}
+	return []location.Location{location.NewWebsocketLocationPort(i.config.GetExternalHost(), i.config.GetUseTLS(), i.config.GetExternalPort())}
 }
 
-func (i *IncomingStack) GetListenUrl() string {
+func (i *IncomingStack) GetListenURL() string {
 	schema := "ws"
-	if i.config.GetUseTls() {
+	if i.config.GetUseTLS() {
 		schema = "wss"
 	}
 	return fmt.Sprintf("%s://%s:%d", schema, i.config.ListenConfig.BindHost, i.config.ListenConfig.BindPort)
@@ -99,7 +99,7 @@ func (i *IncomingStack) GetListenUrl() string {
 // Listen listens on a given port
 // TODO implement tls config
 func (i *IncomingStack) Listen() error {
-	return i.websocketLayer.Listen(i.GetListenUrl(), nil)
+	return i.websocketLayer.Listen(i.GetListenURL(), nil)
 }
 
 var _ layer.Layer = &IncomingStack{}

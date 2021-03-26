@@ -11,7 +11,7 @@ import (
 type IncomingRendezvousLayer struct {
 	*layer.BaseLayer
 	// directory is used for peering nexuses
-	directory *rendezvous.RendezvousDirectory
+	directory *rendezvous.Directory
 }
 
 // NewIncomingRendezvousLayer creates an IncomingRendezvousLayer
@@ -55,8 +55,8 @@ func (o *IncomingRendezvousLayer) ToString() string {
 
 // RevokeNexus removes the nexus from directories/layers
 func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	belowUuid, _ := o.NexusByBelow.Get(belowNexus.UUID())
-	rendezvousNexus, _ := o.Nexuses.Get(belowUuid)
+	belowUUID, _ := o.NexusByBelow.Get(belowNexus.UUID())
+	rendezvousNexus, _ := o.Nexuses.Get(belowUUID)
 	peerRendezvousNexus := o.directory.GetPeerNexus(rendezvousNexus.UUID())
 	o.BaseLayer.RevokeNexus(belowNexus)
 	if peerRendezvousNexus != nil {

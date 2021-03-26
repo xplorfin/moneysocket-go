@@ -60,11 +60,11 @@ func TestPythonParity(t *testing.T) {
 	boltTest := request.NewRequestPay(bolt)
 	EncodeDecode(t, boltTest, testSeed)
 
-	rendezvousRequest := request.NewRendezvousRequest(string(testSeed.DeriveRendezvousId()))
+	rendezvousRequest := request.NewRendezvousRequest(string(testSeed.DeriveRendezvousID()))
 	EncodeDecode(t, rendezvousRequest, testSeed)
 
 	// notifications
-	rendezvousEndNotify := notification.NewRendezvousEnd(string(testSeed.DeriveRendezvousId()), uuid.NewV4().String())
+	rendezvousEndNotify := notification.NewRendezvousEnd(string(testSeed.DeriveRendezvousID()), uuid.NewV4().String())
 	EncodeDecode(t, rendezvousEndNotify, testSeed)
 
 	bolt, _ = mock.MockLndInvoiceMainnet(t)

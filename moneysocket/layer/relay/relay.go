@@ -9,42 +9,42 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-type RelayLayer struct {
+type Layer struct {
 	layer.BaseLayer
 	RendezvousLayer *rendezvous.IncomingRendezvousLayer
 }
 
-func NewRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *RelayLayer {
-	return &RelayLayer{
+func NewRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *Layer {
+	return &Layer{
 		BaseLayer:       layer.NewBaseLayer(),
 		RendezvousLayer: rendezvousLayer,
 	}
 }
 
 // AnnounceNexus registers the message handlers for the rendezvousNexus to RelayLayer
-func (r *RelayLayer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
+func (r *Layer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
 	rendezvousNexus.SetOnMessage(r.OnMessage)
 	rendezvousNexus.SetOnBinMessage(r.OnBinMessage)
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (r *RelayLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (r *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(r.AnnounceNexus)
 	belowLayer.SetOnRevoke(r.RevokeNexus)
 }
 
-func (r *RelayLayer) RevokeNexus(rendezvousNexus nexusHelper.Nexus) {
+func (r *Layer) RevokeNexus(rendezvousNexus nexusHelper.Nexus) {
 	log.Println("revoked from below")
 }
 
-func (r *RelayLayer) OnMessage(rendezvousNexus nexusHelper.Nexus, msg base.MoneysocketMessage) {
+func (r *Layer) OnMessage(rendezvousNexus nexusHelper.Nexus, msg base.MoneysocketMessage) {
 	peerNexus := r.RendezvousLayer.GetPeerNexus(rendezvousNexus)
 	_ = (*peerNexus).Send(msg)
 }
 
-func (r *RelayLayer) OnBinMessage(rendezvousNexus nexusHelper.Nexus, msg []byte) {
+func (r *Layer) OnBinMessage(rendezvousNexus nexusHelper.Nexus, msg []byte) {
 	peerNexus := r.RendezvousLayer.GetPeerNexus(rendezvousNexus)
 	_ = (*peerNexus).SendBin(msg)
 }
 
-var _ layer.Layer = &RelayLayer{}
+var _ layer.Layer = &Layer{}

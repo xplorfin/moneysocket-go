@@ -23,7 +23,7 @@ type MessageHandler func(belowNexus nexus.Nexus, msg moneysocket_message.Moneyso
 type BinMessageHandler func(belowNexus nexus.Nexus, msg []byte)
 
 type BaseNexusTestHarness struct {
-	*BaseNexus
+	*NexusBase
 	OnMsg    MessageHandler
 	OnBinMsg BinMessageHandler
 }
@@ -42,7 +42,7 @@ func (b BaseNexusTestHarness) OnBinMessage(nexus nexus.Nexus, msg []byte) {
 
 func NewBaseNexusTestHarness(onMsg MessageHandler, onMsgBin BinMessageHandler) BaseNexusTestHarness {
 	testHarness := BaseNexusTestHarness{}
-	testHarness.BaseNexus = NewBaseNexus(BaseNexusTestHarnessName)
+	testHarness.NexusBase = NewBaseNexus(BaseNexusTestHarnessName)
 	testHarness.OnMsg = onMsg
 	testHarness.OnBinMsg = onMsgBin
 	return testHarness
@@ -53,8 +53,8 @@ func TestBaseNexusMsgUuidOperations(t *testing.T) {
 	var n2 nexus.Nexus = NewBaseNexusTestHarness(EmptyMessageHandler, EmptyMessageBinHandler)
 
 	// make sure uuid operatons work as expected
-	AssertUuidV4(n1, t)
-	AssertUuidV4(n2, t)
+	AssertUUIDV4(n1, t)
+	AssertUUIDV4(n2, t)
 
 	if n1.IsEqual(n2) {
 		t.Errorf("expected nexus n1 with uuid %s to be different from n2", n1.UUID())
@@ -101,7 +101,7 @@ func TestBaseNexus(t *testing.T) {
 
 }
 
-func AssertUuidV4(nexus nexus.Nexus, t *testing.T) {
+func AssertUUIDV4(nexus nexus.Nexus, t *testing.T) {
 	if nexus.UUID().Version() != uuid.V4 {
 		t.Errorf("expected uuid version %b to equal %b", nexus.UUID().Version(), uuid.V4)
 	}

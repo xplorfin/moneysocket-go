@@ -11,7 +11,7 @@ import (
 )
 
 type IncomingLocalNexus struct {
-	*base.BaseNexus
+	*base.NexusBase
 }
 
 const IncomingLocalNexusName = "IncomingLocalNexus"
@@ -19,7 +19,7 @@ const IncomingLocalNexusName = "IncomingLocalNexus"
 func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) *IncomingLocalNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingLocalNexusName, belowNexus, layer)
 	og := IncomingLocalNexus{
-		BaseNexus: &baseNexus,
+		NexusBase: &baseNexus,
 	}
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
@@ -29,12 +29,12 @@ func NewIncomingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer) *Inc
 
 func (i *IncomingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	log.Println("incoming local nexus got msg")
-	i.BaseNexus.OnMessage(belowNexus, msg)
+	i.NexusBase.OnMessage(belowNexus, msg)
 }
 
 func (i *IncomingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msgBytes []byte) {
 	log.Println("incoming local nexus got raw msg")
-	i.BaseNexus.OnBinMessage(belowNexus, msgBytes)
+	i.NexusBase.OnBinMessage(belowNexus, msgBytes)
 }
 
 func (i *IncomingLocalNexus) Send(msg moneysocket_message.MoneysocketMessage) error {

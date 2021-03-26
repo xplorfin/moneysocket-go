@@ -10,24 +10,24 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-const ProviderNexusName = "ProviderNexus"
+const NexusName = "ProviderNexus"
 
-type ProviderNexus struct {
-	*base.BaseNexus
-	RequestReferenceUuid      string
+type Nexus struct {
+	*base.NexusBase
+	RequestReferenceUUID      string
 	handleProviderInfoRequest compat.HandleProviderInfoRequest
 	ProviderFinishedCb        func(nx nexus.Nexus)
 }
 
-func NewProviderNexus(belowNexus nexus.Nexus) *ProviderNexus {
-	baseNexus := base.NewBaseNexusBelow(ProviderNexusName, belowNexus)
-	pn := ProviderNexus{baseNexus, "", nil, nil}
+func NewProviderNexus(belowNexus nexus.Nexus) *Nexus {
+	baseNexus := base.NewBaseNexusBelow(NexusName, belowNexus)
+	pn := Nexus{baseNexus, "", nil, nil}
 	belowNexus.SetOnBinMessage(pn.OnBinMessage)
 	belowNexus.SetOnMessage(pn.OnMessage)
 	return &pn
 }
 
-func (o *ProviderNexus) IsLayerMessage(message message_base.MoneysocketMessage) bool {
+func (o *Nexus) IsLayerMessage(message message_base.MoneysocketMessage) bool {
 	if message.MessageClass() == message_base.Request {
 		return false
 	}
@@ -35,20 +35,20 @@ func (o *ProviderNexus) IsLayerMessage(message message_base.MoneysocketMessage) 
 	return ntfn.RequestType() == message_base.ProviderRequest || ntfn.RequestType() == message_base.PingRequest
 }
 
-func (o *ProviderNexus) NotifyProvider() {
+func (o *Nexus) NotifyProvider() {
 	ss := o.SharedSeed()
 	providerInfo := o.handleProviderInfoRequest(*ss)
-	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUUID))
 }
 
-func (o *ProviderNexus) NotifyProviderNotReady() {
-	_ = o.Send(notification.NewNotifyProviderNotReady(o.RequestReferenceUuid))
+func (o *Nexus) NotifyProviderNotReady() {
+	_ = o.Send(notification.NewNotifyProviderNotReady(o.RequestReferenceUUID))
 }
 
-func (o *ProviderNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
+func (o *Nexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
 	log.Println("provider nexus got message")
 	if !o.IsLayerMessage(msg) {
-		o.BaseNexus.OnMessage(belowNexus, msg)
+		o.NexusBase.OnMessage(belowNexus, msg)
 		return
 	}
 	ntfn := msg.(notification.MoneysocketNotification)
@@ -68,27 +68,27 @@ func (o *ProviderNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.Money
 
 }
 
-func (o *ProviderNexus) NotifyPong() {
-	_ = o.Send(notification.NewNotifyPong(o.RequestReferenceUuid))
+func (o *Nexus) NotifyPong() {
+	_ = o.Send(notification.NewNotifyPong(o.RequestReferenceUUID))
 }
 
-func (o *ProviderNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+func (o *Nexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	log.Println("provider nexus got raw msg")
-	o.BaseNexus.OnBinMessage(belowNexus, msg)
+	o.NexusBase.OnBinMessage(belowNexus, msg)
 }
 
-func (o *ProviderNexus) WaitForConsumer(providerFinishedCb func(nexus2 nexus.Nexus)) {
+func (o *Nexus) WaitForConsumer(providerFinishedCb func(nexus2 nexus.Nexus)) {
 	o.ProviderFinishedCb = providerFinishedCb
 }
 
-func (o *ProviderNexus) NotifyProviderReady() {
+func (o *Nexus) NotifyProviderReady() {
 	ss := o.SharedSeed()
 	providerInfo := o.Layer.(compat.ProviderTransactLayerInterface).HandleProviderInfoRequest(*ss)
 	if !providerInfo.Details.Ready() {
 		panic("expected provider to be ready")
 	}
-	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUUID))
 }
-func (o *ProviderNexus) ProviderNowReady() {
+func (o *Nexus) ProviderNowReady() {
 	o.NotifyProviderReady()
 }

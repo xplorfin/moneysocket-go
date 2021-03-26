@@ -15,18 +15,18 @@ type NexusMap struct {
 }
 
 // idempotently add an idea to map
-func (nm *NexusMap) Store(nexusUuid uuid.UUID, nexus nexusHelper.Nexus) {
-	nm.internalMap.Store(nexusUuid.String(), nexus)
+func (nm *NexusMap) Store(nexusUUID uuid.UUID, nexus nexusHelper.Nexus) {
+	nm.internalMap.Store(nexusUUID.String(), nexus)
 }
 
 // delete an item from a map
-func (nm *NexusMap) Delete(nexusUuid uuid.UUID) {
-	nm.internalMap.Delete(nexusUuid.String())
+func (nm *NexusMap) Delete(nexusUUID uuid.UUID) {
+	nm.internalMap.Delete(nexusUUID.String())
 }
 
 // get a nexus from the map, don't check for key presence
-func (nm *NexusMap) Get(nexusUuid uuid.UUID) (nexusHelper.Nexus, bool) {
-	nu, ok := nm.internalMap.Get(nexusUuid.String())
+func (nm *NexusMap) Get(nexusUUID uuid.UUID) (nexusHelper.Nexus, bool) {
+	nu, ok := nm.internalMap.Get(nexusUUID.String())
 	if !ok {
 		return NewUnknownNexus(), ok
 	}
@@ -40,31 +40,31 @@ func (nm *NexusMap) Range(f func(key uuid.UUID, nexus nexusHelper.Nexus) bool) {
 }
 
 // nexus map that enforces types
-type NexusUuidMap struct {
+type NexusUUIDMap struct {
 	// map[uuid.UUID]uuid.UUID
 	internalMap sync.Map
 }
 
 // idempotently add an idea to map
-func (num *NexusUuidMap) Store(nexusUuid uuid.UUID, nexus uuid.UUID) {
-	num.internalMap.Store(nexusUuid, nexus)
+func (num *NexusUUIDMap) Store(nexusUUID uuid.UUID, nexus uuid.UUID) {
+	num.internalMap.Store(nexusUUID, nexus)
 }
 
 // delete an item from a map
-func (num *NexusUuidMap) Delete(nexusUuid uuid.UUID) {
-	num.internalMap.Delete(nexusUuid)
+func (num *NexusUUIDMap) Delete(nexusUUID uuid.UUID) {
+	num.internalMap.Delete(nexusUUID)
 }
 
 // get a nexus from the map, don't check for key presence
-func (num *NexusUuidMap) Get(nexusUuid uuid.UUID) (uuid.UUID, bool) {
-	nu, ok := num.internalMap.Load(nexusUuid)
+func (num *NexusUUIDMap) Get(nexusUUID uuid.UUID) (uuid.UUID, bool) {
+	nu, ok := num.internalMap.Load(nexusUUID)
 	if !ok {
 		return uuid.NewV4(), ok
 	}
 	return nu.(uuid.UUID), ok
 }
 
-func (num *NexusUuidMap) Range(f func(key uuid.UUID, value uuid.UUID) bool) {
+func (num *NexusUUIDMap) Range(f func(key uuid.UUID, value uuid.UUID) bool) {
 	num.internalMap.Range(func(key, value interface{}) bool {
 		return f(key.(uuid.UUID), value.(uuid.UUID))
 	})

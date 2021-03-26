@@ -15,15 +15,15 @@ import (
 
 const SellerNexusName = "SellerNexus"
 
-type SellerNexus struct {
-	*base.BaseNexus
-	handleSellerInfoRequest     func() SellerInfo
+type Nexus struct {
+	*base.NexusBase
+	handleSellerInfoRequest     func() Info
 	sellerFinishedCb            func(nexus.Nexus)
 	handleOpinionInvoiceRequest compat.HandleOpinionInvoiceRequest
 }
 
 // seller info message
-type SellerInfo struct {
+type Info struct {
 	// wether or not the seller is ready
 	Ready bool `json:"ready"`
 	// wether or not the uuid works
@@ -31,9 +31,9 @@ type SellerInfo struct {
 	Items      []notification.Item `json:"items"`
 }
 
-func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) *SellerNexus {
+func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) *Nexus {
 	baseNexus := base.NewBaseNexusFull(SellerNexusName, belowNexus, layer)
-	sn := SellerNexus{
+	sn := Nexus{
 		&baseNexus,
 		nil,
 		nil,
@@ -44,7 +44,7 @@ func NewSellerNexus(belowNexus nexus.Nexus, layer layer.Layer) *SellerNexus {
 	return &sn
 }
 
-func (s *SellerNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
+func (s *Nexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
 	if message.MessageClass() == msg.Request {
 		return false
 	}
@@ -53,31 +53,31 @@ func (s *SellerNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
 	return req.MessageType() == msg.RequestOpinionSeller || req.MessageType() == msg.RequestOpinionInvoice
 }
 
-func (s *SellerNexus) notifySeller(requestReferenceUuid string) error {
+func (s *Nexus) notifySeller(requestReferenceUUID string) error {
 	sellerInfo := s.handleSellerInfoRequest()
-	return s.Send(notification.NewNotifyOpinionSeller(sellerInfo.SellerUUID, sellerInfo.Items, requestReferenceUuid))
+	return s.Send(notification.NewNotifyOpinionSeller(sellerInfo.SellerUUID, sellerInfo.Items, requestReferenceUUID))
 }
 
-func (s *SellerNexus) UpdatePrices() {
+func (s *Nexus) UpdatePrices() {
 	_ = s.notifySeller(uuid.NewV4().String())
 }
 
-func (s *SellerNexus) SetHandleOpinionInvoiceRequest(invoiceRequest compat.HandleOpinionInvoiceRequest) {
+func (s *Nexus) SetHandleOpinionInvoiceRequest(invoiceRequest compat.HandleOpinionInvoiceRequest) {
 	s.handleOpinionInvoiceRequest = invoiceRequest
 }
 
-func (s *SellerNexus) SetHandleSellerInfoRequest(handler func() SellerInfo) {
+func (s *Nexus) SetHandleSellerInfoRequest(handler func() Info) {
 	s.handleSellerInfoRequest = handler
 }
 
-func (s *SellerNexus) notifySellerNotReady(requestReferenceUuid string) error {
-	return s.Send(notification.NewNotifyOpinionSellerNotReady(requestReferenceUuid))
+func (s *Nexus) notifySellerNotReady(requestReferenceUUID string) error {
+	return s.Send(notification.NewNotifyOpinionSellerNotReady(requestReferenceUUID))
 }
 
-func (s *SellerNexus) OnMessage(baseNexus nexus.Nexus, message msg.MoneysocketMessage) {
+func (s *Nexus) OnMessage(baseNexus nexus.Nexus, message msg.MoneysocketMessage) {
 	log.Println("provider nexus got message from below")
 	if !s.IsLayerMessage(message) {
-		s.BaseNexus.OnMessage(baseNexus, message)
+		s.NexusBase.OnMessage(baseNexus, message)
 	}
 	// message request
 	nx := message.(notification.MoneysocketNotification)
@@ -85,36 +85,36 @@ func (s *SellerNexus) OnMessage(baseNexus nexus.Nexus, message msg.MoneysocketMe
 		sharedSeed := s.SharedSeed()
 		sellerInfo := s.handleSellerInfoRequest()
 		if sellerInfo.Ready {
-			_ = s.notifySeller(nx.RequestReferenceUuid())
+			_ = s.notifySeller(nx.RequestReferenceUUID())
 			s.sellerFinishedCb(s)
 		} else {
 			l := s.Layer.(compat.SellingLayerInterface)
-			_ = s.notifySellerNotReady(nx.RequestReferenceUuid())
+			_ = s.notifySellerNotReady(nx.RequestReferenceUUID())
 			l.NexusWaitingForApp(sharedSeed, s)
 		}
 	} else if nx.RequestType() == msg.RequestOpinionInvoice {
-		mg := message.(request.RequestOpinionInvoice)
-		s.handleOpinionInvoiceRequest(s, mg.ItemId, nx.RequestReferenceUuid())
+		mg := message.(request.OpinionInvoice)
+		s.handleOpinionInvoiceRequest(s, mg.ItemID, nx.RequestReferenceUUID())
 	}
 }
 
-func (s *SellerNexus) NotifySellerNotReady(requestReferenceUuid string) error {
-	return s.Send(notification.NewNotifyOpinionSellerNotReady(requestReferenceUuid))
+func (s *Nexus) NotifySellerNotReady(requestReferenceUUID string) error {
+	return s.Send(notification.NewNotifyOpinionSellerNotReady(requestReferenceUUID))
 }
 
-func (s *SellerNexus) OnBinMessage(belowNexus nexus.Nexus, msgBytes []byte) {
-	s.BaseNexus.OnBinMessage(belowNexus, msgBytes)
+func (s *Nexus) OnBinMessage(belowNexus nexus.Nexus, msgBytes []byte) {
+	s.NexusBase.OnBinMessage(belowNexus, msgBytes)
 }
 
-func (s *SellerNexus) NotifyOpinionInvoice(bolt11, requestReferenceUuid string) error {
-	return s.Send(notification.NewNotifyOpinionInvoice(requestReferenceUuid, bolt11))
+func (s *Nexus) NotifyOpinionInvoice(bolt11, requestReferenceUUID string) error {
+	return s.Send(notification.NewNotifyOpinionInvoice(requestReferenceUUID, bolt11))
 }
 
-func (s *SellerNexus) WaitForBuyer(sellerFinishedCb func(nexus.Nexus)) {
+func (s *Nexus) WaitForBuyer(sellerFinishedCb func(nexus.Nexus)) {
 	s.sellerFinishedCb = sellerFinishedCb
 }
 
-func (s *SellerNexus) SellerNowReady() {
+func (s *Nexus) SellerNowReady() {
 	_ = s.notifySeller(uuid.NewV4().String())
 	s.sellerFinishedCb(s)
 }

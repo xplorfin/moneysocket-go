@@ -18,7 +18,7 @@ type MoneysocketMessage interface {
 	// get message class (request or message)
 	MessageClass() MessageClass
 	// convert a message to json
-	ToJson() ([]byte, error)
+	ToJSON() ([]byte, error)
 	// wetrher or not the message is valid
 	IsValid() (bool, error)
 	// wether or not a message must be clear text

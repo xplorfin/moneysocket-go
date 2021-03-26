@@ -9,8 +9,8 @@ import (
 )
 
 // handling it this way is idiotic.
-func RequestFromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
-	rawType, err := jsonparser.GetString(payload, RequestNameKey)
+func FromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
+	rawType, err := jsonparser.GetString(payload, NameKey)
 	if err != nil {
 		return nil, 0, err
 	}

@@ -13,7 +13,7 @@ import (
 )
 
 type OutgoingLocalNexus struct {
-	*base.BaseNexus
+	*base.NexusBase
 	belowNexus *JoinedLocalNexus
 	sharedSeed beacon.SharedSeed
 }
@@ -23,7 +23,7 @@ const OutgoingLocalNexusName = "OutgoingLocalNexus"
 func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
 	bnf := base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer)
 	og := OutgoingLocalNexus{
-		BaseNexus:  &bnf,
+		NexusBase:  &bnf,
 		belowNexus: belowNexus,
 	}
 	// this needs to be done everywhere
@@ -37,7 +37,7 @@ func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, shar
 
 func (o *OutgoingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {
 	log.Printf("outgoing local nexus got msg %s", msg)
-	o.BaseNexus.OnMessage(belowNexus, msg)
+	o.NexusBase.OnMessage(belowNexus, msg)
 }
 
 func (o OutgoingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
@@ -46,10 +46,10 @@ func (o OutgoingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	proccessedMessage, _, err := message.WireDecode(msg, &o.sharedSeed)
 	if err != nil {
 		log.Printf("could not decode msg: %s", err)
-		o.BaseNexus.OnBinMessage(belowNexus, msg)
+		o.NexusBase.OnBinMessage(belowNexus, msg)
 		return
 	}
-	o.BaseNexus.OnMessage(belowNexus, proccessedMessage)
+	o.NexusBase.OnMessage(belowNexus, proccessedMessage)
 
 }
 

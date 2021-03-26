@@ -12,11 +12,20 @@ import (
 const JoinedLocalNexusName = "JoinedLocalNexus"
 
 type JoinedLocalNexus struct {
-	*base.BaseNexus
+	*base.NexusBase
 	outgoingNexus compat.RevokableNexus
 	incomingNexus compat.RevokableNexus
 
 	// TODO event listeners
+}
+
+func NewJoinedLocalNexus() *JoinedLocalNexus {
+	bn := base.NewBaseNexus(JoinedLocalNexusName)
+	return &JoinedLocalNexus{
+		NexusBase:     bn,
+		outgoingNexus: nil,
+		incomingNexus: nil,
+	}
 }
 
 func (j *JoinedLocalNexus) SendFromOutgoing(msg base2.MoneysocketMessage) {
@@ -34,26 +43,17 @@ func (j *JoinedLocalNexus) SendBinFromIncoming(msg []byte) {
 	j.outgoingNexus.OnBinMessage(j, msg)
 }
 
-func NewJoinedLocalNexus() *JoinedLocalNexus {
-	bn := base.NewBaseNexus(JoinedLocalNexusName)
-	return &JoinedLocalNexus{
-		BaseNexus:     bn,
-		outgoingNexus: nil,
-		incomingNexus: nil,
-	}
+func (j *JoinedLocalNexus) SetIncomingNexus(incomingNexus compat.RevokableNexus) {
+	j.incomingNexus = incomingNexus
 }
 
-func (n *JoinedLocalNexus) SetIncomingNexus(incomingNexus compat.RevokableNexus) {
-	n.incomingNexus = incomingNexus
+func (j *JoinedLocalNexus) SetOutgoingNexus(outgoingNexus compat.RevokableNexus) {
+	j.outgoingNexus = outgoingNexus
 }
 
-func (n *JoinedLocalNexus) SetOutgoingNexus(outgoingNexus compat.RevokableNexus) {
-	n.outgoingNexus = outgoingNexus
-}
-
-func (n *JoinedLocalNexus) InitiateClose() {
-	n.incomingNexus.InitiateClose()
-	n.outgoingNexus.InitiateClose()
+func (j *JoinedLocalNexus) InitiateClose() {
+	j.incomingNexus.InitiateClose()
+	j.outgoingNexus.InitiateClose()
 }
 
 var _ nexusHelper.Nexus = &JoinedLocalNexus{}

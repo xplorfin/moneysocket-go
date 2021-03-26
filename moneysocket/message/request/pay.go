@@ -7,15 +7,15 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-type RequestPay struct {
+type Pay struct {
 	BaseMoneySocketRequest
 	Bolt11 string
 }
 
 // create a new request pay with a given bolt 11
 // bolt 11 is not validated client (moneysocket) side
-func NewRequestPay(bolt11 string) RequestPay {
-	return RequestPay{
+func NewRequestPay(bolt11 string) Pay {
+	return Pay{
 		NewBaseMoneySocketRequest(base.PayRequest),
 		bolt11,
 	}
@@ -23,7 +23,7 @@ func NewRequestPay(bolt11 string) RequestPay {
 
 const bolt11key = "Bolt11"
 
-func (r RequestPay) ToJson() ([]byte, error) {
+func (r Pay) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	m[bolt11key] = r.Bolt11
 	err := EncodeMoneysocketRequest(r, m)
@@ -33,20 +33,20 @@ func (r RequestPay) ToJson() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-func DecodeRequestPay(payload []byte) (r RequestPay, err error) {
+func DecodeRequestPay(payload []byte) (r Pay, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {
-		return RequestPay{}, err
+		return Pay{}, err
 	}
 	bolt11, err := jsonparser.GetString(payload, bolt11key)
 	if err != nil {
-		return RequestPay{}, err
+		return Pay{}, err
 	}
 	// TODO validate bolt 11 here
-	return RequestPay{
+	return Pay{
 		BaseMoneySocketRequest: request,
 		Bolt11:                 bolt11,
 	}, nil
 }
 
-var _ MoneysocketRequest = &RequestPay{}
+var _ MoneysocketRequest = &Pay{}

@@ -10,7 +10,7 @@ import (
 )
 
 // TODO this needs to be fully implemented
-type TerminusLayer struct {
+type Layer struct {
 	layer.BaseLayer
 	NexusesBySharedSeed       map[string][]string
 	handleInvoiceRequest      compat.HandleInvoiceRequest
@@ -18,7 +18,7 @@ type TerminusLayer struct {
 	handleProviderInfoRequest compat.HandleProviderInfoRequest
 }
 
-func (o *TerminusLayer) SetupTerminusNexus(belowNexus nexus.Nexus) *TerminusNexus {
+func (o *Layer) SetupTerminusNexus(belowNexus nexus.Nexus) *Nexus {
 	terminusNexus := NewTerminusNexus(belowNexus, o)
 	terminusNexus.handleProviderInfoRequest = o.handleProviderInfoRequest
 	terminusNexus.handleInvoiceRequest = o.handleInvoiceRequest
@@ -27,7 +27,7 @@ func (o *TerminusLayer) SetupTerminusNexus(belowNexus nexus.Nexus) *TerminusNexu
 }
 
 // AnnounceNexus creates a new TerminusNexus and registers it
-func (o *TerminusLayer) AnnounceNexus(belowNexus nexus.Nexus) {
+func (o *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	terminusNexus := o.SetupTerminusNexus(belowNexus)
 	o.TrackNexus(terminusNexus, belowNexus)
 	o.SendLayerEvent(terminusNexus, message.NexusAnnounced)
@@ -42,51 +42,51 @@ func (o *TerminusLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	o.NexusesBySharedSeed[ss.ToString()] = append(o.NexusesBySharedSeed[ss.ToString()], terminusNexus.UUID().String())
 }
 
-func (o *TerminusLayer) RevokeNexus(belowNexus nexus.Nexus) {
-	nexusUuid, _ := o.NexusByBelow.Get(belowNexus.UUID())
-	terminusNexus, _ := o.Nexuses.Get(nexusUuid)
+func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
+	nexusUUID, _ := o.NexusByBelow.Get(belowNexus.UUID())
+	terminusNexus, _ := o.Nexuses.Get(nexusUUID)
 	o.BaseLayer.RevokeNexus(terminusNexus)
 	ss := terminusNexus.SharedSeed()
 	delete(o.NexusesBySharedSeed, ss.ToString())
 }
 
-func (o *TerminusLayer) NotifyPreImage(sharedSeeds []beacon.SharedSeed, preimage string) {
+func (o *Layer) NotifyPreImage(sharedSeeds []beacon.SharedSeed, preimage string) {
 	for _, ss := range sharedSeeds {
 		if _, ok := o.NexusesBySharedSeed[ss.ToString()]; !ok {
 			continue
 		}
-		for _, nexusUuid := range o.NexusesBySharedSeed[ss.ToString()] {
-			nxId, _ := uuid.FromString(nexusUuid)
-			nx, _ := o.Nexuses.Get(nxId)
-			terminusNexus := nx.(*TerminusNexus)
+		for _, nexusUUID := range o.NexusesBySharedSeed[ss.ToString()] {
+			nxID, _ := uuid.FromString(nexusUUID)
+			nx, _ := o.Nexuses.Get(nxID)
+			terminusNexus := nx.(*Nexus)
 			terminusNexus.NotifyPreimage(preimage, uuid.NewV4().String())
 			terminusNexus.NotifyProviderInfo(ss)
 		}
 	}
 }
 
-func (o *TerminusLayer) HandlePayRequest(ss beacon.SharedSeed, bolt11 string) {
+func (o *Layer) HandlePayRequest(ss beacon.SharedSeed, bolt11 string) {
 	panic("method not yet implemented")
 }
 
-func (o *TerminusLayer) HandleInvoiceRequest(ss beacon.SharedSeed, msats int) {
+func (o *Layer) HandleInvoiceRequest(ss beacon.SharedSeed, msats int) {
 	panic("method not yet implemented")
 }
 
-func (o *TerminusLayer) HandleProviderInfoRequest(ss beacon.SharedSeed) {
+func (o *Layer) HandleProviderInfoRequest(ss beacon.SharedSeed) {
 	panic("method not yet implemented")
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *TerminusLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)
 }
 
-func NewTerminusLayer() *TerminusLayer {
-	return &TerminusLayer{
+func NewTerminusLayer() *Layer {
+	return &Layer{
 		BaseLayer: layer.NewBaseLayer(),
 	}
 }
 
-var _ layer.Layer = &TerminusLayer{}
+var _ layer.Layer = &Layer{}

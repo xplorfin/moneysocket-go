@@ -11,9 +11,9 @@ type NotifyOpinionSellerNotReady struct {
 }
 
 // create a new rendezvous end notification with a given rendezvous id
-func NewNotifyOpinionSellerNotReady(requestUuid string) NotifyOpinionSellerNotReady {
+func NewNotifyOpinionSellerNotReady(requestUUID string) NotifyOpinionSellerNotReady {
 	return NotifyOpinionSellerNotReady{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyOpinionSellerNotReady, requestUuid),
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyOpinionSellerNotReady, requestUUID),
 	}
 }
 
@@ -21,7 +21,7 @@ func (r NotifyOpinionSellerNotReady) MustBeClearText() bool {
 	return true
 }
 
-func (r NotifyOpinionSellerNotReady) ToJson() ([]byte, error) {
+func (r NotifyOpinionSellerNotReady) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(r, m)
 	if err != nil {

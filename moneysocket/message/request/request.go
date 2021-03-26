@@ -8,14 +8,14 @@ import (
 
 type MoneysocketRequest interface {
 	base.MoneysocketMessage
-	Uuid() string
+	UUID() string
 	RequestName() string
 	MessageType() base.MessageType
 }
 
 type BaseMoneySocketRequest struct {
-	base.BaseMoneysocketMessage
-	BaseUuid    string
+	base.MoneysocketMessage
+	BaseUUID    string
 	RequestType base.MessageType
 }
 
@@ -23,8 +23,8 @@ func (b BaseMoneySocketRequest) MessageClass() base.MessageClass {
 	return base.Request
 }
 
-func (b BaseMoneySocketRequest) Uuid() string {
-	return b.BaseUuid
+func (b BaseMoneySocketRequest) UUID() string {
+	return b.BaseUUID
 }
 
 func (b BaseMoneySocketRequest) RequestName() string {
@@ -37,8 +37,8 @@ func (b BaseMoneySocketRequest) MessageType() base.MessageType {
 }
 
 const (
-	RequestUuidKey = "request_uuid"
-	RequestNameKey = "request_name"
+	UUIDKey = "request_uuid"
+	NameKey = "request_name"
 )
 
 // create a moneysocket request
@@ -47,36 +47,36 @@ func EncodeMoneysocketRequest(msg MoneysocketRequest, toEncode map[string]interf
 	if err != nil {
 		return err
 	}
-	toEncode[RequestUuidKey] = msg.Uuid()
-	toEncode[RequestNameKey] = msg.RequestName()
+	toEncode[UUIDKey] = msg.UUID()
+	toEncode[NameKey] = msg.RequestName()
 	return nil
 }
 
 // generate a new base moneysocket request. Should only be used by other message classes
 func NewBaseMoneySocketRequest(requestType base.MessageType) BaseMoneySocketRequest {
 	return BaseMoneySocketRequest{
-		base.NewBaseMoneysocketMessage(base.Request),
+		base.NewBaseBaseMoneysocketMessage(base.Request),
 		uuid.NewV4().String(),
 		requestType,
 	}
 }
 
 func DecodeRequest(request []byte) (b BaseMoneySocketRequest, err error) {
-	baseMessage, err := base.DecodeBaseMoneysocketMessage(request)
+	baseMessage, err := base.DecodeBaseBaseMoneysocketMessage(request)
 	if err != nil {
 		return b, err
 	}
-	reqUuid, err := jsonparser.GetString(request, RequestUuidKey)
+	reqUUID, err := jsonparser.GetString(request, UUIDKey)
 	if err != nil {
 		return b, err
 	}
-	reqType, err := jsonparser.GetString(request, RequestNameKey)
+	reqType, err := jsonparser.GetString(request, NameKey)
 	if err != nil {
 		return b, err
 	}
 	return BaseMoneySocketRequest{
-		BaseMoneysocketMessage: baseMessage,
-		BaseUuid:               reqUuid,
-		RequestType:            base.MessageTypeFromString(reqType),
+		MoneysocketMessage: baseMessage,
+		BaseUUID:           reqUUID,
+		RequestType:        base.MessageTypeFromString(reqType),
 	}, nil
 }

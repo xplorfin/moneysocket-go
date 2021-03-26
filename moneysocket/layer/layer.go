@@ -55,9 +55,9 @@ type BaseLayer struct {
 	// BelowNexuses is a thread-safe map of BelowNexuses to their ids uuid[nexus]
 	BelowNexuses NexusMap
 	// NexusByBelow is a map of below nexuses by nexus[uuid]
-	NexusByBelow NexusUuidMap
+	NexusByBelow NexusUUIDMap
 	// BelowByNexus is a map of nexus->uuid
-	BelowByNexus NexusUuidMap
+	BelowByNexus NexusUUIDMap
 }
 
 func (l *BaseLayer) SetOnLayerEvent(o OnLayerEventFn) {
@@ -118,8 +118,8 @@ func (l *BaseLayer) TrackNexusRevoked(nexus nexusHelper.Nexus) {
 
 // RevokeNexus removes the nexus from directories/layers
 func (l *BaseLayer) RevokeNexus(belowNexus nexusHelper.Nexus) {
-	belowUuid, _ := l.NexusByBelow.Get(belowNexus.UUID())
-	nexus, _ := l.Nexuses.Get(belowUuid)
+	belowUUID, _ := l.NexusByBelow.Get(belowNexus.UUID())
+	nexus, _ := l.Nexuses.Get(belowUUID)
 	l.UntrackNexus(nexus, belowNexus)
 	if l.IsNexusAnnounced(nexus) {
 		l.TrackNexusRevoked(nexus)
@@ -136,7 +136,7 @@ func NewBaseLayer() BaseLayer {
 		Nexuses:      NexusMap{},
 		Announced:    NexusMap{},
 		BelowNexuses: NexusMap{},
-		NexusByBelow: NexusUuidMap{},
-		BelowByNexus: NexusUuidMap{},
+		NexusByBelow: NexusUUIDMap{},
+		BelowByNexus: NexusUUIDMap{},
 	}
 }

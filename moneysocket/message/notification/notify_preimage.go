@@ -14,9 +14,9 @@ type NotifyPreimage struct {
 	Ext      string
 }
 
-func NewNotifyPreimage(preimage, ext, requestUuid string) NotifyPreimage {
+func NewNotifyPreimage(preimage, ext, requestUUID string) NotifyPreimage {
 	return NotifyPreimage{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyPreimage, requestUuid),
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyPreimage, requestUUID),
 		Preimage:                    preimage,
 		Ext:                         ext,
 	}
@@ -31,7 +31,7 @@ const (
 	extKey      = "ext"
 )
 
-func (n NotifyPreimage) ToJson() ([]byte, error) {
+func (n NotifyPreimage) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(n, m)
 	if err != nil {

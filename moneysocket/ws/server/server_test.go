@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"context"
@@ -16,9 +16,9 @@ func TestListenUnsecure(t *testing.T) {
 
 	protocol := NewTestWebsocketServiceProtocol()
 	port := nettest.GetFreePort(t)
-	testUrl := fmt.Sprintf("%slocalhost:%d", "ws://", port)
+	testURL := fmt.Sprintf("%slocalhost:%d", "ws://", port)
 	g.Go(func() error {
-		return Listen(testUrl, nil, func(writer http.ResponseWriter, request *http.Request) {
+		return Listen(testURL, nil, func(writer http.ResponseWriter, request *http.Request) {
 			ServeHTTP(&protocol, writer, request)
 		})
 	})

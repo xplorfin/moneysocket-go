@@ -8,7 +8,7 @@ import (
 // keys
 const MessageClass = base.MessageClassKey
 const NotificationName = "notification_name"
-const RequestName = request.RequestNameKey
+const RequestName = request.NameKey
 
 // notification types
 const (

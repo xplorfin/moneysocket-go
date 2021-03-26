@@ -72,10 +72,10 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.ListenConfig.defaultPort = listenConfig.GetInt("DefaultPort")
 
 	rpcConfig := NewSection("Rpc", cfg)
-	config.RpcConfig.BindHost = rpcConfig.GetString("BindHost")
-	config.RpcConfig.BindPort = rpcConfig.GetInt("BindPort")
-	config.RpcConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
-	config.RpcConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
+	config.RPCConfig.BindHost = rpcConfig.GetString("BindHost")
+	config.RPCConfig.BindPort = rpcConfig.GetInt("BindPort")
+	config.RPCConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
+	config.RPCConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
 
 	relayConfig := NewSection("Relay", cfg)
 	config.RelayConfig.BindHost = relayConfig.GetString("ListenBind")
@@ -87,12 +87,12 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.RelayConfig.certChainFile = relayConfig.GetString("CertChainFile")
 
 	lndConfig := NewSection("LND", cfg)
-	config.LndConfig.LndDir = lndConfig.GetString("LndDir")
+	config.LndConfig.LndDir = lndConfig.GetString("LNDDir")
 	config.LndConfig.MacaroonPath = lndConfig.GetString("MacaroonPath")
 	config.LndConfig.TLSCertPath = lndConfig.GetString("TlsCertPath")
 	config.LndConfig.Network = lndConfig.GetString("Network")
-	config.LndConfig.GrpcHost = lndConfig.GetString("GrpcHost")
-	config.LndConfig.GrpcPort = lndConfig.GetInt("GrpcPort")
+	config.LndConfig.GrpcHost = lndConfig.GetString("GRPCHost")
+	config.LndConfig.GrpcPort = lndConfig.GetInt("GRPCPort")
 
 	return config, err
 }

@@ -10,7 +10,7 @@ import (
 // represents a terminus account
 type Account struct {
 	AccountName string  `json:"account_name"`
-	AccountUuid string  `json:"account_uuid"`
+	AccountUUID string  `json:"account_uuid"`
 	Wad         wad.Wad `json:"wad"`
 	// pending TODO
 	SharedSeeds []beacon.SharedSeed `json:"shared_seeds"`
@@ -56,21 +56,21 @@ func (a *Account) RemoveSharedSeed(ss beacon.SharedSeed) {
 }
 
 func (a *Account) UnmarshalJSON(b []byte) (err error) {
-	type AccountJson struct {
+	type AccountJSON struct {
 		AccountName string  `json:"account_name"`
-		AccountUuid string  `json:"account_uuid"`
+		AccountUUID string  `json:"account_uuid"`
 		Wad         wad.Wad `json:"wad"`
 		// pending TODO
 		SharedSeeds []string `json:"shared_seeds"`
 		Beacons     []string `json:"beacons"`
 	}
-	var aj AccountJson
+	var aj AccountJSON
 	err = json.Unmarshal(b, &aj)
 	if err != nil {
 		return err
 	}
 	a.AccountName = aj.AccountName
-	a.AccountUuid = aj.AccountUuid
+	a.AccountUUID = aj.AccountUUID
 	a.Wad = aj.Wad
 	for _, seed := range aj.SharedSeeds {
 		ss, err := beacon.HexToSharedSeed(seed)

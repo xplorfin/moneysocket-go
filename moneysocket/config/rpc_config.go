@@ -6,8 +6,8 @@ import (
 	ozzo_validators "github.com/xplorfin/ozzo-validators"
 )
 
-// RpcConfig defines the config for the rpc server
-type RpcConfig struct {
+// RPCConfig defines the config for the rpc server
+type RPCConfig struct {
 	// BindHost for client to connect
 	BindHost string
 	// BindPort for client to connect
@@ -18,8 +18,8 @@ type RpcConfig struct {
 	ExternalPort int
 }
 
-// Validate  validates the RpcConfig
-func (r RpcConfig) Validate() error {
+// Validate  validates the RPCConfig
+func (r RPCConfig) Validate() error {
 	return validation.ValidateStruct(&r,
 		// bind host cannot be null
 		validation.Field(&r.BindHost, validation.Required, is.Host),

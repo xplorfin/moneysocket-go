@@ -7,62 +7,62 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/consumer"
 )
 
-type ConsumerLayer struct {
+type Layer struct {
 	layer.BaseLayer
 	onPing        consumer.OnPingFn
-	consumerNexus *consumer.ConsumerNexus
+	consumerNexus *consumer.Nexus
 }
 
-func NewConsumerLayer() *ConsumerLayer {
-	return &ConsumerLayer{
+func NewConsumerLayer() *Layer {
+	return &Layer{
 		layer.NewBaseLayer(),
 		nil,
-		&consumer.ConsumerNexus{}, // gets overwritten
+		&consumer.Nexus{}, // gets overwritten
 	}
 }
 
 // AnnounceNexus creates a new consumer.ConsumerNexus and starts the handshake
-func (c *ConsumerLayer) AnnounceNexus(belowNexus nexus.Nexus) {
+func (c *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	c.SetupConsumerNexus(belowNexus)
 	c.TrackNexus(c.consumerNexus, belowNexus)
 	c.consumerNexus.StartHandshake(c.ConsumerFinishedCb)
 }
 
-func (c *ConsumerLayer) SetOnPing(fn consumer.OnPingFn) {
+func (c *Layer) SetOnPing(fn consumer.OnPingFn) {
 	c.onPing = fn
 }
 
 // initialize consumer nexus and tie the onping event back to this layer
-func (c *ConsumerLayer) SetupConsumerNexus(belowNexus nexus.Nexus) {
+func (c *Layer) SetupConsumerNexus(belowNexus nexus.Nexus) {
 	c.consumerNexus = consumer.NewConsumerNexus(belowNexus)
 	c.consumerNexus.SetOnPing(c.OnPing)
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (c *ConsumerLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (c *Layer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.RevokeNexus)
 }
 
-func (c *ConsumerLayer) RevokeNexus(belowNexus nexus.Nexus) {
+func (c *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	// TODO add error handling
-	belowUuid, _ := c.NexusByBelow.Get(belowNexus.UUID())
-	consumerNexus, _ := c.Nexuses.Get(belowUuid)
+	belowUUID, _ := c.NexusByBelow.Get(belowNexus.UUID())
+	consumerNexus, _ := c.Nexuses.Get(belowUUID)
 	c.BaseLayer.RevokeNexus(consumerNexus)
-	castedNexus := consumerNexus.(*consumer.ConsumerNexus)
+	castedNexus := consumerNexus.(*consumer.Nexus)
 	castedNexus.StopPinging()
 
 }
 
 // event fired on ping
-func (c *ConsumerLayer) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
+func (c *Layer) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
 	if c.onPing != nil {
 		c.onPing(consumerNexus, milliseconds)
 	}
 }
 
 // consume finished
-func (c *ConsumerLayer) ConsumerFinishedCb(consumerNexus consumer.ConsumerNexus) {
+func (c *Layer) ConsumerFinishedCb(consumerNexus consumer.Nexus) {
 	c.TrackNexusAnnounced(&consumerNexus)
 	c.SendLayerEvent(&consumerNexus, message.NexusAnnounced)
 	if c.OnAnnounce != nil {
@@ -71,4 +71,4 @@ func (c *ConsumerLayer) ConsumerFinishedCb(consumerNexus consumer.ConsumerNexus)
 	consumerNexus.StartPinging()
 }
 
-var _ layer.Layer = &ConsumerLayer{}
+var _ layer.Layer = &Layer{}
