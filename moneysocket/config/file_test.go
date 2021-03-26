@@ -135,12 +135,12 @@ type TestFileConfig struct {
 	RPCExternalHost string `goconf:"Rpc:BindHost"`
 	RPCExternalPort int    `goconf:"Rpc:ExternalPort"`
 	// LND
-	LNDDir          string `goconf:"LND:LNDDir"`
-	LNDMacaroonPath string `goconf:"LND:LNDMacaroonPath"`
-	LNDTlsCertPath  string `goconf:"LND:LNDTlsCertPath"`
-	LNDNetwork      string `goconf:"LND:LNDNetwork"`
-	GRPCHost        string `goconf:"LND:GRPCHost"`
-	GRPCPort        int    `goconf:"LND:GRPCPort"`
+	LNDDir          string `goconf:"LND:LndDir"`
+	LNDMacaroonPath string `goconf:"LND:LndMacaroonPath"`
+	LNDTlsCertPath  string `goconf:"LND:LndTlsCertPath"`
+	LNDNetwork      string `goconf:"LND:LndNetwork"`
+	GRPCHost        string `goconf:"LND:GrpcHost"`
+	GRPCPort        int    `goconf:"LND:GrpcPort"`
 	// Relay
 	RelayBindHost string `goconf:"Relay:ListenBind"`
 	RelayBindPort int    `goconf:"Relay:ListenPort"`
@@ -276,7 +276,7 @@ CertChainFile = {{.ListenCertChainFile}}
 [LND]
 
 # LND settings directory
-LNDDir = {{.LNDDir}}
+LndDir = {{.LNDDir}}
 
 # path to macaroon for grpc permissions
 MacaroonPath = {{.LNDMacaroonPath}}
@@ -288,8 +288,8 @@ TlsCertPath = {{.LNDTlsCertPath}}
 Network = {{.LNDNetwork}}
 
 # GRPC connection
-GRPCHost = {{.GRPCHost}}
-GRPCPort = {{.GRPCPort}}
+GrpcHost = {{.GRPCHost}}
+GrpcPort = {{.GRPCPort}}
 
 [Rpc]
 

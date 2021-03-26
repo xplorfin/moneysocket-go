@@ -1,7 +1,10 @@
 package websocket
 
 import (
+	"fmt"
 	"testing"
+
+	"github.com/xplorfin/netutils/testutils"
 
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
@@ -10,6 +13,10 @@ import (
 func TestNewIncomingWebsocketLayerUnsecure(t *testing.T) {
 	configuration := config.NewConfig()
 	incomingLayer := NewIncomingWebsocketLayer(configuration)
-	err := incomingLayer.Listen("ws://localhost/", nil)
-	Nil(t, err)
+	host := fmt.Sprintf("ws://localhost:%d", testutils.GetFreePort(t))
+	go func() {
+		err := incomingLayer.Listen(host, nil)
+		Nil(t, err)
+	}()
+	testutils.AssertConnected(host, t)
 }
