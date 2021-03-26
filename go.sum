@@ -164,6 +164,8 @@ github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1m
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/fasthttp/router v1.3.9 h1:/V71/6mBpH8oohAaR/DtBB4el6EETbNsBPBoCJZc4gc=
 github.com/fasthttp/router v1.3.9/go.mod h1:hKaPPZT9HWA/bEs1pSIbofAxZCLz3oPNTHtn/xqw6j0=
+github.com/fasthttp/router v1.3.10 h1:bWFTVau1WjRZMZ8R7btuMAQY0biADNRoWKYeHRLLGAk=
+github.com/fasthttp/router v1.3.10/go.mod h1:hKaPPZT9HWA/bEs1pSIbofAxZCLz3oPNTHtn/xqw6j0=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/franela/goblin v0.0.0-20200105215937-c9ffbefa60db/go.mod h1:7dvUGVsVBjqR7JHJk0brhHOZYGmfBYOrK0ZhYMEtBr4=
 github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8/go.mod h1:ZhphrRTfi2rbfLwlschooIH4+wKKDR4Pdxhh+TRoA20=
@@ -567,6 +569,8 @@ github.com/xplorfin/lndmock v0.22.0 h1:s627NZaDxQcU738OouWbkLS3QP2hliwdSz20112qW
 github.com/xplorfin/lndmock v0.22.0/go.mod h1:40SJ91Ed28PiGdOeoT12QP/Fv7MIMOkoEtIBlVly9v0=
 github.com/xplorfin/netutils v0.34.0 h1:SnonK7R7yIYKVOkMhB8IlnC4XF2klG7SJW/O3tFsBjs=
 github.com/xplorfin/netutils v0.34.0/go.mod h1:pVnjjhi+m0V0gqeMwhkrSUkArHM5C019NL3U15kg3e8=
+github.com/xplorfin/netutils v0.35.0 h1:6OWe0sNCcJRdAuRrscGB2xBv5OnUKUPl1JeV51avaK4=
+github.com/xplorfin/netutils v0.35.0/go.mod h1:X5GlnLxJQOqw+ysu93Fr7k0gwh3AUETqJSawZ9akuCw=
 github.com/xplorfin/ozzo-validators v0.28.0 h1:3srd6mwoyQcnxYMvl3vVvxPz4/ijw01RqFPMj0vm0LA=
 github.com/xplorfin/ozzo-validators v0.28.0/go.mod h1:Oo3cCAgG1Hv5ElFmmiriMlSQebnNGWDvRUd2i5rc9Bs=
 github.com/xplorfin/tlsutils v0.18.0 h1:qa9rfEGWqlWGCRu0leP5MOfc9MqhggTCAKy/po7IPoo=
