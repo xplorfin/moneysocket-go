@@ -26,7 +26,7 @@ func NewTerminusDirectory(config *config.Config) *TerminusDirectory {
 	}
 }
 
-// python verison is an iterator
+// python version is an iterator
 func (t *TerminusDirectory) GetAccounts() (accounts []account.AccountDb) {
 	for _, v := range t.Accounts {
 		accounts = append(accounts, v)

@@ -96,9 +96,10 @@ func (i *IncomingStack) GetListenUrl() string {
 	return fmt.Sprintf("%s://%s:%d", schema, i.config.ListenConfig.BindHost, i.config.ListenConfig.BindPort)
 }
 
+// Listen listens on a given port
 // TODO implement tls config
-func (i *IncomingStack) Listen() {
-	i.websocketLayer.Listen(i.GetListenUrl(), nil)
+func (i *IncomingStack) Listen() error {
+	return i.websocketLayer.Listen(i.GetListenUrl(), nil)
 }
 
 var _ layer.Layer = &IncomingStack{}

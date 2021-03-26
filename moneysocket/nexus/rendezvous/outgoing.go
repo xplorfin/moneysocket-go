@@ -62,10 +62,10 @@ func (o *OutgoingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_
 	}
 }
 
-func (o *OutgoingRendezvousNexus) StartRendezvous(rendevousId string, rendezvousFinishedCb func(nexus2 nexus.Nexus)) {
+func (o *OutgoingRendezvousNexus) StartRendezvous(rendevousId string, rendezvousFinishedCb func(nexus nexus.Nexus)) {
 	o.rendezvousFinishedCb = rendezvousFinishedCb
 	rendezvousRequest := request.NewRendezvousRequest(rendevousId)
-	o.Send(rendezvousRequest)
+	_ = o.Send(rendezvousRequest)
 }
 
 var _ nexus.Nexus = &OutgoingRendezvousNexus{}

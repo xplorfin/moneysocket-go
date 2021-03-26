@@ -57,7 +57,7 @@ func (o OutgoingLocalNexus) Send(msg base_moneysocket.MoneysocketMessage) error 
 	isEncrypted, msgOrBytes := message.LocalEncode(msg, o.SharedSeed())
 	if isEncrypted {
 		log.Printf("sending encrypyted: %s", msgOrBytes)
-		o.SendBin(msgOrBytes)
+		_ = o.SendBin(msgOrBytes)
 	} else {
 		o.belowNexus.SendFromOutgoing(msg)
 	}

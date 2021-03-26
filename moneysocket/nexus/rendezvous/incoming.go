@@ -16,7 +16,6 @@ type IncomingRendezvousNexus struct {
 	rendezvousFinishedCb func(nexus.Nexus)
 	requestReferenceUuid string
 	rendezvousId         string
-	providerFinishedCb   func(nexus.Nexus)
 	directory            *RendezvousDirectory
 	// TODO directory
 }
@@ -83,13 +82,13 @@ func (i *IncomingRendezvousNexus) RendezvousAcheived() {
 	if !i.directory.IsRidPeered(i.rendezvousId) {
 		panic("expected rendezvous to be peered")
 	}
-	i.Send(notification.NewNotifyRendezvous(i.rendezvousId, i.requestReferenceUuid))
+	_ = i.Send(notification.NewNotifyRendezvous(i.rendezvousId, i.requestReferenceUuid))
 	i.rendezvousFinishedCb(i)
 }
 
 func (i *IncomingRendezvousNexus) EndRendezvous() {
 	i.directory.RemoveNexus(i)
-	i.Send(notification.NewRendezvousEnd(i.rendezvousId, ""))
+	_ = i.Send(notification.NewRendezvousEnd(i.rendezvousId, ""))
 }
 
 var _ nexus.Nexus = &IncomingRendezvousNexus{}

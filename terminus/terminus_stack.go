@@ -51,6 +51,12 @@ func (s *TerminusStack) SetupLocalLayer() *local.OutgoingLocalLayer {
 	return &l
 }
 
+func (s *TerminusStack) AnnounceNexus(terminusNexus TerminusNexus) {
+	if s.onAnnounce != nil {
+		s.onAnnounce(&terminusNexus)
+	}
+}
+
 func (s *TerminusStack) SetupTerminusLayer(belowLayer layer.Layer) *TerminusLayer {
 	l := NewTerminusLayer()
 	l.RegisterAboveLayer(belowLayer)
@@ -107,6 +113,6 @@ func (s *TerminusStack) LocalConnect(sharedSeed beacon.SharedSeed) {
 	s.localLayer.Connect(sharedSeed)
 }
 
-func (s *TerminusStack) Listen() {
-	s.incomingStack.Listen()
+func (s *TerminusStack) Listen() error {
+	return s.incomingStack.Listen()
 }

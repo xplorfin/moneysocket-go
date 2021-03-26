@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
+
 	"github.com/xplorfin/moneysocket-go/moneysocket/lightning"
 
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
@@ -41,45 +43,61 @@ func NewTerminus(config *config.Config) (terminus Terminus, err error) {
 			return terminus, err
 		}
 	}
-	return Terminus{
+	terminus = Terminus{
 		config:    config,
 		directory: NewTerminusDirectory(config),
 		stack:     NewTerminusStack(config),
 		lightning: &lightningClient,
-	}, err
+	}
+
+	terminus.stack.onAnnounce = terminus.OnAnnounce
+	terminus.stack.onRevoke = terminus.OnRevoke
+
+	return terminus, err
 }
 
-// todo break this out into seperate methods
+// OnAnnounce handles nexus announcements
+func (t *Terminus) OnAnnounce(nexus nexus.Nexus) {
+	// TODO register for messages and log errors if we get any not handled
+	// by stack
+}
+
+func (t *Terminus) OnRevoke(nexus nexus.Nexus) {
+	// do nothing
+}
+
+// ServeHTTP handles requests through the rpc server
+// todo break this out into separate methods
 func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var rpcReq RpcMessage
 	err := decoder.Decode(&rpcReq)
 	if err != nil {
 		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
+		_, _ = w.Write([]byte(err.Error()))
 	}
 	switch rpcReq.Method {
 	// TODO actually decode these args
 	case GetInfoMethod:
-		w.Write([]byte(t.GetInfo()))
+		_, _ = w.Write([]byte(t.GetInfo()))
 	case CreateAccountMethod:
 		adb := t.Create(1000)
-		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("created account %s, wad: %s", adb.Details.AccountName, adb.Details.Wad.FmtShort()))))
+		_, _ = w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("created account %s, wad: %s", adb.Details.AccountName, adb.Details.Wad.FmtShort()))))
 	case ConnectMethod:
 		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 2 {
-			w.Write([]byte(t.makeJsonResponse("error, account not passed")))
+			_, _ = w.Write([]byte(t.makeJsonResponse("error, account not passed")))
 			return
 		}
 		params := rpcReq.Params[0]
 		decodedBeacon, err := beacon.DecodeFromBech32Str(params[1])
 		if err != nil {
-			w.Write([]byte(t.makeJsonResponse("error, beacon invalid")))
+			_, _ = w.Write([]byte(t.makeJsonResponse("error, beacon invalid")))
 			return
 		}
 
 		acct := t.directory.LookupByName(params[0])
 		if acct == nil {
-			w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("account %s not found", params[0]))))
+			_, _ = w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("account %s not found", params[0]))))
 			return
 		}
 		ss := decodedBeacon.GetSharedSeed()
@@ -87,31 +105,31 @@ func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 		acct.AddConnectionAttempt(decodedBeacon, err)
 		acct.Details.AddBeacon(decodedBeacon)
 		t.directory.ReindexAccount(*acct)
-		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("connected: %s to %s", params[0], params[1]))))
+		_, _ = w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("connected: %s to %s", params[0], params[1]))))
 	case ListenMethod:
 		if len(rpcReq.Params) != 1 || len(rpcReq.Params[0]) != 1 {
-			w.Write([]byte(t.makeJsonResponse("error, account not passed")))
+			_, _ = w.Write([]byte(t.makeJsonResponse("error, account not passed")))
 		}
 		acct := rpcReq.Params[0][0]
 		beaconServer, err := t.Listen(acct, "")
 		if err != nil {
 			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 		}
-		w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("listening to %s on %s", beaconServer, acct))))
+		_, _ = w.Write([]byte(t.makeJsonResponse(fmt.Sprintf("listening to %s on %s", beaconServer, acct))))
 	default:
-		w.Write([]byte("method not yet implemented"))
+		_, _ = w.Write([]byte("method not yet implemented"))
 	}
 }
 
-// start the server
-func (t *Terminus) StartServer() {
+// StartServer starts the terminus server
+func (t *Terminus) StartServer() error {
 	server := http.NewServeMux()
 	server.Handle("/", t)
-	http.ListenAndServe(t.config.GetRpcHostname(), server)
+	return http.ListenAndServe(t.config.GetRpcHostname(), server)
 }
 
-// make a raw json response from a string
+// makeJsonResponse makes a raw json response from a string
 func (t Terminus) makeJsonResponse(res string) string {
 	jsonRes := []string{res}
 	jsonResponse, err := json.Marshal(jsonRes)
@@ -121,7 +139,7 @@ func (t Terminus) makeJsonResponse(res string) string {
 	return string(jsonResponse)
 }
 
-// get formatted info (for python paritY)
+// GetInfo gets formatted info (for python parity)
 func (t *Terminus) GetInfo() (res string) {
 	locations := t.stack.GetListenLocation()
 	accounts := t.directory.GetAccountList()
@@ -135,16 +153,17 @@ func (t *Terminus) GetInfo() (res string) {
 	return t.makeJsonResponse(res)
 }
 
-// create an account with a given number of msats and add it to the directory
+// Create creates an account with a given number of msats and add it to the directory
 func (t *Terminus) Create(msats int) account.AccountDb {
 	name := t.directory.GenerateAccountName()
 	acct := account.NewAccountDb(name, t.config)
 	acct.Details.Wad = wad.BitcoinWad(float64(msats))
-	acct.Persist()
+	_ = acct.Persist()
 	t.directory.AddAccount(acct)
 	return acct
 }
 
+// RetryConnectionLoop retries a connection on a loop
 func (t *Terminus) RetryConnectionLoop() {
 	for {
 		for _, acct := range t.directory.GetAccountList() {
@@ -163,7 +182,7 @@ func (t *Terminus) RetryConnectionLoop() {
 	}
 }
 
-// raw shared seed is optional
+// Listen listens on a port. Raw shared seed is optional
 func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon string, err error) {
 	acct := t.directory.LookupByName(rawAcct)
 	if acct == nil {
@@ -191,7 +210,7 @@ func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon s
 	return bcn.ToBech32Str(), nil
 }
 
-// load persisted accounts from disk
+// LoadPersisted loads persisted accounts from the disk
 func (t *Terminus) LoadPersisted() {
 	for _, adb := range account.GetPersistedAccounts(t.config) {
 		t.directory.AddAccount(adb)
@@ -214,12 +233,12 @@ func (t *Terminus) LoadPersisted() {
 	}
 }
 
+// Start starts the server
 func (t *Terminus) Start(ctx context.Context) error {
-	g, ctx := errgroup.WithContext(ctx)
+	g, _ := errgroup.WithContext(ctx)
 
 	g.Go(func() error {
-		t.StartServer()
-		return nil
+		return t.StartServer()
 	})
 	g.Go(func() error {
 		rpcStarted := testutils.WaitForConnectTimeout(t.config.GetRpcHostname(), t.config.RpcServerTimeout())
@@ -227,8 +246,7 @@ func (t *Terminus) Start(ctx context.Context) error {
 			return fmt.Errorf("failed to detect rpc server at %s in %s", t.config.GetRpcHostname(), t.config.RpcServerTimeout().String())
 		}
 		t.LoadPersisted()
-		t.stack.Listen()
-		return nil
+		return t.stack.Listen()
 	})
 
 	g.Go(func() error {
@@ -239,6 +257,6 @@ func (t *Terminus) Start(ctx context.Context) error {
 	if err := g.Wait(); err != nil {
 		return err
 	}
-	return nil
 	// TODO start prune_loop (and maybe connect_loop?)
+	return nil
 }

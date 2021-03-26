@@ -80,9 +80,11 @@ func (t TerminusClient) ExecCmd(method string, argv []string) (res []byte, err e
 	if err != nil {
 		return res, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 	responseReader := new(bytes.Buffer)
-	responseReader.ReadFrom(resp.Body)
+	_, _ = responseReader.ReadFrom(resp.Body)
 	return responseReader.Bytes(), nil
 }
 

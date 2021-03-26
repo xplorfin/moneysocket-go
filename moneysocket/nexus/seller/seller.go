@@ -59,7 +59,7 @@ func (s *SellerNexus) notifySeller(requestReferenceUuid string) error {
 }
 
 func (s *SellerNexus) UpdatePrices() {
-	s.notifySeller(uuid.NewV4().String())
+	_ = s.notifySeller(uuid.NewV4().String())
 }
 
 func (s *SellerNexus) SetHandleOpinionInvoiceRequest(invoiceRequest compat.HandleOpinionInvoiceRequest) {
@@ -115,6 +115,6 @@ func (s *SellerNexus) WaitForBuyer(sellerFinishedCb func(nexus.Nexus)) {
 }
 
 func (s *SellerNexus) SellerNowReady() {
-	s.notifySeller(uuid.NewV4().String())
+	_ = s.notifySeller(uuid.NewV4().String())
 	s.sellerFinishedCb(s)
 }

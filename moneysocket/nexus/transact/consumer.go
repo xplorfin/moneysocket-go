@@ -110,13 +110,13 @@ func (c *ConsumerTrackNexus) OnProviderInfo(consumerTransactNexus nexus.Nexus, m
 
 func (c ConsumerTrackNexus) RequestInvoice(msats int64, description string) (uuid string) {
 	ri := request.NewRequestInvoice(msats)
-	c.Send(ri)
+	_ = c.Send(ri)
 	return ri.Uuid()
 }
 
 func (c ConsumerTrackNexus) RequestPay(bolt11 string) (uuid string) {
 	rp := request.NewRequestPay(bolt11)
-	c.Send(rp)
+	_ = c.Send(rp)
 	return rp.Uuid()
 }
 

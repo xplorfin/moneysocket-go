@@ -3,7 +3,6 @@ package local
 import (
 	"log"
 
-	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer/compat"
 	moneysocket_message "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
@@ -13,7 +12,6 @@ import (
 
 type IncomingLocalNexus struct {
 	*base.BaseNexus
-	sharedSeed beacon.SharedSeed
 }
 
 const IncomingLocalNexusName = "IncomingLocalNexus"

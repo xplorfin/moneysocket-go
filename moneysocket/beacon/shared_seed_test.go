@@ -136,7 +136,7 @@ func TestInvalidSeed(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		seed := gofakeit.Sentence(gofakeit.RandomInt([]int{15, 20}))
 		if len([]byte(seed)) == 16 {
-			continue // seed is correct lenght
+			continue // seed is correct length
 		}
 		ss, err := BytesToSharedSeed([]byte(seed))
 		if err == nil {

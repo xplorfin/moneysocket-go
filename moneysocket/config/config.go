@@ -1,4 +1,4 @@
-// we store config seperately from terminus to prevent circular dependency errors
+// we store config separately from terminus to prevent circular dependency errors
 package config
 
 import (

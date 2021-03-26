@@ -28,7 +28,9 @@ func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config)
 // start a test server on port specified in config on server
 func GetStartedTestServer(t *testing.T) (server Terminus, config *config.Config) {
 	server, config = GetTestServer(t)
-	go server.Start(context.Background())
+	go func() {
+		_ = server.Start(context.Background())
+	}()
 	nettest.AssertConnected(config.GetRpcHostname(), t)
 	return server, config
 }

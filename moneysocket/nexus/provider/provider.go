@@ -38,11 +38,11 @@ func (o *ProviderNexus) IsLayerMessage(message message_base.MoneysocketMessage) 
 func (o *ProviderNexus) NotifyProvider() {
 	ss := o.SharedSeed()
 	providerInfo := o.handleProviderInfoRequest(*ss)
-	o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
 }
 
 func (o *ProviderNexus) NotifyProviderNotReady() {
-	o.Send(notification.NewNotifyProviderNotReady(o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyProviderNotReady(o.RequestReferenceUuid))
 }
 
 func (o *ProviderNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
@@ -69,7 +69,7 @@ func (o *ProviderNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.Money
 }
 
 func (o *ProviderNexus) NotifyPong() {
-	o.Send(notification.NewNotifyPong(o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyPong(o.RequestReferenceUuid))
 }
 
 func (o *ProviderNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
@@ -87,7 +87,7 @@ func (o *ProviderNexus) NotifyProviderReady() {
 	if !providerInfo.Details.Ready() {
 		panic("expected provider to be ready")
 	}
-	o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
+	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUuid))
 }
 func (o *ProviderNexus) ProviderNowReady() {
 	o.NotifyProviderReady()

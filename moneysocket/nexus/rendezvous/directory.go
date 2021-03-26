@@ -13,13 +13,13 @@ type RendezvousDirectory struct {
 	// todo switch to sync maps with individual mutexes
 	// this can probably be removed rn
 	mux sync.Mutex
-	// NexusesByUUID is a map from uuid to cooresponding nexus
+	// NexusesByUUID is a map from uuid to corresponding nexus
 	NexusesByUUID map[string]nexusHelper.Nexus
-	// RidsByUUIDs is a map from nexus uuid to cooresponding rendezvous id
+	// RidsByUUIDs is a map from nexus uuid to corresponding rendezvous id
 	RidsByUUIDs map[string]string
 	// UnpeeredUUIDsByRid is a map of uuids that are currently unpaired sorted by rendezvous id
 	UnpeeredUUIDsByRid map[string]string
-	// UUIDPeers is a map of nexus to the uuid of the cooresponding peer
+	// UUIDPeers is a map of nexus to the uuid of the corresponding peer
 	UUIDPeers map[string]string
 	// RIDSPeered is a list of rids which are currently peered
 	RIDSPeered []string

@@ -109,12 +109,12 @@ func (c *ConsumerNexus) StartHandshake(cb ConsumerFinishedCb) {
 func (c *ConsumerNexus) SendPing() {
 	currentTime := time.Now()
 	c.pingStartTime = &currentTime
-	c.Send(request.NewPingRequest())
+	_ = c.Send(request.NewPingRequest())
 }
 
 // start pining on a set interval
 func (c *ConsumerNexus) StartPinging() {
-	tick := time.Tick(3 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	c.isPinging = true
 	// Keep trying until we're timed out or got a result or got an error
 	for {
@@ -126,7 +126,7 @@ func (c *ConsumerNexus) StartPinging() {
 			c.isPinging = false
 			break
 		// Got a tick, we should check on doSomething()
-		case <-tick:
+		case <-ticker.C:
 			c.SendPing()
 		}
 	}

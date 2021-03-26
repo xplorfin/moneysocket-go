@@ -9,6 +9,11 @@ run:
   # for slow ci machines
   timeout: 10m
 
+linters-settings:
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+
 linters:
   enable:
     - gofmt
@@ -16,5 +21,7 @@ linters:
     - gosimple
     - unconvert
     - goimports
-  disable-all: true
+    - misspell
+    - gosimple
+  disable-all: false
   fast: false

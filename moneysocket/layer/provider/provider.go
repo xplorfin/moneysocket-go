@@ -4,17 +4,17 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer/compat"
+	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/provider"
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
+// ProviderLayer handles app waiting
 // TODO this needs to be fully implemented
 type ProviderLayer struct {
 	layer.BaseLayer
 	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.AccountDb
-	requestReferenceUuid      string
-	providerFinishedCb        func(nexus2 nexus.Nexus)
 	WaitingForApp             compat.WaitingForApp
 }
 
@@ -24,12 +24,19 @@ func (o *ProviderLayer) RegisterAboveLayer(belowLayer layer.Layer) {
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
+// ProviderFinishedCb is the callback for the provider finished callback
+func (o *ProviderLayer) ProviderFinishedCb(providerNexus nexus.Nexus) {
+	o.TrackNexusAnnounced(providerNexus)
+	o.SendLayerEvent(providerNexus, message.NexusAnnounced)
+	o.OnAnnounce(providerNexus)
+}
+
 // AnnounceNexus creates a new provider.ProviderNexus and registers it
 // also registers the providerFinishedCb (cb = callback)
 func (o *ProviderLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus := provider.NewProviderNexus(belowNexus)
 	o.TrackNexus(providerNexus, belowNexus)
-	providerNexus.WaitForConsumer(o.providerFinishedCb)
+	providerNexus.WaitForConsumer(o.ProviderFinishedCb)
 }
 
 func (o *ProviderLayer) RevokeNexus(belowNexus nexus.Nexus) {
