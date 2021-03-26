@@ -75,9 +75,9 @@ func TestLndConfig(t *testing.T) {
 	Nil(t, err)
 
 	// get alices tls cert
-	_, aliceTls, err := aliceContainer.GetTLSCert()
+	_, aliceTLS, err := aliceContainer.GetTLSCert()
 	Nil(t, err)
-	tlsFile := filet.TmpFile(t, lndDir, aliceTls)
+	tlsFile := filet.TmpFile(t, lndDir, aliceTLS)
 
 	config := LndConfig{
 		LndDir:       lndDir,

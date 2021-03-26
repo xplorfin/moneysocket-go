@@ -20,11 +20,11 @@ type SellerStack struct {
 	layer.BaseLayer
 	websocketLayer              *websocket.OutgoingWebsocketLayer
 	rendezvousLayer             *rendezvous.OutgoingRendezvousLayer
-	providerLayer               *provider.ProviderLayer
-	transactLayer               *provider.ProviderTransactLayer
-	sellerLayer                 *seller.SellerLayer
+	providerLayer               *provider.Layer
+	transactLayer               *provider.TransactLayer
+	sellerLayer                 *seller.Layer
 	handleProviderInfoRequest   compat.HandleProviderInfoRequest
-	handleSellerInfoRequest     func() nexusSeller.SellerInfo
+	handleSellerInfoRequest     func() nexusSeller.Info
 	handleInvoiceRequest        func(msats int64, requestUuid string)
 	handleOpinionInvoiceRequest func(item string, requestUuid string)
 	handlePayRequest            func(msats int64, requestUuid string)
@@ -96,7 +96,7 @@ func (s *SellerStack) SetupProviderLayer() {
 	s.providerLayer.SetOnLayerEvent(func(layerName string, nexus nexus.Nexus, event string) {
 		s.OnLayerEvent(message.Provider, nexus, event)
 	})
-	s.providerLayer.SetHandlerProvideInfoRequest(func(seed beacon.SharedSeed) account.AccountDb {
+	s.providerLayer.SetHandlerProvideInfoRequest(func(seed beacon.SharedSeed) account.Db {
 		return s.handleProviderInfoRequest(seed)
 	})
 	s.providerLayer.RegisterAboveLayer(s.rendezvousLayer)
@@ -127,7 +127,7 @@ func (s *SellerStack) SetupSellerLayer() {
 	s.sellerLayer.SetHandleOpinionInvoiceRequest(func(nx nexus.Nexus, itemId string, requestUuid string) {
 		s.handleOpinionInvoiceRequest(itemId, requestUuid)
 	})
-	s.sellerLayer.SetHandleSellerInfoRequest(func() nexusSeller.SellerInfo {
+	s.sellerLayer.SetHandleSellerInfoRequest(func() nexusSeller.Info {
 		return s.handleSellerInfoRequest()
 	})
 	s.sellerLayer.SetOnAnnounce(func(nexus nexus.Nexus) {
@@ -140,22 +140,22 @@ func (s *SellerStack) SetupSellerLayer() {
 }
 
 func (s *SellerStack) UpdatePrices() {
-	s.nexus.(*nexusSeller.SellerNexus).UpdatePrices()
+	s.nexus.(*nexusSeller.Nexus).UpdatePrices()
 }
 
-func (s *SellerStack) SetHandleSellerInfoRequest(handler func() nexusSeller.SellerInfo) {
+func (s *SellerStack) SetHandleSellerInfoRequest(handler func() nexusSeller.Info) {
 	s.handleSellerInfoRequest = handler
 }
 
-func (s *SellerStack) HandleInvoiceRequest(msats int64, requestUuid string) {
+func (s *SellerStack) HandleInvoiceRequest(msats int64, requestUUID string) {
 	if s.handleInvoiceRequest != nil {
-		s.handleInvoiceRequest(msats, requestUuid)
+		s.handleInvoiceRequest(msats, requestUUID)
 	}
 }
 
-func (s *SellerStack) HandleOpinionInvoiceRequest(itemId string, requestUuid string) {
+func (s *SellerStack) HandleOpinionInvoiceRequest(itemID, requestUUID string) {
 	if s.handleOpinionInvoiceRequest != nil {
-		s.handleOpinionInvoiceRequest(itemId, requestUuid)
+		s.handleOpinionInvoiceRequest(itemID, requestUUID)
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 // keys
 const MessageClass = base.MessageClassKey
 const NotificationName = "notification_name"
-const RequestName = request.RequestNameKey
+const RequestName = request.NameKey
 
 // notification types
 const (
@@ -16,7 +16,7 @@ const (
 	NotifyProviderNotReady = "NOTIFY_PROVIDER_NOT_READY"
 	NotifyPing             = "NOTIFY_PING"
 	NotifyPong             = "NOTIFY_PONG"
-	// rendezcous notificaton types
+	// rendezcous notification types
 	NotifyRendezvous         = "NOTIFY_RENDEZVOUS"
 	NotifyRendezvousNotReady = "NOTIFY_RENDEZVOUS_NOT_READY"
 	NotifyRendezvousEnd      = "NOTIFY_RENDEZVOUS_END"

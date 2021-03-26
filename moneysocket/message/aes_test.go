@@ -7,7 +7,7 @@ import (
 )
 
 // Cipher key must be 32 chars long because block size is 16 bytes
-const CIPHER_KEY = "abcdefghijklmnopqrstuvwxyz012345"
+const CipherKey = "abcdefghijklmnopqrstuvwxyz012345"
 
 func TestAES(t *testing.T) {
 	t.Run("Encrypts and decrypts", func(t *testing.T) {
@@ -16,12 +16,12 @@ func TestAES(t *testing.T) {
 
 		for _, plainText := range plainTexts {
 
-			encrypted, err := Encrypt([]byte(plainText), []byte(CIPHER_KEY))
+			encrypted, err := Encrypt([]byte(plainText), []byte(CipherKey))
 			if err != nil {
 				t.Fatalf("Failed to encrypt: %s - %s", plainText, err.Error())
 			}
 
-			decrypted, err := Decrypt(encrypted, []byte(CIPHER_KEY))
+			decrypted, err := Decrypt(encrypted, []byte(CipherKey))
 			if err != nil {
 				t.Fatalf("Failed to decrypt: %s - %s", plainText, err.Error())
 			}

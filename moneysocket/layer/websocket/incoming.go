@@ -6,14 +6,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/websocket"
-	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_server"
+	"github.com/xplorfin/moneysocket-go/moneysocket/ws/server"
 )
 
 type IncomingWebsocketLayer struct {
 	layer.BaseLayer
 	Config         *config.Config
 	IncomingSocket *websocket.IncomingSocket
-	WebsocketNexus *websocket.WebsocketNexus
+	WebsocketNexus *websocket.Nexus
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
@@ -51,9 +51,9 @@ func (i *IncomingWebsocketLayer) StopListening() {
 	panic("method not yet implemented")
 }
 
-func (i *IncomingWebsocketLayer) Listen(wsUrl string, tlsInfo *ws_server.TlsInfo) (err error) {
+func (i *IncomingWebsocketLayer) Listen(wsURL string, tlsInfo *server.TLSInfo) (err error) {
 	i.IncomingSocket.FactoryMsProtocolLayer = i
-	return ws_server.Listen(wsUrl, tlsInfo, i.IncomingSocket.ServeHTTP)
+	return server.Listen(wsURL, tlsInfo, i.IncomingSocket.ServeHTTP)
 }
 
 var _ layer.Layer = &IncomingWebsocketLayer{}

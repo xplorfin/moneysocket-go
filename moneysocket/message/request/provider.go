@@ -6,18 +6,18 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-type RequestProvider struct {
+type Provider struct {
 	BaseMoneySocketRequest
 }
 
-func NewRequestProvider() RequestProvider {
-	return RequestProvider{
+func NewRequestProvider() Provider {
+	return Provider{
 		NewBaseMoneySocketRequest(base.ProviderRequest),
 	}
 }
 
 // encode a request provider to json
-func (rp RequestProvider) ToJson() ([]byte, error) {
+func (rp Provider) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketRequest(rp, m)
 	if err != nil {
@@ -28,12 +28,12 @@ func (rp RequestProvider) ToJson() ([]byte, error) {
 }
 
 // decode a request provider from json
-func DecodeRequestProvider(payload []byte) (RequestProvider, error) {
+func DecodeRequestProvider(payload []byte) (Provider, error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {
-		return RequestProvider{}, err
+		return Provider{}, err
 	}
-	return RequestProvider{request}, err
+	return Provider{request}, err
 }
 
-var _ MoneysocketRequest = &RequestProvider{}
+var _ MoneysocketRequest = &Provider{}

@@ -16,7 +16,7 @@ func Start(args []string) {
 	// this should be fixed for parity w/ moneysocket-py
 	app := cli.NewApp()
 	app.Name = "terminus cli"
-	app.Version = messagebase.VERSION
+	app.Version = messagebase.Version
 
 	app.Commands = []*cli.Command{
 		{

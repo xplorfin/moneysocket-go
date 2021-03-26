@@ -7,25 +7,25 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-type RequestOpinionInvoice struct {
+type OpinionInvoice struct {
 	BaseMoneySocketRequest
-	ItemId string
+	ItemID string
 }
 
-func NewRequestOpinionInvoice(itemId, requestUuid string) RequestOpinionInvoice {
-	r := RequestOpinionInvoice{
+func NewRequestOpinionInvoice(itemID, requestUUID string) OpinionInvoice {
+	r := OpinionInvoice{
 		BaseMoneySocketRequest: NewBaseMoneySocketRequest(base.RequestOpinionInvoice),
-		ItemId:                 itemId,
+		ItemID:                 itemID,
 	}
-	r.BaseUuid = requestUuid
+	r.BaseUUID = requestUUID
 	return r
 }
 
-const itemIdKey = "item_id"
+const itemIDKey = "item_id"
 
-func (r RequestOpinionInvoice) ToJson() ([]byte, error) {
+func (r OpinionInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	m[itemIdKey] = r.ItemId
+	m[itemIDKey] = r.ItemID
 	err := EncodeMoneysocketRequest(r, m)
 	if err != nil {
 		return nil, err
@@ -34,18 +34,18 @@ func (r RequestOpinionInvoice) ToJson() ([]byte, error) {
 	return encodedRequest, err
 }
 
-func DecodeRequestOpinionInvoice(payload []byte) (r RequestOpinionInvoice, err error) {
+func DecodeRequestOpinionInvoice(payload []byte) (r OpinionInvoice, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {
-		return RequestOpinionInvoice{}, err
+		return OpinionInvoice{}, err
 	}
 
-	itemId, err := jsonparser.GetString(payload, itemIdKey)
+	itemID, err := jsonparser.GetString(payload, itemIDKey)
 	if err != nil {
-		return RequestOpinionInvoice{}, err
+		return OpinionInvoice{}, err
 	}
-	r = RequestOpinionInvoice{request, itemId}
+	r = OpinionInvoice{request, itemID}
 	return r, nil
 }
 
-var _ MoneysocketRequest = &RequestOpinionInvoice{}
+var _ MoneysocketRequest = &OpinionInvoice{}

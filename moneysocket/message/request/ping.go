@@ -16,7 +16,7 @@ func NewPingRequest() PingRequest {
 	}
 }
 
-func (p PingRequest) ToJson() ([]byte, error) {
+func (p PingRequest) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketRequest(p, m)
 	if err != nil {

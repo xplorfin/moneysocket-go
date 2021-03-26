@@ -8,38 +8,38 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
-type TerminusDirectory struct {
+type Directory struct {
 	config                *config.Config
-	AccountBySharedSeed   map[string]account.AccountDb
+	AccountBySharedSeed   map[string]account.Db
 	SharedSeedsByAccount  map[string][]beacon.SharedSeed
-	Accounts              map[string]account.AccountDb
-	AccountsByPaymentHash map[string]account.AccountDb
+	Accounts              map[string]account.Db
+	AccountsByPaymentHash map[string]account.Db
 }
 
-func NewTerminusDirectory(config *config.Config) *TerminusDirectory {
-	return &TerminusDirectory{
+func NewTerminusDirectory(config *config.Config) *Directory {
+	return &Directory{
 		config:                config,
-		AccountBySharedSeed:   make(map[string]account.AccountDb),
+		AccountBySharedSeed:   make(map[string]account.Db),
 		SharedSeedsByAccount:  make(map[string][]beacon.SharedSeed),
-		Accounts:              make(map[string]account.AccountDb),
-		AccountsByPaymentHash: make(map[string]account.AccountDb),
+		Accounts:              make(map[string]account.Db),
+		AccountsByPaymentHash: make(map[string]account.Db),
 	}
 }
 
-// python verison is an iterator
-func (t *TerminusDirectory) GetAccounts() (accounts []account.AccountDb) {
+// python version is an iterator
+func (t *Directory) GetAccounts() (accounts []account.Db) {
 	for _, v := range t.Accounts {
 		accounts = append(accounts, v)
 	}
 	return accounts
 }
 
-func (t *TerminusDirectory) GetAccountList() []account.AccountDb {
+func (t *Directory) GetAccountList() []account.Db {
 	return t.GetAccounts()
 }
 
 // generate an account name from an autoincrementing int
-func (t *TerminusDirectory) GenerateAccountName() string {
+func (t *Directory) GenerateAccountName() string {
 	for i := 0; i < 1000; i++ {
 		acct := t.LookupByName(strconv.Itoa(i))
 		if acct == nil {
@@ -50,33 +50,33 @@ func (t *TerminusDirectory) GenerateAccountName() string {
 }
 
 // get list of acount names
-func (t *TerminusDirectory) GetAccountNameSet() (accounts []string) {
+func (t *Directory) GetAccountNameSet() (accounts []string) {
 	for _, account := range t.Accounts {
 		accounts = append(accounts, account.Details.AccountName)
 	}
 	return accounts
 }
 
-func (t *TerminusDirectory) LookupByName(name string) *account.AccountDb {
+func (t *Directory) LookupByName(name string) *account.Db {
 	if val, ok := t.Accounts[name]; ok {
 		return &val
 	}
 	return nil
 }
 
-func (t *TerminusDirectory) LookupBySeed(seed beacon.SharedSeed) account.AccountDb {
+func (t *Directory) LookupBySeed(seed beacon.SharedSeed) account.Db {
 	return t.AccountBySharedSeed[seed.ToString()]
 }
 
-func (t *TerminusDirectory) LookupByPaymentHash(hash string) {
+func (t *Directory) LookupByPaymentHash(hash string) {
 	panic("method not yet implemented")
 }
 
-func (t *TerminusDirectory) ReindexAccount(acct account.AccountDb) {
+func (t *Directory) ReindexAccount(acct account.Db) {
 	t.AddAccount(acct)
 }
 
-func (t *TerminusDirectory) AddAccount(acct account.AccountDb) {
+func (t *Directory) AddAccount(acct account.Db) {
 	details := acct.Details
 	acct.ConnectionAttempts = make(map[string]error)
 	t.Accounts[details.AccountName] = acct

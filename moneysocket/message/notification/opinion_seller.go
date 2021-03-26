@@ -19,30 +19,30 @@ type Item struct {
 
 type NotifyOpinionSeller struct {
 	BaseMoneySocketNotification
-	sellerUuid string
+	sellerUUID string
 	items      []Item
 }
 
-func NewNotifyOpinionSeller(sellerUuid string, items []Item, requestReferenceUuid string) NotifyOpinionSeller {
+func NewNotifyOpinionSeller(sellerUUID string, items []Item, requestReferenceUUID string) NotifyOpinionSeller {
 	return NotifyOpinionSeller{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(msg.NotifyOpinionSeller, requestReferenceUuid),
-		sellerUuid:                  sellerUuid,
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(msg.NotifyOpinionSeller, requestReferenceUUID),
+		sellerUUID:                  sellerUUID,
 		items:                       items,
 	}
 }
 
 const (
-	sellerUuidKey = "seller_uuid"
+	sellerUUIDKey = "seller_uuid"
 	itemsKey      = "items"
 )
 
-func (o NotifyOpinionSeller) ToJson() ([]byte, error) {
+func (o NotifyOpinionSeller) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(o, m)
 	if err != nil {
 		return nil, err
 	}
-	m[sellerUuidKey] = o.sellerUuid
+	m[sellerUUIDKey] = o.sellerUUID
 	m[itemsKey] = o.items
 	return json.Marshal(&m)
 }
@@ -52,7 +52,7 @@ func DecodeNotifyOpinionSeller(payload []byte) (NotifyOpinionSeller, error) {
 	if err != nil {
 		return NotifyOpinionSeller{}, err
 	}
-	sellerUuid, err := jsonparser.GetString(payload, sellerUuidKey)
+	sellerUUID, err := jsonparser.GetString(payload, sellerUUIDKey)
 	if err != nil {
 		return NotifyOpinionSeller{}, err
 	}
@@ -67,7 +67,7 @@ func DecodeNotifyOpinionSeller(payload []byte) (NotifyOpinionSeller, error) {
 	}
 	return NotifyOpinionSeller{
 		BaseMoneySocketNotification: notification,
-		sellerUuid:                  sellerUuid,
+		sellerUUID:                  sellerUUID,
 		items:                       items,
 	}, nil
 }

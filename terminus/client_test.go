@@ -10,8 +10,8 @@ import (
 func TestClientListen(t *testing.T) {
 	t.Skip("for local testing only")
 	configuration := config.NewConfig()
-	configuration.RpcConfig.BindHost = "127.0.0.1"
-	configuration.RpcConfig.BindPort = 11054
+	configuration.RPCConfig.BindHost = "127.0.0.1"
+	configuration.RPCConfig.BindPort = 11054
 	client := NewClient(configuration)
 
 	res, err := client.Listen("account-0")
@@ -25,8 +25,8 @@ func TestClientListen(t *testing.T) {
 func TestClientCreate(t *testing.T) {
 	t.Skip("for local testing only")
 	configuration := config.NewConfig()
-	configuration.RpcConfig.BindHost = "127.0.0.1"
-	configuration.RpcConfig.BindPort = 11054
+	configuration.RPCConfig.BindHost = "127.0.0.1"
+	configuration.RPCConfig.BindPort = 11054
 	client := NewClient(configuration)
 
 	res, err := client.CreateAccount(1000)
@@ -40,8 +40,8 @@ func TestClientCreate(t *testing.T) {
 func TestClientInfo(t *testing.T) {
 	t.Skip("for local testing only")
 	configuration := config.NewConfig()
-	configuration.RpcConfig.BindHost = "127.0.0.1"
-	configuration.RpcConfig.BindPort = 11054
+	configuration.RPCConfig.BindHost = "127.0.0.1"
+	configuration.RPCConfig.BindPort = 11054
 	client := NewClient(configuration)
 
 	res, err := client.GetInfo()

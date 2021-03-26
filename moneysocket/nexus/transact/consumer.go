@@ -44,12 +44,12 @@ func (c ConsumerTrackNexus) HandleLayerNotification(msg notification.Moneysocket
 	if msg.RequestType() == moneysocket_message.NotifyOpinionInvoice {
 		notifyMsg := msg.(notification.NotifyInvoice)
 		if c.onInvoice != nil {
-			c.onInvoice(c, notifyMsg.Bolt11, msg.RequestReferenceUuid())
+			c.onInvoice(c, notifyMsg.Bolt11, msg.RequestReferenceUUID())
 		}
 	} else if msg.RequestType() == moneysocket_message.NotifyPreimage {
 		notifyMsg := msg.(notification.NotifyPreimage)
 		if c.onPreimage != nil {
-			c.onPreimage(c, notifyMsg.Preimage, notifyMsg.RequestReferenceUuid())
+			c.onPreimage(c, notifyMsg.Preimage, notifyMsg.RequestReferenceUUID())
 		}
 	}
 }
@@ -74,9 +74,9 @@ func (c ConsumerTrackNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 }
 
 // call on invoice function
-func (c *ConsumerTrackNexus) OnInvoice(transactNexus nexus.Nexus, invoice string, requestReferenceUuid string) {
+func (c *ConsumerTrackNexus) OnInvoice(transactNexus nexus.Nexus, invoice string, requestReferenceUUID string) {
 	if c.onInvoice != nil {
-		c.onInvoice(transactNexus, invoice, requestReferenceUuid)
+		c.onInvoice(transactNexus, invoice, requestReferenceUUID)
 	}
 }
 
@@ -86,9 +86,9 @@ func (c *ConsumerTrackNexus) SetOnInvoice(invoice OnInvoice) {
 }
 
 // call on preimage function
-func (c *ConsumerTrackNexus) OnPreImage(transactNexus nexus.Nexus, preimage string, requestReferenceUuid string) {
+func (c *ConsumerTrackNexus) OnPreImage(transactNexus nexus.Nexus, preimage string, requestReferenceUUID string) {
 	if c.onPreimage != nil {
-		c.onPreimage(transactNexus, preimage, requestReferenceUuid)
+		c.onPreimage(transactNexus, preimage, requestReferenceUUID)
 	}
 }
 
@@ -110,14 +110,14 @@ func (c *ConsumerTrackNexus) OnProviderInfo(consumerTransactNexus nexus.Nexus, m
 
 func (c ConsumerTrackNexus) RequestInvoice(msats int64, description string) (uuid string) {
 	ri := request.NewRequestInvoice(msats)
-	c.Send(ri)
-	return ri.Uuid()
+	_ = c.Send(ri)
+	return ri.UUID()
 }
 
 func (c ConsumerTrackNexus) RequestPay(bolt11 string) (uuid string) {
 	rp := request.NewRequestPay(bolt11)
-	c.Send(rp)
-	return rp.Uuid()
+	_ = c.Send(rp)
+	return rp.UUID()
 }
 
 var _ nexus.Nexus = &ConsumerTrackNexus{}

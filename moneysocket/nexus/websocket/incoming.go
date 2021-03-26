@@ -11,11 +11,11 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_server"
+	"github.com/xplorfin/moneysocket-go/moneysocket/ws/server"
 )
 
 type IncomingSocket struct {
-	ws_server.WebSocketServerProtocol
+	server.WebSocketServerProtocol
 	// name of the nexus (stored for debugging)
 	name string
 	// uuid of the nexus
@@ -36,7 +36,7 @@ const IncomingSocketName = "IncomingSocketName"
 // create a new incoming websocket nexus (accepts request)
 func NewIncomingSocket() *IncomingSocket {
 	return &IncomingSocket{
-		WebSocketServerProtocol: ws_server.NewBaseWebsocketService(),
+		WebSocketServerProtocol: server.NewBaseWebsocketService(),
 		wasAnnounced:            false,
 		name:                    IncomingSocketName,
 		uuid:                    uuid.NewV4(),
@@ -97,7 +97,7 @@ func (i *IncomingSocket) OnWsMessage(payload []byte, isBinary bool) {
 			log.Infof("could not decode %s", err)
 		}
 		log.Infof("recv msg: %s", msg)
-		msg, _, _ = message.MessageFromText(payload)
+		msg, _, _ = message.FromText(payload)
 		i.OnMessage(i, msg)
 	} else {
 		log.Infof("text payload %s", payload)
@@ -119,7 +119,7 @@ func (i *IncomingSocket) OnClose(wasClean bool, code int, reason string) {
 }
 
 func (i *IncomingSocket) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ws_server.ServeHTTP(i, w, r)
+	server.ServeHTTP(i, w, r)
 }
 
 func (i *IncomingSocket) SharedSeed() *beacon.SharedSeed {
@@ -155,7 +155,7 @@ func (i *IncomingSocket) SetOnBinMessage(messageBinFunc nexusHelper.OnBinMessage
 }
 
 // assert type is valid socket
-var _ ws_server.WebSocketServerProtocol = &IncomingSocket{}
+var _ server.WebSocketServerProtocol = &IncomingSocket{}
 
 // assert type is valid nexus
 var _ nexusHelper.Nexus = &IncomingSocket{}

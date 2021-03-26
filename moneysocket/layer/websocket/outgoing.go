@@ -8,7 +8,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	nws "github.com/xplorfin/moneysocket-go/moneysocket/nexus/websocket"
-	"github.com/xplorfin/moneysocket-go/moneysocket/ws/ws_client"
+	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
 // TODO this needs to be fully implemented
@@ -48,7 +48,7 @@ func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, se
 	o.OutgoingSocketProtocol.OutgoingSharedSeed = seed
 	// we do this in a func so a traceback leads back here
 	go func() {
-		ws_client.NewWsClient(o.OutgoingSocketProtocol, location.ToString())
+		client.NewWsClient(o.OutgoingSocketProtocol, location.ToString())
 	}()
 	return o.OutgoingSocketProtocol, nil
 }

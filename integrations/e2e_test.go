@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
+	. "github.com/stretchr/testify/assert"
 
 	"github.com/xplorfin/moneysocket-go/relay"
 
@@ -28,8 +28,8 @@ func makeConfig(t *testing.T) *config.Config {
 	testConfig.ListenConfig.ExternalHost = "127.0.0.1"
 	testConfig.ListenConfig.ExternalPort = testConfig.GetBindPort()
 
-	testConfig.RpcConfig.BindHost = "localhost"
-	testConfig.RpcConfig.BindPort = nettest.GetFreePort(t)
+	testConfig.RPCConfig.BindHost = "localhost"
+	testConfig.RPCConfig.BindPort = nettest.GetFreePort(t)
 
 	testConfig.RelayConfig.BindHost = "localhost"
 	testConfig.RelayConfig.BindPort = nettest.GetFreePort(t)
@@ -44,50 +44,51 @@ func TestE2E(t *testing.T) {
 
 	// setup test relay
 	testRelay := relay.NewRelay(cfg)
-	go testRelay.RunApp()
+	go func() {
+		err := testRelay.RunApp()
+		Nil(t, err)
+	}()
 
 	// setup test rpc server
-	testRpcServer, err := terminus.NewTerminus(cfg)
-	assert.Nil(t, err)
-	go testRpcServer.Start(ctx)
+	testRPCServer, err := terminus.NewTerminus(cfg)
+	Nil(t, err)
+	go func() {
+		err = testRPCServer.Start(ctx)
+		Nil(t, err)
+	}()
 
 	// test rpc server hostname
-	nettest.AssertConnected(cfg.GetRpcHostname(), t)
+	nettest.AssertConnected(cfg.GetRPCHostname(), t)
 
 	terminusClient := terminus.NewClient(cfg)
 	// create two accounts
 	// -- account 1
 	account1Beacon, err := terminusClient.CreateAccount(1000000)
-	if err != nil {
-		t.Error(err)
-	}
+	Nil(t, err)
+
 	t.Log(account1Beacon)
 	// -- acount 2
 	account1Beacon, err = terminusClient.CreateAccount(1000000)
-	if err != nil {
-		t.Error(err)
-	}
+	Nil(t, err)
+
 	t.Log(account1Beacon)
 
 	// start the seller wallet consumer on account-1
 	account1Listen := getBeacon(t, terminusClient, "1")
 	app := NewSellerApp(account1Listen)
 	err = app.ConsumerStack.DoConnect(account1Listen)
-	if err != nil {
-		t.Error(err)
-	}
+	Nil(t, err)
 
 	// start the wallet consumer on account-0
 	account0Listen := getBeacon(t, terminusClient, "0")
 	walletCon := NewWalletConsumer(account0Listen)
 	err = walletCon.DoConnect(account0Listen)
+	Nil(t, err)
 
 	// generate a new beacon and call connect
-	providerBeacon := generateNewBeacon(cfg.GetExternalHost(), cfg.GetUseTls(), cfg.GetExternalPort())
+	providerBeacon := generateNewBeacon(cfg.GetExternalHost(), cfg.GetUseTLS(), cfg.GetExternalPort())
 	_, err = terminusClient.Connect("0", providerBeacon.ToBech32Str())
-	if err != nil {
-		t.Error(err)
-	}
+	Nil(t, err)
 
 	// check if incoming socket is there
 	fmt.Print(terminusClient.GetInfo())
@@ -95,18 +96,14 @@ func TestE2E(t *testing.T) {
 }
 
 // getBeacon mocks a new beacon for a given account
-func getBeacon(t *testing.T, terminusClient terminus.TerminusClient, account string) beacon.Beacon {
+func getBeacon(t *testing.T, terminusClient terminus.Client, account string) beacon.Beacon {
 	accountBeacon, err := terminusClient.Listen(account)
-	if err != nil {
-		t.Error(err)
-
-	}
+	Nil(t, err)
 
 	// get the beacon
 	acc, err := beacon.DecodeFromBech32Str(extractBeacon(accountBeacon))
-	if err != nil {
-		t.Error(err)
-	}
+	Nil(t, err)
+
 	return acc
 }
 

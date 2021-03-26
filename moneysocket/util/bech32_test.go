@@ -13,7 +13,7 @@ func TestBech32BidrectionalEncoding(t *testing.T) {
 	for i := 0; i < 10000; i++ {
 		rawHrp := gofakeit.Word()
 		rawKey := []byte(gofakeit.BitcoinPrivateKey()[0 : 52-len(rawHrp)])
-		// assert arbitary word lenghts don't break the decoding mechanis
+		// assert arbitrary word lengths don't break the decoding mechanics
 		encodedKey, err := Bech32EncodeBytes(rawKey, rawHrp)
 		if err != nil {
 			t.Error(err)
@@ -37,7 +37,7 @@ func TestUndecodable(t *testing.T) {
 	for i := 0; i < 10000; i++ {
 		//without a rawHrp these should fail
 		encodeTest := gofakeit.BitcoinAddress()
-		// assert arbitary word lenghts don't break the decoding mechanis
+		// assert arbitrary word lengths don't break the decoding mechanics
 		decodedHrp, decodedKey, err := Bech32DecodeBytes(encodeTest)
 		if err == nil {
 			t.Errorf("expected error from hrp %s and valid key: %s", decodedHrp, decodedKey)

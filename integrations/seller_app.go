@@ -20,16 +20,16 @@ type SellerApp struct {
 	SellerStack *stack.SellerStack
 	// ConsumerStack is a stack of layers to manage events in the seller consumer app
 	ConsumerStack *stack.OutgoingConsumerStack
-	// AccountUuid is the uuid used to identify the (buyer?) account
-	AccountUuid string
-	// SellerUuid is the uuid used to identify the (seller) account
-	SellerUuid string
+	// AccountUUID is the uuid used to identify the (buyer?) account
+	AccountUUID string
+	// SellerUUID is the uuid used to identify the (seller) account
+	SellerUUID string
 	// RequestedItems is a list of items the buyer "checks out with"
 	RequestedItems map[string]string
 	// StoreOpen is whether or not the seller opens the store
 	StoreOpen bool
 	// ProviderInfo contains information about the state of the sale (who's paying who, the wad, account uuid)
-	ProviderInfo seller.SellerInfo
+	ProviderInfo seller.Info
 }
 
 // NewSellerApp initializes a seller app with a beacon (that contains the location we communicate with)
@@ -39,8 +39,8 @@ func NewSellerApp(beacon beacon.Beacon) *SellerApp {
 	sa := SellerApp{
 		SellerStack:    sellerStack,
 		ConsumerStack:  walletConsumer.OutgoingConsumerStack,
-		AccountUuid:    uuid.NewV4().String(),
-		SellerUuid:     uuid.NewV4().String(),
+		AccountUUID:    uuid.NewV4().String(),
+		SellerUUID:     uuid.NewV4().String(),
 		RequestedItems: make(map[string]string),
 	}
 	return &sa
@@ -103,11 +103,11 @@ func (sa *SellerApp) SetupSellerStack() {
 		}
 		log.Println(fmt.Sprintf("adding invoice request: %s", requestUuid))
 	})
-	sa.SellerStack.SetHandleSellerInfoRequest(func() seller.SellerInfo {
+	sa.SellerStack.SetHandleSellerInfoRequest(func() seller.Info {
 		if sa.StoreOpen {
-			return seller.SellerInfo{
+			return seller.Info{
 				Ready:      true,
-				SellerUUID: sa.SellerUuid,
+				SellerUUID: sa.SellerUUID,
 				Items: []notification.Item{
 					{
 						ItemID: helloName,
@@ -126,11 +126,10 @@ func (sa *SellerApp) SetupSellerStack() {
 					},
 				},
 			}
-		} else {
-			return seller.SellerInfo{Ready: false}
 		}
+		return seller.Info{Ready: false}
 	})
-	sa.SellerStack.SetHandleProviderInfoRequest(func(seed beacon.SharedSeed) account.AccountDb {
+	sa.SellerStack.SetHandleProviderInfoRequest(func(seed beacon.SharedSeed) account.Db {
 		panic("TODO")
 	})
 }

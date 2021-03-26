@@ -9,14 +9,14 @@ import (
 
 type HandleInvoiceRequest func(nexus nexus.Nexus, msats int64, requestUuid string)
 type HandlePayRequest func(nexus nexus.Nexus, bolt11 string, requestUuid string)
-type HandleProviderInfoRequest func(seed beacon.SharedSeed) account.AccountDb
+type HandleProviderInfoRequest func(seed beacon.SharedSeed) account.Db
 type HandleOpinionInvoiceRequest func(nx nexus.Nexus, itemId string, requestUuid string)
 
 type ProviderTransactLayerInterface interface {
 	layer.Layer
-	HandleProviderInfoRequest(seed beacon.SharedSeed) account.AccountDb
-	HandlePayRequest(nexus nexus.Nexus, bolt11 string, requestUuid string)
-	HandleInvoiceRequest(nexus nexus.Nexus, msats int64, requestUuid string)
+	HandleProviderInfoRequest(seed beacon.SharedSeed) account.Db
+	HandlePayRequest(nexus nexus.Nexus, bolt11 string, requestUUID string)
+	HandleInvoiceRequest(nexus nexus.Nexus, msats int64, requestUUID string)
 }
 
 type SellingLayerInterface interface {

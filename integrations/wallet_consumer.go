@@ -17,9 +17,9 @@ type WalletConsumer struct {
 }
 
 // generateNewBeacon creates a new beacon based on host, use
-func generateNewBeacon(host string, useTls bool, port int) beacon.Beacon {
+func generateNewBeacon(host string, useTLS bool, port int) beacon.Beacon {
 	res := beacon.NewBeacon()
-	loc := location.NewWebsocketLocationPort(host, useTls, port)
+	loc := location.NewWebsocketLocationPort(host, useTLS, port)
 	res.AddLocation(loc)
 	return res
 }

@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"html/template"
@@ -75,25 +75,33 @@ func (c *Client) writePump() error {
 	for {
 		select {
 		case message, ok := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			err := c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err != nil {
+				return err
+			}
 			if !ok {
 				// The hub closed the channel.
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-				return nil
+				return c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 			}
 
 			w, err := c.conn.NextWriter(websocket.BinaryMessage)
 			if err != nil {
 				return nil
 			}
-			w.Write(message)
+			_, err = w.Write(message)
+			if err != nil {
+				return err
+			}
 
-			if err := w.Close(); err != nil {
+			if err = w.Close(); err != nil {
 				return err
 			}
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+			err := c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err != nil {
+				return err
+			}
+			if err = c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return err
 			}
 		}

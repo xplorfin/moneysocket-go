@@ -17,8 +17,8 @@ func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config)
 	configuration.AccountPersistDir = filet.TmpDir(t, "")
 	configuration.ListenConfig.BindHost = "localhost"
 	configuration.ListenConfig.BindPort = nettest.GetFreePort(t)
-	configuration.RpcConfig.BindHost = "localhost"
-	configuration.RpcConfig.BindPort = nettest.GetFreePort(t)
+	configuration.RPCConfig.BindHost = "localhost"
+	configuration.RPCConfig.BindPort = nettest.GetFreePort(t)
 
 	server, err := NewTerminus(configuration)
 	assert.Nil(t, err)
@@ -28,8 +28,10 @@ func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config)
 // start a test server on port specified in config on server
 func GetStartedTestServer(t *testing.T) (server Terminus, config *config.Config) {
 	server, config = GetTestServer(t)
-	go server.Start(context.Background())
-	nettest.AssertConnected(config.GetRpcHostname(), t)
+	go func() {
+		_ = server.Start(context.Background())
+	}()
+	nettest.AssertConnected(config.GetRPCHostname(), t)
 	return server, config
 }
 

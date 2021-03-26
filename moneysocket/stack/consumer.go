@@ -18,7 +18,7 @@ type ConsumerStack struct {
 	layer.BaseLayer
 	// gets called on layer registration
 	sendStackEvent layer.OnLayerEventFn
-	consumerLayer  *consumer.ConsumerLayer
+	consumerLayer  *consumer.Layer
 	transactLayer  *transact.ConsumerTransactLayer
 	onPing         consumerNexus.OnPingFn
 	// invoice event handler
@@ -73,9 +73,9 @@ func (c *ConsumerStack) SendStackEvent(layerName string, nexus nexusHelper.Nexus
 }
 
 // call on invoice function
-func (c *ConsumerStack) OnInvoice(transactNexus nexusHelper.Nexus, invoice string, requestReferenceUuid string) {
+func (c *ConsumerStack) OnInvoice(transactNexus nexusHelper.Nexus, invoice string, requestReferenceUUID string) {
 	if c.onInvoice != nil {
-		c.onInvoice(transactNexus, invoice, requestReferenceUuid)
+		c.onInvoice(transactNexus, invoice, requestReferenceUUID)
 	}
 }
 
@@ -85,9 +85,9 @@ func (c *ConsumerStack) SetOnInvoice(invoice nexus_transact.OnInvoice) {
 }
 
 // call on preimage function
-func (c *ConsumerStack) OnPreImage(transactNexus nexusHelper.Nexus, preimage string, requestReferenceUuid string) {
+func (c *ConsumerStack) OnPreImage(transactNexus nexusHelper.Nexus, preimage, requestReferenceUUID string) {
 	if c.onPreimage != nil {
-		c.onPreimage(transactNexus, preimage, requestReferenceUuid)
+		c.onPreimage(transactNexus, preimage, requestReferenceUUID)
 	}
 }
 
@@ -133,9 +133,9 @@ func (c *ConsumerStack) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
-func (c *ConsumerStack) RequestInvoice(msats int64, overrideRequestUuid, description string) {
-	c.nexus.(compat.ConsumeNexusInterface).RequestInvoice(msats, overrideRequestUuid, description)
+func (c *ConsumerStack) RequestInvoice(msats int64, overrideRequestUUID, description string) {
+	c.nexus.(compat.ConsumeNexusInterface).RequestInvoice(msats, overrideRequestUUID, description)
 }
-func (c *ConsumerStack) RequestPay(bolt11, overrideRequestUuid string) {
-	c.nexus.(compat.ConsumeNexusInterface).RequestPay(bolt11, overrideRequestUuid)
+func (c *ConsumerStack) RequestPay(bolt11, overrideRequestUUID string) {
+	c.nexus.(compat.ConsumeNexusInterface).RequestPay(bolt11, overrideRequestUUID)
 }

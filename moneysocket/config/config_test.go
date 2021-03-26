@@ -27,7 +27,7 @@ func TestGetters(t *testing.T) {
 			selfSignedCert: true,
 			certChainFile:  chainFile,
 		},
-		RpcConfig: RpcConfig{
+		RPCConfig: RPCConfig{
 			BindHost:     "127.0.0.1",
 			BindPort:     nettest.GetFreePort(t),
 			ExternalHost: "127.0.0.1",
@@ -45,7 +45,7 @@ func TestGetters(t *testing.T) {
 	Equal(t, config.GetBindPort(), config.ListenConfig.BindPort)
 	Equal(t, config.GetExternalHost(), config.ListenConfig.ExternalHost)
 	Equal(t, config.GetExternalPort(), config.ListenConfig.ExternalPort)
-	Equal(t, config.GetUseTls(), config.ListenConfig.useTLS)
+	Equal(t, config.GetUseTLS(), config.ListenConfig.useTLS)
 	Equal(t, config.GetCertFile(), config.ListenConfig.certFile)
 	Equal(t, config.GetKeyFile(), config.ListenConfig.certKey)
 	Equal(t, config.GetSelfSignedCert(), config.ListenConfig.selfSignedCert)

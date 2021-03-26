@@ -26,7 +26,7 @@ func (o *OutgoingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewOutgoingRendezvousNexus(belowNexus, o)
 	o.TrackNexus(rendezvousNexus, belowNexus)
 	sharedSeed := belowNexus.SharedSeed()
-	rid := hex.EncodeToString(sharedSeed.DeriveRendezvousId())
+	rid := hex.EncodeToString(sharedSeed.DeriveRendezvousID())
 	rendezvousNexus.StartRendezvous(rid, o.RendezvousFinishedCb)
 }
 

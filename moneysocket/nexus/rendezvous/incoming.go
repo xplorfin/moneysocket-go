@@ -12,21 +12,20 @@ import (
 )
 
 type IncomingRendezvousNexus struct {
-	*base.BaseNexus
+	*base.NexusBase
 	rendezvousFinishedCb func(nexus.Nexus)
-	requestReferenceUuid string
-	rendezvousId         string
-	providerFinishedCb   func(nexus.Nexus)
-	directory            *RendezvousDirectory
+	requestReferenceUUID string
+	rendezvousID         string
+	directory            *Directory
 	// TODO directory
 }
 
 const IncomingRendezvousNexusName = "IncomingRendezvousNexus"
 
-func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *RendezvousDirectory) *IncomingRendezvousNexus {
+func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *Directory) *IncomingRendezvousNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingRendezvousNexusName, belowNexus, layer)
 	og := IncomingRendezvousNexus{
-		BaseNexus: &baseNexus,
+		NexusBase: &baseNexus,
 		directory: directory,
 	}
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
@@ -50,46 +49,46 @@ func (i *IncomingRendezvousNexus) WaitForRendezvous(rendezvousFinishedCb func(ne
 func (i *IncomingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
 	log.Println("rdv nexus got message")
 	if !i.IsLayerMessage(msg) {
-		i.BaseNexus.OnMessage(belowNexus, msg)
+		i.NexusBase.OnMessage(belowNexus, msg)
 		return
 	}
 
-	req := msg.(request.RequestRendezvous)
-	i.rendezvousId = req.RendezvousId
-	i.requestReferenceUuid = req.Uuid()
+	req := msg.(request.Rendezvous)
+	i.rendezvousID = req.RendezvousID
+	i.requestReferenceUUID = req.UUID()
 
-	if i.directory.IsRidPeered(i.rendezvousId) {
+	if i.directory.IsRidPeered(i.rendezvousID) {
 		i.InitiateClose()
 	}
 
-	i.directory.AddNexus(i, i.rendezvousId)
+	i.directory.AddNexus(i, i.rendezvousID)
 	peer := i.directory.GetPeerNexus(i.UUID())
 	if peer != nil {
-		_ = i.Send(notification.NewNotifyRendezvous(i.rendezvousId, i.requestReferenceUuid))
+		_ = i.Send(notification.NewNotifyRendezvous(i.rendezvousID, i.requestReferenceUUID))
 		i.rendezvousFinishedCb(i)
 		(*peer).(*IncomingRendezvousNexus).RendezvousAcheived()
 	} else {
-		_ = i.Send(notification.NewRendezvousNotReady(i.rendezvousId, i.requestReferenceUuid))
+		_ = i.Send(notification.NewRendezvousNotReady(i.rendezvousID, i.requestReferenceUUID))
 	}
 }
 
 func (i *IncomingRendezvousNexus) OnBinMessage(belowNexus nexus.Nexus, msgByte []byte) {
 	log.Println("rdv nexus got raw message")
-	i.BaseNexus.OnBinMessage(belowNexus, msgByte)
+	i.NexusBase.OnBinMessage(belowNexus, msgByte)
 }
 
 // called by other peer
 func (i *IncomingRendezvousNexus) RendezvousAcheived() {
-	if !i.directory.IsRidPeered(i.rendezvousId) {
+	if !i.directory.IsRidPeered(i.rendezvousID) {
 		panic("expected rendezvous to be peered")
 	}
-	i.Send(notification.NewNotifyRendezvous(i.rendezvousId, i.requestReferenceUuid))
+	_ = i.Send(notification.NewNotifyRendezvous(i.rendezvousID, i.requestReferenceUUID))
 	i.rendezvousFinishedCb(i)
 }
 
 func (i *IncomingRendezvousNexus) EndRendezvous() {
 	i.directory.RemoveNexus(i)
-	i.Send(notification.NewRendezvousEnd(i.rendezvousId, ""))
+	_ = i.Send(notification.NewRendezvousEnd(i.rendezvousID, ""))
 }
 
 var _ nexus.Nexus = &IncomingRendezvousNexus{}

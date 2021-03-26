@@ -9,25 +9,25 @@ import (
 )
 
 // RendezvousDirectory stores nexus peering data
-type RendezvousDirectory struct {
+type Directory struct {
 	// todo switch to sync maps with individual mutexes
 	// this can probably be removed rn
 	mux sync.Mutex
-	// NexusesByUUID is a map from uuid to cooresponding nexus
+	// NexusesByUUID is a map from uuid to corresponding nexus
 	NexusesByUUID map[string]nexusHelper.Nexus
-	// RidsByUUIDs is a map from nexus uuid to cooresponding rendezvous id
+	// RidsByUUIDs is a map from nexus uuid to corresponding rendezvous id
 	RidsByUUIDs map[string]string
 	// UnpeeredUUIDsByRid is a map of uuids that are currently unpaired sorted by rendezvous id
 	UnpeeredUUIDsByRid map[string]string
-	// UUIDPeers is a map of nexus to the uuid of the cooresponding peer
+	// UUIDPeers is a map of nexus to the uuid of the corresponding peer
 	UUIDPeers map[string]string
 	// RIDSPeered is a list of rids which are currently peered
 	RIDSPeered []string
 }
 
 // NewRendezvousDirectory creates a new RendezvousDirectory
-func NewRendezvousDirectory() *RendezvousDirectory {
-	return &RendezvousDirectory{
+func NewRendezvousDirectory() *Directory {
+	return &Directory{
 		NexusesByUUID:      make(map[string]nexusHelper.Nexus),
 		RidsByUUIDs:        make(map[string]string),
 		UnpeeredUUIDsByRid: make(map[string]string),
@@ -37,7 +37,7 @@ func NewRendezvousDirectory() *RendezvousDirectory {
 }
 
 // ToString gets the number of nexuses/peered/unpeered
-func (r *RendezvousDirectory) ToString() string {
+func (r *Directory) ToString() string {
 	nexuses := len(r.NexusesByUUID)
 	unpeered := len(r.UnpeeredUUIDsByRid)
 	peered := len(r.UUIDPeers)
@@ -45,8 +45,8 @@ func (r *RendezvousDirectory) ToString() string {
 }
 
 // GetPeerNexus get matching peer of a given nexus (1:1 mapping)
-func (r *RendezvousDirectory) GetPeerNexus(nexusId uuid.UUID) *nexusHelper.Nexus {
-	if peer, ok := r.UUIDPeers[nexusId.String()]; ok {
+func (r *Directory) GetPeerNexus(nexusID uuid.UUID) *nexusHelper.Nexus {
+	if peer, ok := r.UUIDPeers[nexusID.String()]; ok {
 		matchingN := r.NexusesByUUID[peer]
 		return &matchingN
 	}
@@ -54,7 +54,7 @@ func (r *RendezvousDirectory) GetPeerNexus(nexusId uuid.UUID) *nexusHelper.Nexus
 }
 
 // IsNexusInDirectory determines wether or not nexus is indexed in directory
-func (r *RendezvousDirectory) IsNexusInDirectory(nexus nexusHelper.Nexus) bool {
+func (r *Directory) IsNexusInDirectory(nexus nexusHelper.Nexus) bool {
 	if _, ok := r.NexusesByUUID[nexus.UUID().String()]; ok {
 		return true
 	}
@@ -62,9 +62,9 @@ func (r *RendezvousDirectory) IsNexusInDirectory(nexus nexusHelper.Nexus) bool {
 }
 
 // IsRidPeered checks if a rendezvous id currently has a peer
-func (r *RendezvousDirectory) IsRidPeered(rendezvousId string) bool {
+func (r *Directory) IsRidPeered(rendezvousID string) bool {
 	for _, rid := range r.RIDSPeered {
-		if rid == rendezvousId {
+		if rid == rendezvousID {
 			return true
 		}
 	}
@@ -72,24 +72,24 @@ func (r *RendezvousDirectory) IsRidPeered(rendezvousId string) bool {
 }
 
 // AddNexus adds and indexes a nexus
-func (r *RendezvousDirectory) AddNexus(nexus nexusHelper.Nexus, rendezvousId string) {
+func (r *Directory) AddNexus(nexus nexusHelper.Nexus, rendezvousID string) {
 	r.mux.Lock()
 	fmt.Print(nexus.UUID().String())
 	r.NexusesByUUID[nexus.UUID().String()] = nexus
-	r.RidsByUUIDs[nexus.UUID().String()] = rendezvousId
-	if peerUuid, ok := r.UnpeeredUUIDsByRid[rendezvousId]; ok {
-		delete(r.UnpeeredUUIDsByRid, rendezvousId)
-		r.UUIDPeers[peerUuid] = nexus.UUID().String()
-		r.UUIDPeers[nexus.UUID().String()] = peerUuid
-		r.RIDSPeered = append(r.RIDSPeered, rendezvousId)
+	r.RidsByUUIDs[nexus.UUID().String()] = rendezvousID
+	if peerUUID, ok := r.UnpeeredUUIDsByRid[rendezvousID]; ok {
+		delete(r.UnpeeredUUIDsByRid, rendezvousID)
+		r.UUIDPeers[peerUUID] = nexus.UUID().String()
+		r.UUIDPeers[nexus.UUID().String()] = peerUUID
+		r.RIDSPeered = append(r.RIDSPeered, rendezvousID)
 	} else {
-		r.UnpeeredUUIDsByRid[rendezvousId] = nexus.UUID().String()
+		r.UnpeeredUUIDsByRid[rendezvousID] = nexus.UUID().String()
 	}
 	r.mux.Unlock()
 }
 
 // RemoveNexus removes a nexus from the directory
-func (r *RendezvousDirectory) RemoveNexus(nexus nexusHelper.Nexus) {
+func (r *Directory) RemoveNexus(nexus nexusHelper.Nexus) {
 	if !r.IsNexusInDirectory(nexus) {
 		return
 	}
@@ -98,10 +98,10 @@ func (r *RendezvousDirectory) RemoveNexus(nexus nexusHelper.Nexus) {
 	rid := r.RidsByUUIDs[nexus.UUID().String()]
 	delete(r.RidsByUUIDs, nexus.UUID().String())
 
-	if peerUuid, ok := r.UUIDPeers[nexus.UUID().String()]; ok {
-		delete(r.UUIDPeers, peerUuid)
+	if peerUUID, ok := r.UUIDPeers[nexus.UUID().String()]; ok {
+		delete(r.UUIDPeers, peerUUID)
 		delete(r.UUIDPeers, nexus.UUID().String())
-		r.UnpeeredUUIDsByRid[rid] = peerUuid
+		r.UnpeeredUUIDsByRid[rid] = peerUUID
 		// remove from peered uuids
 		for i, peeredRid := range r.RIDSPeered {
 			if peeredRid == rid {

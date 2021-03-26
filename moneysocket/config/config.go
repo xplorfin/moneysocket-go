@@ -1,4 +1,4 @@
-// we store config seperately from terminus to prevent circular dependency errors
+// we store config separately from terminus to prevent circular dependency errors
 package config
 
 import (
@@ -16,8 +16,8 @@ type Config struct {
 	AccountPersistDir string
 	// ListenConfig defines the config to have generated beacons
 	ListenConfig ListenConfig
-	// RpcConfig defines the configuration for the rpc server to listen on
-	RpcConfig RpcConfig
+	// RPCConfig defines the configuration for the rpc server to listen on
+	RPCConfig RPCConfig
 	// RelayConfig defines the configuration for the relay server (see: https://git.io/JmrYJ )
 	RelayConfig RelayConfig
 	// LndConfig defines the configuration for hooking up with the lnd server
@@ -33,7 +33,7 @@ func NewConfig() *Config {
 			ExternalHost: "localhost",
 			ExternalPort: 50001,
 		},
-		RpcConfig: RpcConfig{
+		RPCConfig: RPCConfig{
 			BindHost:     "localhost",
 			BindPort:     5003,
 			ExternalHost: "localhost",
@@ -60,7 +60,7 @@ func (c Config) Validate() error {
 		return err
 	}
 
-	err = c.RpcConfig.Validate()
+	err = c.RPCConfig.Validate()
 	if err != nil {
 		return err
 	}
@@ -94,8 +94,8 @@ func (c *Config) GetExternalPort() int {
 	return c.ListenConfig.ExternalPort
 }
 
-// GetUseTls determines wether or not to use tls
-func (c *Config) GetUseTls() bool {
+// GetUseTLS determines wether or not to use tls
+func (c *Config) GetUseTLS() bool {
 	return c.ListenConfig.useTLS
 }
 
@@ -124,15 +124,15 @@ func (c *Config) GetHostName() string {
 	return fmt.Sprintf("%s:%d", c.GetBindHost(), c.GetBindPort())
 }
 
-// GetRpcHostname fetches the hostname of the rpc server
-func (c *Config) GetRpcHostname() string {
-	return fmt.Sprintf("%s:%d", c.RpcConfig.BindHost, c.RpcConfig.BindPort)
+// GetRPCHostname fetches the hostname of the rpc server
+func (c *Config) GetRPCHostname() string {
+	return fmt.Sprintf("%s:%d", c.RPCConfig.BindHost, c.RPCConfig.BindPort)
 
 }
 
-// GetRpcAddress fetches the address (w/ connection schema) of the rpc server
-func (c *Config) GetRpcAddress() string {
-	return fmt.Sprintf("http://%s", c.GetRpcHostname())
+// GetRPCAddress fetches the address (w/ connection schema) of the rpc server
+func (c *Config) GetRPCAddress() string {
+	return fmt.Sprintf("http://%s", c.GetRPCHostname())
 }
 
 // GetAddress fetches the address of the rpc server
@@ -140,21 +140,21 @@ func (c *Config) GetAddress() string {
 	return fmt.Sprintf("http://%s/", c.GetHostName())
 }
 
-// GetRelayUrl gets the relay url
-func (c *Config) GetRelayUrl() string {
+// GetRelayURL gets the relay url
+func (c *Config) GetRelayURL() string {
 	u := url.URL{
 		Scheme: "ws",
 		Host:   fmt.Sprintf("%s:%d", c.RelayConfig.BindHost, c.RelayConfig.BindPort),
 	}
 
-	if c.GetUseTls() {
+	if c.GetUseTLS() {
 		u.Scheme = "wss"
 	}
 
 	return u.String()
 }
 
-// RpcServerTimeout fetches the server timeout
-func (c *Config) RpcServerTimeout() time.Duration {
+// RPCServerTimeout fetches the server timeout
+func (c *Config) RPCServerTimeout() time.Duration {
 	return time.Second * 10
 }

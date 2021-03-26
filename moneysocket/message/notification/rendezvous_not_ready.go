@@ -9,14 +9,14 @@ import (
 
 type RendezvousNotReady struct {
 	BaseMoneySocketNotification
-	rendezvousId string
+	rendezvousID string
 }
 
 // create a new rendezvous end notification with a given rendezvous id
-func NewRendezvousNotReady(rid, requestUuid string) RendezvousNotReady {
+func NewRendezvousNotReady(rid, requestUUID string) RendezvousNotReady {
 	return RendezvousNotReady{
-		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvousNotReadyNotification, requestUuid),
-		rendezvousId:                rid,
+		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvousNotReadyNotification, requestUUID),
+		rendezvousID:                rid,
 	}
 }
 
@@ -24,13 +24,13 @@ func (r RendezvousNotReady) MustBeClearText() bool {
 	return true
 }
 
-func (r RendezvousNotReady) ToJson() ([]byte, error) {
+func (r RendezvousNotReady) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(r, m)
 	if err != nil {
 		return nil, err
 	}
-	m[rendezvousIdKey] = r.rendezvousId
+	m[rendezvousIDKey] = r.rendezvousID
 	return json.Marshal(&m)
 }
 
@@ -39,11 +39,11 @@ func DecodeRendezvousNotReady(payload []byte) (RendezvousNotReady, error) {
 	if err != nil {
 		return RendezvousNotReady{}, err
 	}
-	rendezvousId, err := jsonparser.GetString(payload, rendezvousIdKey)
+	rendezvousID, err := jsonparser.GetString(payload, rendezvousIDKey)
 	if err != nil {
 		return RendezvousNotReady{}, err
 	}
-	return RendezvousNotReady{notiification, rendezvousId}, nil
+	return RendezvousNotReady{notiification, rendezvousID}, nil
 }
 
 var _ MoneysocketNotification = &RendezvousNotReady{}

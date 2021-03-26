@@ -56,7 +56,7 @@ func (l LndConfig) Validate() (err error) {
 		return fmt.Errorf("network %s invalid, expected bitcoin", l.Network)
 	}
 
-	// we validate these seperately from Grpc for easier tracebacks
+	// we validate these separately from Grpc for easier tracebacks
 	if l.TLSCertPath != "" {
 		_, err = l.GetTLSCert()
 		if err != nil {

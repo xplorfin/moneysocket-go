@@ -14,17 +14,17 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-const ProviderTransactNexusName = "ProviderTransactNexus"
+const TransactNexusName = "ProviderTransactNexus"
 
-type ProviderTransactNexus struct {
-	*base.BaseNexus
+type TransactNexus struct {
+	*base.NexusBase
 	HandleInvoiceRequest compat.HandleInvoiceRequest
 	HandlePayRequest     compat.HandlePayRequest
 }
 
-func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) *ProviderTransactNexus {
-	nx := base.NewBaseNexusFull(ProviderTransactNexusName, belowNexus, layer)
-	pn := ProviderTransactNexus{&nx, nil, nil}
+func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) *TransactNexus {
+	nx := base.NewBaseNexusFull(TransactNexusName, belowNexus, layer)
+	pn := TransactNexus{&nx, nil, nil}
 
 	belowNexus.SetOnBinMessage(pn.OnBinMessage)
 	belowNexus.SetOnMessage(pn.OnMessage)
@@ -33,17 +33,17 @@ func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Layer) *Provid
 }
 
 // handle layer request
-func (p *ProviderTransactNexus) HandleLayerRequest(req request.MoneysocketRequest) {
+func (p *TransactNexus) HandleLayerRequest(req request.MoneysocketRequest) {
 	if req.MessageType() == msg.InvoiceRequest {
-		invoice := req.(request.RequestInvoice)
-		p.HandleInvoiceRequest(p, invoice.Msats, req.Uuid())
+		invoice := req.(request.Invoice)
+		p.HandleInvoiceRequest(p, invoice.Msats, req.UUID())
 	} else if req.MessageType() == msg.PayRequest {
-		payRequest := req.(request.RequestPay)
-		p.HandlePayRequest(p, payRequest.Bolt11, req.Uuid())
+		payRequest := req.(request.Pay)
+		p.HandlePayRequest(p, payRequest.Bolt11, req.UUID())
 	}
 }
 
-func (p *ProviderTransactNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
+func (p *TransactNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
 	if message.MessageClass() == msg.Request {
 		return false
 	}
@@ -51,33 +51,33 @@ func (p *ProviderTransactNexus) IsLayerMessage(message msg.MoneysocketMessage) b
 	return req.MessageType() == msg.InvoiceRequest || req.MessageType() == msg.PayRequest
 }
 
-func (p *ProviderTransactNexus) OnMessage(belowNexus nexus.Nexus, message msg.MoneysocketMessage) {
+func (p *TransactNexus) OnMessage(belowNexus nexus.Nexus, message msg.MoneysocketMessage) {
 	if !p.IsLayerMessage(message) {
-		p.BaseNexus.OnMessage(belowNexus, message)
+		p.NexusBase.OnMessage(belowNexus, message)
 	} else {
 		req := message.(request.MoneysocketRequest)
 		p.HandleLayerRequest(req)
 	}
 }
 
-func (p *ProviderTransactNexus) OnBinMessage(baseNexus nexus.Nexus, msg []byte) {
+func (p *TransactNexus) OnBinMessage(baseNexus nexus.Nexus, msg []byte) {
 	// pass
 }
 
-func (p *ProviderTransactNexus) NotifyInvoice(bolt11, requestReferenceUuid string) error {
-	return p.Send(notification.NewNotifyInvoice(bolt11, requestReferenceUuid))
+func (p *TransactNexus) NotifyInvoice(bolt11, requestReferenceUUID string) error {
+	return p.Send(notification.NewNotifyInvoice(bolt11, requestReferenceUUID))
 }
 
-func (p *ProviderTransactNexus) NotifyPreimage(preimage, requestReferenceUuid string) error {
-	return p.Send(notification.NewNotifyPreimage(preimage, "", requestReferenceUuid))
+func (p *TransactNexus) NotifyPreimage(preimage, requestReferenceUUID string) error {
+	return p.Send(notification.NewNotifyPreimage(preimage, "", requestReferenceUUID))
 }
 
-func (p *ProviderTransactNexus) NotifyProviderInfo(seed beacon.SharedSeed) error {
-	pi := p.BaseNexus.Layer.(compat.ProviderTransactLayerInterface)
+func (p *TransactNexus) NotifyProviderInfo(seed beacon.SharedSeed) error {
+	pi := p.NexusBase.Layer.(compat.ProviderTransactLayerInterface)
 	adb := pi.HandleProviderInfoRequest(seed)
 	log.Println("notify provider")
-	m := notification.NewNotifyProvider(adb.Details.AccountUuid, adb.Details.Payer(), adb.Details.Payee(), adb.Details.Wad, uuid.NewV4().String())
+	m := notification.NewNotifyProvider(adb.Details.AccountUUID, adb.Details.Payer(), adb.Details.Payee(), adb.Details.Wad, uuid.NewV4().String())
 	return p.Send(m)
 }
 
-var _ nexus.Nexus = &ProviderTransactNexus{}
+var _ nexus.Nexus = &TransactNexus{}

@@ -7,25 +7,25 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-type RequestRendezvous struct {
+type Rendezvous struct {
 	BaseMoneySocketRequest
 	// the id of the rendezvous we're requesting (normally derived  from the shared seed)
-	RendezvousId string
+	RendezvousID string
 }
 
 // request the server start a rendezvous w/ a given rendezvous id
-func NewRendezvousRequest(id string) RequestRendezvous {
-	return RequestRendezvous{
+func NewRendezvousRequest(id string) Rendezvous {
+	return Rendezvous{
 		NewBaseMoneySocketRequest(base.RendezvousRequest),
 		id,
 	}
 }
 
-const rendevousIdKey = "rendezvous_id"
+const rendezvousIDKey = "rendezvous_id"
 
-func (r RequestRendezvous) ToJson() ([]byte, error) {
+func (r Rendezvous) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	m[rendevousIdKey] = r.RendezvousId
+	m[rendezvousIDKey] = r.RendezvousID
 	err := EncodeMoneysocketRequest(r, m)
 	if err != nil {
 		return nil, err
@@ -33,25 +33,25 @@ func (r RequestRendezvous) ToJson() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-func (r RequestRendezvous) MustBeClearText() bool {
+func (r Rendezvous) MustBeClearText() bool {
 	return true
 }
 
-func DecodeRendezvousRequest(payload []byte) (r RequestRendezvous, err error) {
+func DecodeRendezvousRequest(payload []byte) (r Rendezvous, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {
-		return RequestRendezvous{}, err
+		return Rendezvous{}, err
 	}
 
-	rid, err := jsonparser.GetString(payload, rendevousIdKey)
+	rid, err := jsonparser.GetString(payload, rendezvousIDKey)
 	if err != nil {
-		return RequestRendezvous{}, nil
+		return Rendezvous{}, nil
 	}
-	r = RequestRendezvous{
+	r = Rendezvous{
 		BaseMoneySocketRequest: request,
-		RendezvousId:           rid,
+		RendezvousID:           rid,
 	}
 	return r, nil
 }
 
-var _ MoneysocketRequest = &RequestRendezvous{}
+var _ MoneysocketRequest = &Rendezvous{}

@@ -18,7 +18,7 @@ func IsCypherText(text []byte) bool {
 
 // encode a message, encrypt if shared seed is present
 func WireEncode(msg base.MoneysocketMessage, ss *beacon.SharedSeed) ([]byte, error) {
-	encoded, err := msg.ToJson()
+	encoded, err := msg.ToJSON()
 	if err != nil {
 		return nil, err
 	}
@@ -57,16 +57,16 @@ func WireDecode(msgBytes []byte, sharedSeed *beacon.SharedSeed) (msg base.Moneys
 
 	switch msgClass {
 	case base.Request:
-		return MessageFromText(rawMsg)
+		return FromText(rawMsg)
 	case base.Notification:
-		return notification.NotificationFromText(rawMsg)
+		return notification.FromText(rawMsg)
 	default:
 		panic(fmt.Sprintf("unhandled message type %d", msgClass))
 	}
 }
 
 func LocalEncode(msg base.MoneysocketMessage, sharedSeed *beacon.SharedSeed) (encoded bool, msgBytes []byte) {
-	msgBytes, err := msg.ToJson()
+	msgBytes, err := msg.ToJSON()
 	if err != nil {
 		panic(err)
 	}

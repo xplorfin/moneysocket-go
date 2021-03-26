@@ -14,27 +14,27 @@ import (
 
 type OnPingFn func(nexus nexus.Nexus, msecs int)
 
-type ConsumerFinishedCb func(consumerNexus ConsumerNexus)
+type FinishedCb func(consumerNexus Nexus)
 
-type ConsumerNexus struct {
-	*base.BaseNexus
+type Nexus struct {
+	*base.NexusBase
 	handshakeFinished bool
 	pingStartTime     *time.Time
 	// how often to ping
 	pingInterval       time.Duration
 	onPing             OnPingFn
-	consumerFinishedCb ConsumerFinishedCb
+	consumerFinishedCb FinishedCb
 	// wether or not ping loop is currently engaged
 	isPinging bool
 	// channel for ending ping loop
 	donePinging chan bool
 }
 
-const ConsumerNexusName = "ConsumerNexus"
+const NexusName = "ConsumerNexus"
 
-func NewConsumerNexus(belowNexus nexus.Nexus) *ConsumerNexus {
-	consumerNexus := ConsumerNexus{
-		BaseNexus:    base.NewBaseNexus(ConsumerNexusName),
+func NewConsumerNexus(belowNexus nexus.Nexus) *Nexus {
+	consumerNexus := Nexus{
+		NexusBase:    base.NewBaseNexus(NexusName),
 		donePinging:  make(chan bool, 1),
 		pingInterval: time.Second * 3,
 	}
@@ -43,7 +43,7 @@ func NewConsumerNexus(belowNexus nexus.Nexus) *ConsumerNexus {
 	return &consumerNexus
 }
 
-func (c *ConsumerNexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
+func (c *Nexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
 	if message.MessageClass() != base2.Notification {
 		return false
 	}
@@ -51,24 +51,24 @@ func (c *ConsumerNexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
 	return notif.MessageClass() == base2.NotifyProvider || notif.MessageClass() == base2.NotifyProviderNotReady || notif.MessageClass() == base2.NotifyPong
 }
 
-func (c *ConsumerNexus) ConsumerFinishedCb() {
+func (c *Nexus) ConsumerFinishedCb() {
 	// TODO
 }
 
-func (c *ConsumerNexus) SetOnPing(fn OnPingFn) {
+func (c *Nexus) SetOnPing(fn OnPingFn) {
 	c.onPing = fn
 }
 
-func (c *ConsumerNexus) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
+func (c *Nexus) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
 	if c.onPing != nil {
 		c.onPing(consumerNexus, milliseconds)
 	}
 }
 
-func (c *ConsumerNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
+func (c *Nexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
 	log.Print("consumer nexus got msg")
 	if !c.IsLayerMessage(msg) {
-		c.BaseNexus.OnMessage(belowNexus, msg)
+		c.NexusBase.OnMessage(belowNexus, msg)
 	}
 
 	notif := msg.(notification.MoneysocketNotification)
@@ -78,7 +78,7 @@ func (c *ConsumerNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketM
 			c.handshakeFinished = true
 			c.consumerFinishedCb(*c)
 		}
-		c.BaseNexus.OnMessage(belowNexus, msg)
+		c.NexusBase.OnMessage(belowNexus, msg)
 	}
 
 	if notif.MessageClass() != base2.NotifyProviderNotReady {
@@ -96,25 +96,25 @@ func (c *ConsumerNexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketM
 		c.pingStartTime = nil
 	}
 }
-func (c *ConsumerNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
-	c.BaseNexus.OnBinMessage(belowNexus, msg)
+func (c *Nexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+	c.NexusBase.OnBinMessage(belowNexus, msg)
 }
 
-func (c *ConsumerNexus) StartHandshake(cb ConsumerFinishedCb) {
+func (c *Nexus) StartHandshake(cb FinishedCb) {
 	c.consumerFinishedCb = cb
 	_ = c.Send(request.NewRequestProvider())
 }
 
 // send a ping up the chain
-func (c *ConsumerNexus) SendPing() {
+func (c *Nexus) SendPing() {
 	currentTime := time.Now()
 	c.pingStartTime = &currentTime
-	c.Send(request.NewPingRequest())
+	_ = c.Send(request.NewPingRequest())
 }
 
 // start pining on a set interval
-func (c *ConsumerNexus) StartPinging() {
-	tick := time.Tick(3 * time.Second)
+func (c *Nexus) StartPinging() {
+	ticker := time.NewTicker(3 * time.Second)
 	c.isPinging = true
 	// Keep trying until we're timed out or got a result or got an error
 	for {
@@ -126,16 +126,16 @@ func (c *ConsumerNexus) StartPinging() {
 			c.isPinging = false
 			break
 		// Got a tick, we should check on doSomething()
-		case <-tick:
+		case <-ticker.C:
 			c.SendPing()
 		}
 	}
 }
 
-func (c *ConsumerNexus) StopPinging() {
+func (c *Nexus) StopPinging() {
 	if c.isPinging {
 		<-c.donePinging
 	}
 }
 
-var _ nexus.Nexus = &ConsumerNexus{}
+var _ nexus.Nexus = &Nexus{}

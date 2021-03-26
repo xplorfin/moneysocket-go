@@ -14,7 +14,7 @@ func TestGetPersistedAccounts(t *testing.T) {
 	configuration := config.NewConfig()
 	configuration.AccountPersistDir = filet.TmpDir(t, "")
 
-	testAccounts := make(map[string]AccountDb)
+	testAccounts := make(map[string]Db)
 	for i := 0; i < testIteratons; i++ {
 		accountName := gofakeit.BeerAlcohol()
 		adb := NewAccountDb(accountName, configuration)
@@ -26,7 +26,7 @@ func TestGetPersistedAccounts(t *testing.T) {
 		if val, ok := testAccounts[db.Details.AccountName]; ok {
 			Equal(t, val.Details.AccountName, db.Details.AccountName)
 			Equal(t, val.Details.Wad, db.Details.Wad)
-			Equal(t, val.Details.AccountUuid, db.Details.AccountUuid)
+			Equal(t, val.Details.AccountUUID, db.Details.AccountUUID)
 			Equal(t, val.Details.SharedSeeds, db.Details.SharedSeeds)
 		} else {
 			t.Errorf("expected iterated account %s to be in accounts created for testing", db.Details.AccountName)

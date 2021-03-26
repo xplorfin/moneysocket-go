@@ -12,7 +12,8 @@ import (
 
 // helper function for when youd don't want to pass a handler
 
-type BaseNexus struct {
+// NexusBase is the nexus superclass. It contains common functions for a nexus
+type NexusBase struct {
 	// name of the nexus (stored in base for debugging)
 	name         string
 	uuid         uuid.UUID
@@ -23,25 +24,25 @@ type BaseNexus struct {
 }
 
 // statically assert nexus type conformity
-var _ nexus.Nexus = &BaseNexus{}
+var _ nexus.Nexus = &NexusBase{}
 
-func NewBaseNexus(name string) *BaseNexus {
-	return &BaseNexus{
+func NewBaseNexus(name string) *NexusBase {
+	return &NexusBase{
 		name: name,
 		uuid: uuid.NewV4(),
 	}
 }
 
-func NewBaseNexusBelow(name string, belowNexus nexus.Nexus) *BaseNexus {
-	return &BaseNexus{
+func NewBaseNexusBelow(name string, belowNexus nexus.Nexus) *NexusBase {
+	return &NexusBase{
 		name:       name,
 		uuid:       uuid.NewV4(),
 		BelowNexus: &belowNexus,
 	}
 }
 
-func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) BaseNexus {
-	return BaseNexus{
+func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) NexusBase {
+	return NexusBase{
 		name:       name,
 		uuid:       uuid.NewV4(),
 		BelowNexus: &belowNexus,
@@ -49,7 +50,7 @@ func NewBaseNexusFull(name string, belowNexus nexus.Nexus, layer layer.Layer) Ba
 	}
 }
 
-func (b *BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
+func (b *NexusBase) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	if b.IsEqual(belowNexus) {
 		log.Printf("below nexus: %s (%s) and current nexus %s (%s) appears to be crossed", belowNexus.Name(), belowNexus.UUID(), b.Name(), b.UUID())
 		log.Print(b.GetDownwardNexusList())
@@ -57,19 +58,19 @@ func (b *BaseNexus) CheckCrossedNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-func (b *BaseNexus) UUID() uuid.UUID {
+func (b *NexusBase) UUID() uuid.UUID {
 	return b.uuid
 }
 
-func (b *BaseNexus) Name() string {
+func (b *NexusBase) Name() string {
 	return b.name
 }
 
-func (b *BaseNexus) IsEqual(n nexus.Nexus) bool {
+func (b *NexusBase) IsEqual(n nexus.Nexus) bool {
 	return n.UUID() == b.UUID()
 }
 
-func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
+func (b *NexusBase) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessage) {
 	b.CheckCrossedNexus(belowNexus)
 	if b.onMessage != nil {
 		b.onMessage(b, msg)
@@ -77,7 +78,7 @@ func (b *BaseNexus) OnMessage(belowNexus nexus.Nexus, msg base.MoneysocketMessag
 	}
 }
 
-func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
+func (b *NexusBase) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	b.CheckCrossedNexus(belowNexus)
 	// default to onbinmessage
 	if b.onBinMessage != nil {
@@ -86,7 +87,7 @@ func (b *BaseNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	}
 }
 
-func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
+func (b NexusBase) GetDownwardNexusList() (belowList []nexus.Nexus) {
 	if b.BelowNexus != nil {
 		belowList = (*b.BelowNexus).GetDownwardNexusList()
 		belowList = append(belowList, &b)
@@ -94,37 +95,37 @@ func (b BaseNexus) GetDownwardNexusList() (belowList []nexus.Nexus) {
 	return belowList
 }
 
-func (b *BaseNexus) Send(msg base.MoneysocketMessage) error {
+func (b *NexusBase) Send(msg base.MoneysocketMessage) error {
 	if b.BelowNexus != nil {
 		return (*b.BelowNexus).Send(msg)
 	}
 	return nil
 }
 
-func (b *BaseNexus) SendBin(msg []byte) error {
+func (b *NexusBase) SendBin(msg []byte) error {
 	if b.BelowNexus != nil {
 		return (*b.BelowNexus).SendBin(msg)
 	}
 	return nil
 }
 
-func (b *BaseNexus) InitiateClose() {
+func (b *NexusBase) InitiateClose() {
 	if b.BelowNexus != nil {
 		(*b.BelowNexus).InitiateClose()
 	}
 }
 
-func (b BaseNexus) SharedSeed() *beacon.SharedSeed {
+func (b NexusBase) SharedSeed() *beacon.SharedSeed {
 	if b.BelowNexus != nil {
 		return (*b.BelowNexus).SharedSeed()
 	}
 	return nil
 }
 
-func (b *BaseNexus) SetOnMessage(messageFunc nexus.OnMessage) {
+func (b *NexusBase) SetOnMessage(messageFunc nexus.OnMessage) {
 	b.onMessage = messageFunc
 }
 
-func (b *BaseNexus) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
+func (b *NexusBase) SetOnBinMessage(messageBinFunc nexus.OnBinMessage) {
 	b.onBinMessage = messageBinFunc
 }

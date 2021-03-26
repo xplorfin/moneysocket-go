@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"context"
@@ -20,7 +20,7 @@ type WebSocketServerProtocol interface {
 	OnConnect(r *http.Request)
 	// connection is open
 	OnOpen()
-	// recieve a message, maps to OnMessage() in python version
+	// receive a message, maps to OnMessage() in python version
 	OnWsMessage(payload []byte, isBinary bool)
 	// called when connection isclosed
 	OnClose(wasClean bool, code int, reason string)

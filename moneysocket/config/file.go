@@ -72,10 +72,10 @@ func ParseConfig(fileContents string) (config Config, err error) {
 	config.ListenConfig.defaultPort = listenConfig.GetInt("DefaultPort")
 
 	rpcConfig := NewSection("Rpc", cfg)
-	config.RpcConfig.BindHost = rpcConfig.GetString("BindHost")
-	config.RpcConfig.BindPort = rpcConfig.GetInt("BindPort")
-	config.RpcConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
-	config.RpcConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
+	config.RPCConfig.BindHost = rpcConfig.GetString("BindHost")
+	config.RPCConfig.BindPort = rpcConfig.GetInt("BindPort")
+	config.RPCConfig.ExternalHost = rpcConfig.GetString("ExternalHost")
+	config.RPCConfig.ExternalPort = rpcConfig.GetInt("ExternalPort")
 
 	relayConfig := NewSection("Relay", cfg)
 	config.RelayConfig.BindHost = relayConfig.GetString("ListenBind")

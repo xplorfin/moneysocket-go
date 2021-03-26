@@ -10,11 +10,11 @@ type NotifyProviderNotReady struct {
 	BaseMoneySocketNotification
 }
 
-func NewNotifyProviderNotReady(requestUuid string) NotifyProviderNotReady {
-	return NotifyProviderNotReady{NewBaseMoneySocketNotification(base.NotifyProviderNotReady, requestUuid)}
+func NewNotifyProviderNotReady(requestUUID string) NotifyProviderNotReady {
+	return NotifyProviderNotReady{NewBaseMoneySocketNotification(base.NotifyProviderNotReady, requestUUID)}
 }
 
-func (n NotifyProviderNotReady) ToJson() ([]byte, error) {
+func (n NotifyProviderNotReady) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(n, m)
 	if err != nil {

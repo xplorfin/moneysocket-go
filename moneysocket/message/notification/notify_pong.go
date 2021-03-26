@@ -10,11 +10,11 @@ type NotifyPong struct {
 	BaseMoneySocketNotification
 }
 
-func NewNotifyPong(requestUuid string) NotifyPong {
-	return NotifyPong{NewBaseMoneySocketNotification(base.NotifyPong, requestUuid)}
+func NewNotifyPong(requestUUID string) NotifyPong {
+	return NotifyPong{NewBaseMoneySocketNotification(base.NotifyPong, requestUUID)}
 }
 
-func (n NotifyPong) ToJson() ([]byte, error) {
+func (n NotifyPong) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneysocketNotification(n, m)
 	if err != nil {

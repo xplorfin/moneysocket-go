@@ -1,4 +1,4 @@
-package ws_server
+package server
 
 import (
 	"net/http"
@@ -28,19 +28,19 @@ type TestWebsocketServiceProtocol struct {
 }
 
 func (t *TestWebsocketServiceProtocol) OnConnecting(r *http.Request) {
-	t.onConnectingCalls += 1
+	t.onConnectingCalls++
 }
 
 func (t *TestWebsocketServiceProtocol) OnConnect(r *http.Request) {
-	t.onConnectCalls += 1
+	t.onConnectCalls++
 }
 
 func (t *TestWebsocketServiceProtocol) OnOpen() {
-	t.onOpenCalls += 1
+	t.onOpenCalls++
 }
 
 func (t *TestWebsocketServiceProtocol) OnWsMessage(payload []byte, isBinary bool) {
-	t.onMessageCalls += 1
+	t.onMessageCalls++
 	t.Messages = append(t.Messages, TestIncomingMessages{
 		payload:  payload,
 		isBinary: isBinary,
@@ -48,7 +48,7 @@ func (t *TestWebsocketServiceProtocol) OnWsMessage(payload []byte, isBinary bool
 }
 
 func (t *TestWebsocketServiceProtocol) OnClose(wasClean bool, code int, reason string) {
-	t.onCloseCalls += 1
+	t.onCloseCalls++
 }
 
 func (t *TestWebsocketServiceProtocol) ServeHTTP(w http.ResponseWriter, r *http.Request) {

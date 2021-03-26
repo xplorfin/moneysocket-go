@@ -7,64 +7,69 @@ import (
 )
 
 const (
-	PROTOCOL_NAME = "Moneysocket"
-	VERSION       = "0.0.0"
+	ProtocolName = "Moneysocket"
+	Version      = "0.0.0"
 )
 
-type BaseMoneysocketMessage struct {
-	Time                time.Time
-	BaseProtocol        string
+// MessageBase is the message
+type MessageBase struct {
+	// Time is the time
+	Time time.Time
+	// BaseProtocol is the base protocol name
+	BaseProtocol string
+	// BaseProtocolVersion is the protocol version
 	BaseProtocolVersion string
-	BaseMessageClass    MessageClass
+	// BaseMessageClass is the message class
+	BaseMessageClass MessageClass
 }
 
-func (m BaseMoneysocketMessage) CryptLevel() string {
+func (m MessageBase) CryptLevel() string {
 	return "AES"
 }
 
-func (m BaseMoneysocketMessage) ProtocolVersion() string {
+func (m MessageBase) ProtocolVersion() string {
 	return m.BaseProtocolVersion
 }
 
-func (m BaseMoneysocketMessage) MessageClass() MessageClass {
+func (m MessageBase) MessageClass() MessageClass {
 	return m.BaseMessageClass
 }
 
-func (m BaseMoneysocketMessage) MustBeClearText() bool {
+func (m MessageBase) MustBeClearText() bool {
 	return false
 }
 
-func (m BaseMoneysocketMessage) ToJson() ([]byte, error) {
-	panic("must be implemented in children classes. You can use EncodeMoneysocketMessage as a helper method")
+func (m MessageBase) ToJSON() ([]byte, error) {
+	panic("must be implemented in children classes. You can use EncodeBaseMoneysocketMessage as a helper method")
 }
 
-func (m BaseMoneysocketMessage) IsValid() (bool, error) {
+func (m MessageBase) IsValid() (bool, error) {
 	panic("must be implemented in children classes")
 }
 
-func NewBaseMoneysocketMessage(messageType MessageClass) BaseMoneysocketMessage {
-	return BaseMoneysocketMessage{
+func NewBaseBaseMoneysocketMessage(messageType MessageClass) MessageBase {
+	return MessageBase{
 		Time:                time.Now(),
-		BaseProtocol:        PROTOCOL_NAME,
-		BaseProtocolVersion: VERSION,
+		BaseProtocol:        ProtocolName,
+		BaseProtocolVersion: Version,
 		BaseMessageClass:    messageType,
 	}
 }
 
-func (m BaseMoneysocketMessage) Timestamp() time.Time {
+func (m MessageBase) Timestamp() time.Time {
 	return m.Time
 }
 
-func (m BaseMoneysocketMessage) Protocol() string {
+func (m MessageBase) Protocol() string {
 	return m.BaseProtocol
 }
 
 // decode a moneysocket message from json
-func DecodeBaseMoneysocketMessage(payload []byte) (b BaseMoneysocketMessage, err error) {
+func DecodeBaseBaseMoneysocketMessage(payload []byte) (b MessageBase, err error) {
 	// TODO get float
 	parsedTime, err := jsonparser.GetFloat(payload, timestampKey)
 	if err != nil {
-		return BaseMoneysocketMessage{}, err
+		return MessageBase{}, err
 	}
 
 	o := int64(float64(time.Millisecond) * (parsedTime - float64(int64(parsedTime))))
@@ -72,19 +77,19 @@ func DecodeBaseMoneysocketMessage(payload []byte) (b BaseMoneysocketMessage, err
 	b.Time = time.Unix(int64(parsedTime), int64(float64(time.Second)*(parsedTime-float64(int64(parsedTime)))))
 	msgClass, err := jsonparser.GetString(payload, MessageClassKey)
 	if err != nil {
-		return BaseMoneysocketMessage{}, err
+		return MessageBase{}, err
 	}
 	b.BaseMessageClass = MessageClassFromString(msgClass)
 	b.BaseProtocolVersion, err = jsonparser.GetString(payload, protocolVersion)
 	if err != nil {
-		return BaseMoneysocketMessage{}, err
+		return MessageBase{}, err
 	}
 	b.BaseProtocol, err = jsonparser.GetString(payload, protocolKey)
 	if err != nil {
-		return BaseMoneysocketMessage{}, err
+		return MessageBase{}, err
 	}
 	return b, err
 
 }
 
-var _ MoneysocketMessage = &BaseMoneysocketMessage{}
+var _ MoneysocketMessage = &MessageBase{}

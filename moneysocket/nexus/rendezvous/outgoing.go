@@ -12,7 +12,7 @@ import (
 )
 
 type OutgoingRendezvousNexus struct {
-	*base.BaseNexus
+	*base.NexusBase
 	rendezvousFinishedCb func(nexus.Nexus)
 }
 
@@ -21,7 +21,7 @@ const OutgoingRendezvousNexusName = "OutgoingRendezvousNexus"
 func NewOutgoingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer) *OutgoingRendezvousNexus {
 	bnf := base.NewBaseNexusFull(OutgoingRendezvousNexusName, belowNexus, layer)
 	og := OutgoingRendezvousNexus{
-		BaseNexus: &bnf,
+		NexusBase: &bnf,
 	}
 	belowNexus.SetOnBinMessage(og.OnBinMessage)
 	belowNexus.SetOnMessage(og.OnMessage)
@@ -46,7 +46,7 @@ func (o *OutgoingRendezvousNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byt
 func (o *OutgoingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
 	log.Printf("outgoing rdv nexus got msg %s", msg)
 	if !o.IsLayerMessage(msg) {
-		o.BaseNexus.OnMessage(belowNexus, msg)
+		o.NexusBase.OnMessage(belowNexus, msg)
 	}
 
 	notif := msg.(notification2.MoneysocketNotification)
@@ -62,10 +62,10 @@ func (o *OutgoingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_
 	}
 }
 
-func (o *OutgoingRendezvousNexus) StartRendezvous(rendevousId string, rendezvousFinishedCb func(nexus2 nexus.Nexus)) {
+func (o *OutgoingRendezvousNexus) StartRendezvous(rendevousID string, rendezvousFinishedCb func(nexus nexus.Nexus)) {
 	o.rendezvousFinishedCb = rendezvousFinishedCb
-	rendezvousRequest := request.NewRendezvousRequest(rendevousId)
-	o.Send(rendezvousRequest)
+	rendezvousRequest := request.NewRendezvousRequest(rendevousID)
+	_ = o.Send(rendezvousRequest)
 }
 
 var _ nexus.Nexus = &OutgoingRendezvousNexus{}
