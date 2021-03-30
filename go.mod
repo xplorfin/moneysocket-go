@@ -25,7 +25,7 @@ require (
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/xplorfin/filet v0.1.0
 	github.com/xplorfin/lndmock v0.24.0
-	github.com/xplorfin/netutils v0.36.0
+	github.com/xplorfin/netutils v0.37.0
 	github.com/xplorfin/ozzo-validators v0.30.0
 	github.com/xplorfin/tlsutils v0.18.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
