@@ -3,53 +3,52 @@ package location
 import (
 	"fmt"
 
-	moneysocketUtil "github.com/xplorfin/moneysocket-go/moneysocket/util"
-
 	tlvHelper "github.com/lightningnetwork/lnd/tlv"
 	beaconUtil "github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
+	moneysocketUtil "github.com/xplorfin/moneysocket-go/moneysocket/util"
 )
 
 // see https://git.io/JmVpM
 
 const (
 	// DefaultBluetoothPlaceholder temporarily defines an hrp header
-	// for the as-of-yet unused BluetoothLocation type
+	// for the as-of-yet unused BluetoothLocation type.
 	DefaultBluetoothPlaceholder = "bluetooth herpader"
-	// BluetoothType defines the name of the BluetoothLocation type
+	// BluetoothType defines the name of the BluetoothLocation type.
 	BluetoothType = "Bluetooth"
 )
 
-// BluetoothLocation beacon - this is not currently implemented and is reserved for future use
+// BluetoothLocation beacon - this is not currently implemented and is reserved for future use.
 type BluetoothLocation struct {
 	// PlaceholderString is the
 	PlaceholderString string
 }
 
-// NewBluetoothLocation Creates a new bluetooth location with the default header
+// NewBluetoothLocation Creates a new bluetooth location with the default header.
 func NewBluetoothLocation() BluetoothLocation {
 	return BluetoothLocation{
 		PlaceholderString: DefaultBluetoothPlaceholder,
 	}
 }
 
-// Type gets the BluetoothLocation tlv type
+// Type gets the BluetoothLocation tlv type.
 func (loc BluetoothLocation) Type() tlvHelper.Type {
 	return beaconUtil.BluetoothLocationTLVType
 }
 
-// TLV gets the tlv of a given BluetoothLocation
+// TLV gets the tlv of a given BluetoothLocation.
 func (loc BluetoothLocation) TLV() []tlvHelper.Record {
 	placeHolder := EncodedPlaceHolderTLV(loc.PlaceholderString)
 	return []tlvHelper.Record{tlvHelper.MakePrimitiveRecord(beaconUtil.BluetoothLocationTLVType, &placeHolder)}
 }
 
-// EncodedTLV gets the encoded tlv of a given BluetoothLocation
+// EncodedTLV gets the encoded tlv of a given BluetoothLocation.
 func (loc BluetoothLocation) EncodedTLV() []byte {
 	res := loc.TLV()
 	return moneysocketUtil.TLVRecordToBytes(res...)
 }
 
-// ToObject converts the BluetoothLocation to a json-serializable map
+// ToObject converts the BluetoothLocation to a json-serializable map.
 func (loc BluetoothLocation) ToObject() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["type"] = BluetoothType
@@ -57,7 +56,7 @@ func (loc BluetoothLocation) ToObject() map[string]interface{} {
 	return m
 }
 
-// BluetoothLocationFromTLV converts a util.TLV from a tlv object
+// BluetoothLocationFromTLV converts a util.TLV from a tlv object.
 func BluetoothLocationFromTLV(tlv beaconUtil.TLV) (loc BluetoothLocation, err error) {
 	if tlv.Type() != beaconUtil.BluetoothLocationTLVType {
 		return loc, fmt.Errorf("got unexpected tlv type: %d expected %d", tlv.Type(), beaconUtil.BluetoothLocationTLVType)
@@ -80,5 +79,5 @@ func BluetoothLocationFromTLV(tlv beaconUtil.TLV) (loc BluetoothLocation, err er
 	return loc, err
 }
 
-// statically assert that this type binds to location interface
+// statically assert that this type binds to location interface.
 var _ Location = BluetoothLocation{}

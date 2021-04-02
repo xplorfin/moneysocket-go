@@ -7,13 +7,13 @@ import (
 )
 
 const (
-	// ProtocolName is the protocol name for money socket
+	// ProtocolName is the protocol name for money socket.
 	ProtocolName = "Moneysocket"
-	// Version is the version of the protocol
+	// Version is the version of the protocol.
 	Version = "0.0.0"
 )
 
-// MessageBase is the message
+// MessageBase is the message.
 type MessageBase struct {
 	// Time is the time
 	Time time.Time
@@ -25,7 +25,7 @@ type MessageBase struct {
 	BaseMessageClass MessageClass
 }
 
-// NewBaseBaseMoneysocketMessage creates a new MessageBase from a given MessageClass
+// NewBaseBaseMoneysocketMessage creates a new MessageBase from a given MessageClass.
 func NewBaseBaseMoneysocketMessage(messageType MessageClass) MessageBase {
 	return MessageBase{
 		Time:                time.Now(),
@@ -36,49 +36,49 @@ func NewBaseBaseMoneysocketMessage(messageType MessageClass) MessageBase {
 }
 
 // CryptLevel is the cryptography level of the message
-// this can be override in the sub-class
+// this can be override in the sub-class.
 func (m MessageBase) CryptLevel() string {
 	return "AES"
 }
 
-// ProtocolVersion determines the version of MessageBase
+// ProtocolVersion determines the version of MessageBase.
 func (m MessageBase) ProtocolVersion() string {
 	return m.BaseProtocolVersion
 }
 
-// MessageClass returns the MessageClass of the message
+// MessageClass returns the MessageClass of the message.
 func (m MessageBase) MessageClass() MessageClass {
 	return m.BaseMessageClass
 }
 
 // MustBeClearText determines whether or not a message can be unencrypted
-// this can be overrided in the message class
+// this can be overrided in the message class.
 func (m MessageBase) MustBeClearText() bool {
 	return false
 }
 
-// ToJSON marshals the message to json
+// ToJSON marshals the message to json.
 func (m MessageBase) ToJSON() ([]byte, error) {
 	panic("must be implemented in children classes. You can use EncodeBaseMoneysocketMessage as a helper method")
 }
 
 // IsValid determines wether or not a message is valid
-// this is implemented in a sub-class
+// this is implemented in a sub-class.
 func (m MessageBase) IsValid() (bool, error) {
 	panic("must be implemented in children classes")
 }
 
-// Timestamp is the timestamp fo the message
+// Timestamp is the timestamp fo the message.
 func (m MessageBase) Timestamp() time.Time {
 	return m.Time
 }
 
-// Protocol is the protocol of the message
+// Protocol is the protocol of the message.
 func (m MessageBase) Protocol() string {
 	return m.BaseProtocol
 }
 
-// DecodeBaseBaseMoneysocketMessage decodes a moneysocket message from json
+// DecodeBaseBaseMoneysocketMessage decodes a moneysocket message from json.
 func DecodeBaseBaseMoneysocketMessage(payload []byte) (b MessageBase, err error) {
 	// TODO get float
 	parsedTime, err := jsonparser.GetFloat(payload, timestampKey)
@@ -103,7 +103,6 @@ func DecodeBaseBaseMoneysocketMessage(payload []byte) (b MessageBase, err error)
 		return MessageBase{}, err
 	}
 	return b, err
-
 }
 
 var _ MoneysocketMessage = &MessageBase{}

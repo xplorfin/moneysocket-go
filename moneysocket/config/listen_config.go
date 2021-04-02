@@ -12,7 +12,7 @@ import (
 	"github.com/xplorfin/tlsutils"
 )
 
-// ListenConfig specifies the configuration for terminus to listen on
+// ListenConfig specifies the configuration for terminus to listen on.
 type ListenConfig struct {
 	// BindHost defines listening bind setting. Defaults to 127.0.0.1 for localhost connections, 0.0.0.0
 	// for allowing connections from other hosts
@@ -42,17 +42,17 @@ type ListenConfig struct {
 	defaultPort int
 }
 
-// certPath is the path to the certificate file
+// certPath is the path to the certificate file.
 func (l ListenConfig) certPath() string {
 	return l.certFile
 }
 
-// certKeyPath is the path to the certificate key file
+// certKeyPath is the path to the certificate key file.
 func (l ListenConfig) certKeyPath() string {
 	return l.certKey
 }
 
-// Validate the configuration
+// Validate the configuration.
 func (l ListenConfig) Validate() error {
 	err := validation.ValidateStruct(&l,
 		// bind host cannot be null

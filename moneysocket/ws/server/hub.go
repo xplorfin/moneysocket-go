@@ -16,7 +16,7 @@ type Hub struct {
 	unregister chan *Client
 }
 
-// NewHub creates a Hub
+// NewHub creates a Hub.
 func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),

@@ -10,7 +10,7 @@ import (
 	"github.com/mergermarket/go-pkcs7"
 )
 
-// Encrypt encrypts plain text string into cipher text string
+// Encrypt encrypts plain text string into cipher text string.
 func Encrypt(msg []byte, key []byte) ([]byte, error) {
 	plainText, err := pkcs7.Pad(msg, aes.BlockSize)
 	if err != nil {
@@ -38,7 +38,7 @@ func Encrypt(msg []byte, key []byte) ([]byte, error) {
 	return cipherText, nil
 }
 
-// Decrypt decrypts cipher text string into plain text string
+// Decrypt decrypts cipher text string into plain text string.
 func Decrypt(cipherText []byte, key []byte) (string, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {

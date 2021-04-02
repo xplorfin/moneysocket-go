@@ -27,7 +27,6 @@ func TestPythonDecode(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-
 }
 
 func EncodeDecode(t *testing.T, msg base.MoneysocketMessage, seed beacon.SharedSeed) {

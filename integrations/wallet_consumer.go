@@ -10,13 +10,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/stack"
 )
 
-// WalletConsumer emulates wallet consumer from bs-demo
+// WalletConsumer emulates wallet consumer from bs-demo.
 type WalletConsumer struct {
 	*stack.OutgoingConsumerStack
 	ConsumerBeacon beacon.Beacon
 }
 
-// generateNewBeacon creates a new beacon based on host, use
+// generateNewBeacon creates a new beacon based on host, use.
 func generateNewBeacon(host string, useTLS bool, port int) beacon.Beacon {
 	res := beacon.NewBeacon()
 	loc := location.NewWebsocketLocationPort(host, useTLS, port)
@@ -25,7 +25,7 @@ func generateNewBeacon(host string, useTLS bool, port int) beacon.Beacon {
 }
 
 // NewWalletConsumer creates a WalletConsumer from
-//a beacon.Beacon and initializes event handlers
+// a beacon.Beacon and initializes event handlers.
 func NewWalletConsumer(beacon beacon.Beacon) WalletConsumer {
 	cons := stack.NewOutgoingConsumerStack()
 	cons.SetOnAnnounce(func(nexus nexus.Nexus) {

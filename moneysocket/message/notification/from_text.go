@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"github.com/buger/jsonparser"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// FromText converts a json payload to a message
+// FromText converts a json payload to a message.
 func FromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
 	rawType, err := jsonparser.GetString(payload, NameKey)
 	if err != nil {

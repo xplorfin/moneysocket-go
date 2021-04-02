@@ -11,20 +11,20 @@ import (
 )
 
 // Layer handles app waiting
-// TODO this needs to be fully implemented
+// TODO this needs to be fully implemented.
 type Layer struct {
 	layer.BaseLayer
 	handlerProvideInfoRequest func(seed beacon.SharedSeed) account.DB
 	WaitingForApp             compat.WaitingForApp
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (o *Layer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
-// ProviderFinishedCb is the callback for the provider finished callback
+// ProviderFinishedCb is the callback for the provider finished callback.
 func (o *Layer) ProviderFinishedCb(providerNexus nexus.Nexus) {
 	o.TrackNexusAnnounced(providerNexus)
 	o.SendLayerEvent(providerNexus, message.NexusAnnounced)
@@ -32,14 +32,14 @@ func (o *Layer) ProviderFinishedCb(providerNexus nexus.Nexus) {
 }
 
 // AnnounceNexus creates a new provider.ProviderNexus and registers it
-// also registers the providerFinishedCb (cb = callback)
+// also registers the providerFinishedCb (cb = callback).
 func (o *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus := provider.NewProviderNexus(belowNexus)
 	o.TrackNexus(providerNexus, belowNexus)
 	providerNexus.WaitForConsumer(o.ProviderFinishedCb)
 }
 
-// RevokeNexus revokes a nexus from the layer
+// RevokeNexus revokes a nexus from the layer.
 func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	res, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	providerNexus, _ := o.Nexuses.Get(res)
@@ -58,7 +58,7 @@ func (o *Layer) SetHandlerProvideInfoRequest(hpir compat.HandleProviderInfoReque
 	o.handlerProvideInfoRequest = hpir
 }
 
-// NexusWaitingForApp sets the for the shared seed
+// NexusWaitingForApp sets the for the shared seed.
 func (o *Layer) NexusWaitingForApp(ss beacon.SharedSeed, providerNexus nexus.Nexus) {
 	o.WaitingForApp[ss.ToString()] = providerNexus
 }
@@ -72,7 +72,7 @@ func (o *Layer) ProviderNowReadyFromApp() {
 	}
 }
 
-// NewProviderLayer creates a new provider layer
+// NewProviderLayer creates a new provider layer.
 func NewProviderLayer() *Layer {
 	return &Layer{
 		BaseLayer:     layer.NewBaseLayer(),

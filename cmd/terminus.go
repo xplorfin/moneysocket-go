@@ -3,14 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/xplorfin/moneysocket-go/relay"
-
 	cli "github.com/urfave/cli/v2"
 	messagebase "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
+	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 )
 
-// Start takes a list of args (from os.Args()), parse a command and runs it
+// Start takes a list of args (from os.Args()), parse a command and runs it.
 func Start(args []string) {
 	// TODO go requires flags to appear before positional args
 	// this should be fixed for parity w/ moneysocket-py

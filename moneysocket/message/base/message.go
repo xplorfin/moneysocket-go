@@ -7,7 +7,7 @@ import (
 
 // MoneysocketMessage is probably one of the worst ways to handle json in go
 // but I wanted to make sure the first vresion was as close to moneysocket as possible
-// architecturally so I could safely refactor with test cases in place
+// architecturally so I could safely refactor with test cases in place.
 type MoneysocketMessage interface {
 	// get timestamp message was created
 	Timestamp() time.Time
@@ -27,7 +27,7 @@ type MoneysocketMessage interface {
 	CryptLevel() string
 }
 
-// json keys
+// json keys.
 const (
 	timestampKey    = "timestamp"
 	protocolKey     = "protocol"

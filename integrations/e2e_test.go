@@ -8,18 +8,15 @@ import (
 	"time"
 
 	. "github.com/stretchr/testify/assert"
-
-	"github.com/xplorfin/moneysocket-go/relay"
-
-	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
-
 	"github.com/xplorfin/filet"
+	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
+	"github.com/xplorfin/moneysocket-go/relay"
 	"github.com/xplorfin/moneysocket-go/terminus"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
 
-// makeConfig creates a mock config for e2e tests
+// makeConfig creates a mock config for e2e tests.
 func makeConfig(t *testing.T) *config.Config {
 	testConfig := config.NewConfig()
 	testConfig.AccountPersistDir = filet.TmpDir(t, "")
@@ -37,7 +34,7 @@ func makeConfig(t *testing.T) *config.Config {
 	return testConfig
 }
 
-// TestE2E attempts to run an end-to-end test of the moneysockte opinion app
+// TestE2E attempts to run an end-to-end test of the moneysockte opinion app.
 func TestE2E(t *testing.T) {
 	cfg := makeConfig(t)
 	ctx := context.Background()
@@ -95,7 +92,7 @@ func TestE2E(t *testing.T) {
 	time.Sleep(time.Second * 20)
 }
 
-// getBeacon mocks a new beacon for a given account
+// getBeacon mocks a new beacon for a given account.
 func getBeacon(t *testing.T, terminusClient terminus.Client, account string) beacon.Beacon {
 	accountBeacon, err := terminusClient.Listen(account)
 	Nil(t, err)
@@ -107,7 +104,7 @@ func getBeacon(t *testing.T, terminusClient terminus.Client, account string) bea
 	return acc
 }
 
-// extractBeacon extracts a beacon from a terminus response
+// extractBeacon extracts a beacon from a terminus response.
 func extractBeacon(response string) string {
 	return strings.Split(response[strings.Index(response, beacon.MoneysocketHrp):], " ")[0]
 }

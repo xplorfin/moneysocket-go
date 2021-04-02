@@ -14,17 +14,17 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-// TransactNexusName the name of the provider transaction
+// TransactNexusName the name of the provider transaction.
 const TransactNexusName = "ProviderTransactNexus"
 
-// TransactNexus is the provider transact nexus nam
+// TransactNexus is the provider transact nexus nam.
 type TransactNexus struct {
 	*base.NexusBase
 	HandleInvoiceRequest compat.HandleInvoiceRequest
 	HandlePayRequest     compat.HandlePayRequest
 }
 
-// NewProviderTransactNexus creates a new TransactNexus
+// NewProviderTransactNexus creates a new TransactNexus.
 func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Base) *TransactNexus {
 	nx := base.NewBaseNexusFull(TransactNexusName, belowNexus, layer)
 	pn := TransactNexus{&nx, nil, nil}
@@ -35,7 +35,7 @@ func NewProviderTransactNexus(belowNexus nexus.Nexus, layer layer.Base) *Transac
 	return &pn
 }
 
-// HandleLayerRequest handles a layer request
+// HandleLayerRequest handles a layer request.
 func (p *TransactNexus) HandleLayerRequest(req request.MoneysocketRequest) {
 	if req.MessageType() == msg.InvoiceRequest {
 		invoice := req.(request.Invoice)
@@ -46,7 +46,7 @@ func (p *TransactNexus) HandleLayerRequest(req request.MoneysocketRequest) {
 	}
 }
 
-// IsLayerMessage checkks if a message can be processed by this layer
+// IsLayerMessage checkks if a message can be processed by this layer.
 func (p *TransactNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
 	if message.MessageClass() == msg.Request {
 		return false
@@ -55,7 +55,7 @@ func (p *TransactNexus) IsLayerMessage(message msg.MoneysocketMessage) bool {
 	return req.MessageType() == msg.InvoiceRequest || req.MessageType() == msg.PayRequest
 }
 
-// OnMessage processes a message
+// OnMessage processes a message.
 func (p *TransactNexus) OnMessage(belowNexus nexus.Nexus, message msg.MoneysocketMessage) {
 	if !p.IsLayerMessage(message) {
 		p.NexusBase.OnMessage(belowNexus, message)
@@ -65,22 +65,22 @@ func (p *TransactNexus) OnMessage(belowNexus nexus.Nexus, message msg.Moneysocke
 	}
 }
 
-// OnBinMessage processes a  bin message
+// OnBinMessage processes a  bin message.
 func (p *TransactNexus) OnBinMessage(baseNexus nexus.Nexus, msg []byte) {
 	// pass
 }
 
-// NotifyInvoice notifies a new invoice
+// NotifyInvoice notifies a new invoice.
 func (p *TransactNexus) NotifyInvoice(bolt11, requestReferenceUUID string) error {
 	return p.Send(notification.NewNotifyInvoice(bolt11, requestReferenceUUID))
 }
 
-// NotifyPreimage notifies a preimage
+// NotifyPreimage notifies a preimage.
 func (p *TransactNexus) NotifyPreimage(preimage, requestReferenceUUID string) error {
 	return p.Send(notification.NewNotifyPreimage(preimage, "", requestReferenceUUID))
 }
 
-// NotifyProviderInfo notifies a provider info
+// NotifyProviderInfo notifies a provider info.
 func (p *TransactNexus) NotifyProviderInfo(seed beacon.SharedSeed) error {
 	pi := p.NexusBase.Layer.(compat.ProviderTransactLayerInterface)
 	adb := pi.HandleProviderInfoRequest(seed)

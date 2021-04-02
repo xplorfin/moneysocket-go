@@ -12,7 +12,7 @@ import (
 	"github.com/xplorfin/tlsutils"
 )
 
-// RelayConfig defines the configuration for the relay
+// RelayConfig defines the configuration for the relay.
 type RelayConfig struct {
 	// BindHost defines listening bind setting. Defaults to 127.0.0.1 for localhost connections, 0.0.0.0
 	// for allowing connections from other hosts
@@ -41,7 +41,7 @@ func (r RelayConfig) certKeyPath() string {
 	return r.certKey
 }
 
-// Validate the configuration
+// Validate the configuration.
 func (r RelayConfig) Validate() error {
 	err := validation.ValidateStruct(&r,
 		// bind host cannot be null

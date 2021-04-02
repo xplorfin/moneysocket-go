@@ -13,7 +13,7 @@ import (
 	nexus_transact "github.com/xplorfin/moneysocket-go/moneysocket/nexus/transact"
 )
 
-// ConsumerStack handles various events passed from/to child classes
+// ConsumerStack handles various events passed from/to child classes.
 type ConsumerStack struct {
 	layer.BaseLayer
 	// gets called on layer registration
@@ -32,14 +32,14 @@ type ConsumerStack struct {
 	sharedSeed *beacon.SharedSeed
 }
 
-// NewConsumerStack creates a new ConsumerStack
+// NewConsumerStack creates a new ConsumerStack.
 func NewConsumerStack() *ConsumerStack {
 	c := ConsumerStack{}
 	c.BaseLayer = layer.NewBaseLayer()
 	return &c
 }
 
-// SetupConsumerLayer sets up a consumer layer
+// SetupConsumerLayer sets up a consumer layer.
 func (c *ConsumerStack) SetupConsumerLayer(belowLayer layer.Base) {
 	c.consumerLayer = consumer.NewConsumerLayer()
 	c.consumerLayer.RegisterAboveLayer(belowLayer)
@@ -47,7 +47,7 @@ func (c *ConsumerStack) SetupConsumerLayer(belowLayer layer.Base) {
 	c.consumerLayer.SetOnPing(c.onPing)
 }
 
-// SetupTransactLayer sets up a transact layer
+// SetupTransactLayer sets up a transact layer.
 func (c *ConsumerStack) SetupTransactLayer(belowLayer layer.Base) {
 	c.transactLayer = transact.NewConsumerTransactLayer()
 	c.transactLayer.RegisterAboveLayer(belowLayer)
@@ -63,67 +63,67 @@ func (c *ConsumerStack) SetupTransactLayer(belowLayer layer.Base) {
 	})
 }
 
-// OnPing sends a ping
+// OnPing sends a ping.
 func (c *ConsumerStack) OnPing(transactNexus nexusHelper.Nexus, msecs int) {
 	if c.onPing != nil {
 		c.onPing(transactNexus, msecs)
 	}
 }
 
-// SendStackEvent sends a stack event
+// SendStackEvent sends a stack event.
 func (c *ConsumerStack) SendStackEvent(layerName string, nexus nexusHelper.Nexus, event string) {
 	if c.sendStackEvent != nil {
 		c.sendStackEvent(layerName, nexus, event)
 	}
 }
 
-// OnInvoice calls the on invoice function
+// OnInvoice calls the on invoice function.
 func (c *ConsumerStack) OnInvoice(transactNexus nexusHelper.Nexus, invoice string, requestReferenceUUID string) {
 	if c.onInvoice != nil {
 		c.onInvoice(transactNexus, invoice, requestReferenceUUID)
 	}
 }
 
-// SetOnInvoice sets function to be called when on invoice is called
+// SetOnInvoice sets function to be called when on invoice is called.
 func (c *ConsumerStack) SetOnInvoice(invoice nexus_transact.OnInvoice) {
 	c.onInvoice = invoice
 }
 
-// OnPreImage call on preimage function
+// OnPreImage call on preimage function.
 func (c *ConsumerStack) OnPreImage(transactNexus nexusHelper.Nexus, preimage, requestReferenceUUID string) {
 	if c.onPreimage != nil {
 		c.onPreimage(transactNexus, preimage, requestReferenceUUID)
 	}
 }
 
-// SetOnPreimage sets function to be called when onPreImage is called
+// SetOnPreimage sets function to be called when onPreImage is called.
 func (c *ConsumerStack) SetOnPreimage(preimage nexus_transact.OnPreimage) {
 	c.onPreimage = preimage
 }
 
-// SetOnPing sets function to be called when onPreImage is called
+// SetOnPing sets function to be called when onPreImage is called.
 func (c *ConsumerStack) SetOnPing(ping consumerNexus.OnPingFn) {
 	c.onPing = ping
 }
 
-// SetOnProviderInfo sets function to be called when OnProviderInfo is called
+// SetOnProviderInfo sets function to be called when OnProviderInfo is called.
 func (c *ConsumerStack) SetOnProviderInfo(info nexus_transact.OnProviderInfo) {
 	c.onProviderInfo = info
 }
 
-// SetSendStackEvent sets a send stack callback
+// SetSendStackEvent sets a send stack callback.
 func (c *ConsumerStack) SetSendStackEvent(handler layer.OnLayerEventFn) {
 	c.sendStackEvent = handler
 }
 
-// OnProviderInfo handles a provider info event
+// OnProviderInfo handles a provider info event.
 func (c *ConsumerStack) OnProviderInfo(consumerTransactNexus nexusHelper.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	if c.onProviderInfo != nil {
 		c.onProviderInfo(consumerTransactNexus, msg)
 	}
 }
 
-// AnnounceNexus announces a nexus
+// AnnounceNexus announces a nexus.
 func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = belowNexus
 	c.sharedSeed = belowNexus.SharedSeed()
@@ -132,7 +132,7 @@ func (c *ConsumerStack) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
-// RevokeNexus removes the nexus from directories/layers. Calls OnRevoke
+// RevokeNexus removes the nexus from directories/layers. Calls OnRevoke.
 func (c *ConsumerStack) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	c.nexus = nil
 	c.sharedSeed = &beacon.SharedSeed{}
@@ -141,12 +141,12 @@ func (c *ConsumerStack) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
-// RequestInvoice requests an invoice for a given sat count
+// RequestInvoice requests an invoice for a given sat count.
 func (c *ConsumerStack) RequestInvoice(msats int64, overrideRequestUUID, description string) {
 	c.nexus.(compat.ConsumeNexusInterface).RequestInvoice(msats, overrideRequestUUID, description)
 }
 
-// RequestPay requests the lnd client to pay an invoice
+// RequestPay requests the lnd client to pay an invoice.
 func (c *ConsumerStack) RequestPay(bolt11, overrideRequestUUID string) {
 	c.nexus.(compat.ConsumeNexusInterface).RequestPay(bolt11, overrideRequestUUID)
 }

@@ -9,7 +9,7 @@ func NamespacePopTLVs(byteString []byte) (t TLV, remainder []byte, err error) {
 	return TLVPop(byteString)
 }
 
-// NamespaceTLVsAreValid will determine if a bytestring contains valid tlvs
+// NamespaceTLVsAreValid will determine if a bytestring contains valid tlvs.
 func NamespaceTLVsAreValid(byteString []byte) bool {
 	bs := byteString
 	for len(bs) > 0 {
@@ -23,7 +23,7 @@ func NamespaceTLVsAreValid(byteString []byte) bool {
 }
 
 // NamespaceIterTLVs will iterate over the namespaces in a byteString
-// returns error if all are not valid
+// returns error if all are not valid.
 func NamespaceIterTLVs(byteString []byte) (tlvs []TLV, err error) {
 	if !NamespaceTLVsAreValid(byteString) {
 		return tlvs, fmt.Errorf("namespace tlvs may not be valid")

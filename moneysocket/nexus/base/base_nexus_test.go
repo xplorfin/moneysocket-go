@@ -14,13 +14,16 @@ import (
 func EmptyMessageHandler(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	// do nothing
 }
+
 func EmptyMessageBinHandler(belowNexus nexus.Nexus, msg []byte) {
 	// do nothing
 }
 
-// nexus message handler
-type MessageHandler func(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage)
-type BinMessageHandler func(belowNexus nexus.Nexus, msg []byte)
+// nexus message handler.
+type (
+	MessageHandler    func(belowNexus nexus.Nexus, msg moneysocket_message.MoneysocketMessage)
+	BinMessageHandler func(belowNexus nexus.Nexus, msg []byte)
+)
 
 type BaseNexusTestHarness struct {
 	*NexusBase
@@ -59,7 +62,6 @@ func TestBaseNexusMsgUuidOperations(t *testing.T) {
 	if n1.IsEqual(n2) {
 		t.Errorf("expected nexus n1 with uuid %s to be different from n2", n1.UUID())
 	}
-
 }
 
 func TestBaseNexus(t *testing.T) {
@@ -98,7 +100,6 @@ func TestBaseNexus(t *testing.T) {
 	if binMsgHandlerHit == false {
 		t.Error("expected message binMsgHandler to be hit")
 	}
-
 }
 
 func AssertUUIDV4(nexus nexus.Nexus, t *testing.T) {

@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"github.com/buger/jsonparser"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
 // FromText converts a payload to a decoded moneysocket message
-// TODO handle more elegantly
+// TODO handle more elegantly.
 func FromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
 	rawType, err := jsonparser.GetString(payload, NameKey)
 	if err != nil {

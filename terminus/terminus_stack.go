@@ -15,10 +15,10 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/stack"
 )
 
-// OnStackEvent processes stack events
+// OnStackEvent processes stack events.
 type OnStackEvent func(layerName string, nexus nexus.Nexus, status string)
 
-// Stack is the terminus stack
+// Stack is the terminus stack.
 type Stack struct {
 	Config       *config.Config
 	onAnnounce   layer.OnAnnounceFn
@@ -35,7 +35,7 @@ type Stack struct {
 	// TODO add event listeners
 }
 
-// NewTerminusStack creates a terminus stack
+// NewTerminusStack creates a terminus stack.
 func NewTerminusStack(config *config.Config) *Stack {
 	s := Stack{Config: config}
 	s.localLayer = s.SetupLocalLayer()
@@ -48,21 +48,21 @@ func NewTerminusStack(config *config.Config) *Stack {
 	return &s
 }
 
-// SetupLocalLayer sets up the local layer
+// SetupLocalLayer sets up the local layer.
 func (s *Stack) SetupLocalLayer() *local.OutgoingLocalLayer {
 	l := local.NewOutgoingLocalLayer()
 	l.RegisterLayerEvent(s.SendStackEvent, message.OutgoingLocal)
 	return &l
 }
 
-// AnnounceNexus announces the terminus nexus
+// AnnounceNexus announces the terminus nexus.
 func (s *Stack) AnnounceNexus(terminusNexus Nexus) {
 	if s.onAnnounce != nil {
 		s.onAnnounce(&terminusNexus)
 	}
 }
 
-// SetupTerminusLayer sets up the terminus layer
+// SetupTerminusLayer sets up the terminus layer.
 func (s *Stack) SetupTerminusLayer(belowLayer layer.Base) *Layer {
 	l := NewTerminusLayer()
 	l.RegisterAboveLayer(belowLayer)
@@ -73,20 +73,20 @@ func (s *Stack) SetupTerminusLayer(belowLayer layer.Base) *Layer {
 	return l
 }
 
-// SetupIncomingStack sets up an incoming stack3
+// SetupIncomingStack sets up an incoming stack3.
 func (s *Stack) SetupIncomingStack(config *config.Config, localLayer *local.OutgoingLocalLayer) *stack.IncomingStack {
 	incomingStack := stack.NewIncomingStack(config, localLayer)
 	return incomingStack
 }
 
-// SetupWebsocketLayer sets up a websocket layer
+// SetupWebsocketLayer sets up a websocket layer.
 func (s *Stack) SetupWebsocketLayer() *websocket.OutgoingWebsocketLayer {
 	l := websocket.NewOutgoingWebsocketLayer()
 	l.RegisterLayerEvent(s.SendStackEvent, message.OutgoingWebsocket)
 	return l
 }
 
-// SetupProviderLayer sets up a provider layer
+// SetupProviderLayer sets up a provider layer.
 func (s *Stack) SetupProviderLayer(belowLayer layer.Base) *provider.Layer {
 	l := provider.NewProviderLayer()
 	l.RegisterAboveLayer(belowLayer)
@@ -95,7 +95,7 @@ func (s *Stack) SetupProviderLayer(belowLayer layer.Base) *provider.Layer {
 	return l
 }
 
-// SetupRendezvousLayer sets up the rendezvous layer
+// SetupRendezvousLayer sets up the rendezvous layer.
 func (s *Stack) SetupRendezvousLayer(belowLayer1 layer.Base, belowLayer2 layer.Base) *rendezvous.OutgoingRendezvousLayer {
 	l := rendezvous.NewOutgoingRendezvousLayer()
 	l.RegisterAboveLayer(belowLayer1)
@@ -104,29 +104,29 @@ func (s *Stack) SetupRendezvousLayer(belowLayer1 layer.Base, belowLayer2 layer.B
 	return l
 }
 
-// SendStackEvent sends a given event up the stack
+// SendStackEvent sends a given event up the stack.
 func (s *Stack) SendStackEvent(layerName string, nexus nexus.Nexus, status string) {
 	if s.onStackEvent != nil {
 		s.onStackEvent(layerName, nexus, status)
 	}
 }
 
-// GetListenLocation gets ws listen locations from the config
+// GetListenLocation gets ws listen locations from the config.
 func (s *Stack) GetListenLocation() []location.Location {
 	return s.incomingStack.GetListenLocations()
 }
 
-// Connect connects to a websocket location
+// Connect connects to a websocket location.
 func (s *Stack) Connect(location location.WebsocketLocation, sharedSeed *beacon.SharedSeed) (*websocket2.OutgoingSocket, error) {
 	return s.websocketLayer.Connect(location, sharedSeed)
 }
 
-// LocalConnect connects to a layer by shared seed
+// LocalConnect connects to a layer by shared seed.
 func (s *Stack) LocalConnect(sharedSeed beacon.SharedSeed) {
 	s.localLayer.Connect(sharedSeed)
 }
 
-// Listen listens on the incoming stack
+// Listen listens on the incoming stack.
 func (s *Stack) Listen() error {
 	return s.incomingStack.Listen()
 }

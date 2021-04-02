@@ -11,34 +11,34 @@ import (
 )
 
 // MoneysocketHrp is the human readable part (https://en.bitcoin.it/wiki/BIP_0173#Bech32 )
-// of the TLV (type-length-value, defined in BOLT #1: https://git.io/JLCRq )
+// of the TLV (type-length-value, defined in BOLT #1: https://git.io/JLCRq ).
 const MoneysocketHrp = "moneysocket"
 
-// Beacon contains a SharedSeed for end-to-end encryption and a list of location.Location's
+// Beacon contains a SharedSeed for end-to-end encryption and a list of location.Location's.
 type Beacon struct {
 	seed      SharedSeed
 	locations []location.Location
 }
 
-// NewBeacon creates a Beacon with no locations and an auto-generated SharedSeed
+// NewBeacon creates a Beacon with no locations and an auto-generated SharedSeed.
 func NewBeacon() Beacon {
 	return NewBeaconFromSharedSeed(NewSharedSeed())
 }
 
 // NewBeaconFromSharedSeed creates a Beacon with no locations
-// and the given SharedSeed
+// and the given SharedSeed.
 func NewBeaconFromSharedSeed(seed SharedSeed) Beacon {
 	return Beacon{
 		seed: seed,
 	}
 }
 
-// Locations returns the list of locations in the Beacon
+// Locations returns the list of locations in the Beacon.
 func (b Beacon) Locations() []location.Location {
 	return b.locations
 }
 
-// ToObject generates a json-encodable map of the Beacon's data
+// ToObject generates a json-encodable map of the Beacon's data.
 func (b Beacon) ToObject() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["shared_seed"] = b.seed.ToString()
@@ -50,17 +50,17 @@ func (b Beacon) ToObject() map[string]interface{} {
 	return m
 }
 
-// AddLocation appends a location to the beacon
+// AddLocation appends a location to the beacon.
 func (b *Beacon) AddLocation(loc location.Location) {
 	b.locations = append(b.locations, loc)
 }
 
-// GetSharedSeed fetches the shared seed from the beacon
+// GetSharedSeed fetches the shared seed from the beacon.
 func (b Beacon) GetSharedSeed() SharedSeed {
 	return b.seed
 }
 
-// EncodeLocationListTlvs encodes a list of locations as tlvs
+// EncodeLocationListTlvs encodes a list of locations as tlvs.
 func (b Beacon) EncodeLocationListTlvs() []byte {
 	encoded := make([]byte, 0)
 	locationCount := uint64(len(b.locations))
@@ -75,7 +75,7 @@ func (b Beacon) EncodeLocationListTlvs() []byte {
 	return encodeUtils.TLVRecordToBytes(tlv.MakePrimitiveRecord(util.LocationListTLVType, &encoded))
 }
 
-// EncodeTLV encodes the tlv
+// EncodeTLV encodes the tlv.
 func (b Beacon) EncodeTLV() []byte {
 	// encode the shared seed
 	ssEncoded := b.seed.EncodedTLV()
@@ -84,7 +84,7 @@ func (b Beacon) EncodeTLV() []byte {
 	return encodeUtils.TLVRecordToBytes(tlv.MakePrimitiveRecord(util.BeaconTLVType, &combinedTlvs))
 }
 
-// ToBech32Str encodes the tlv to a bech32 string (https://en.bitcoin.it/wiki/BIP_0173#Bech32 )
+// ToBech32Str encodes the tlv to a bech32 string (https://en.bitcoin.it/wiki/BIP_0173#Bech32 ).
 func (b Beacon) ToBech32Str() string {
 	encodedBytes := b.EncodeTLV()
 	res, err := encodeUtils.Bech32EncodeBytes(encodedBytes, MoneysocketHrp)
@@ -96,7 +96,7 @@ func (b Beacon) ToBech32Str() string {
 }
 
 // DecodeTLV decodes a TLV (type-length-value, defined in BOLT #1: https://git.io/JLCRq)
-// into a Beacon. Returns an error if Beacon cannot be decoded
+// into a Beacon. Returns an error if Beacon cannot be decoded.
 func DecodeTLV(b []byte) (beacon Beacon, err error) {
 	beaconTlv, _, err := util.TLVPop(b)
 	if err != nil {
@@ -171,7 +171,7 @@ func DecodeTLV(b []byte) (beacon Beacon, err error) {
 	return beacon, err
 }
 
-// DecodeFromBech32Str decodes a Beacon from a bech32 string (https://en.bitcoin.it/wiki/BIP_0173#Bech32 )
+// DecodeFromBech32Str decodes a Beacon from a bech32 string (https://en.bitcoin.it/wiki/BIP_0173#Bech32 ).
 func DecodeFromBech32Str(bech32 string) (Beacon, error) {
 	hrp, decodedBytes, err := encodeUtils.Bech32DecodeBytes(bech32)
 	if err != nil {

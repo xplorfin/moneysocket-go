@@ -8,21 +8,19 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
-
-	"github.com/xplorfin/moneysocket-go/moneysocket/lightning"
-
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
+	"github.com/xplorfin/moneysocket-go/moneysocket/lightning"
+	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/wad"
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 	"github.com/xplorfin/netutils/testutils"
 	"golang.org/x/sync/errgroup"
 )
 
-// Terminus is the app
+// Terminus is the app.
 type Terminus struct {
 	// config is the terminus app config
 	config *config.Config
@@ -34,7 +32,7 @@ type Terminus struct {
 	lightning *lightning.Lightning
 }
 
-// NewTerminus creates a Terminus node from a config
+// NewTerminus creates a Terminus node from a config.
 func NewTerminus(config *config.Config) (terminus Terminus, err error) {
 	var lightningClient lightning.Lightning
 	if config.LndConfig.HasLndConfig() {
@@ -56,19 +54,19 @@ func NewTerminus(config *config.Config) (terminus Terminus, err error) {
 	return terminus, err
 }
 
-// OnAnnounce handles nexus announcements
+// OnAnnounce handles nexus announcements.
 func (t *Terminus) OnAnnounce(nexus nexus.Nexus) {
 	// TODO register for messages and log errors if we get any not handled
 	// by stack
 }
 
-// OnRevoke handles a nexus revoke attempt. Does nothing in terminus
+// OnRevoke handles a nexus revoke attempt. Does nothing in terminus.
 func (t *Terminus) OnRevoke(nexus nexus.Nexus) {
 	// do nothing
 }
 
 // ServeHTTP handles requests through the rpc server
-// todo break this out into separate methods
+// todo break this out into separate methods.
 func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var rpcReq RPCMessage
@@ -123,14 +121,14 @@ func (t *Terminus) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	}
 }
 
-// StartServer starts the terminus server
+// StartServer starts the terminus server.
 func (t *Terminus) StartServer() error {
 	server := http.NewServeMux()
 	server.Handle("/", t)
 	return http.ListenAndServe(t.config.GetRPCHostname(), server)
 }
 
-// makeJSONResponse makes a raw json response from a string
+// makeJSONResponse makes a raw json response from a string.
 func (t Terminus) makeJSONResponse(res string) string {
 	jsonRes := []string{res}
 	jsonResponse, err := json.Marshal(jsonRes)
@@ -140,7 +138,7 @@ func (t Terminus) makeJSONResponse(res string) string {
 	return string(jsonResponse)
 }
 
-// GetInfo gets formatted info (for python parity)
+// GetInfo gets formatted info (for python parity).
 func (t *Terminus) GetInfo() (res string) {
 	locations := t.stack.GetListenLocation()
 	accounts := t.directory.GetAccountList()
@@ -154,7 +152,7 @@ func (t *Terminus) GetInfo() (res string) {
 	return t.makeJSONResponse(res)
 }
 
-// Create creates an account with a given number of msats and add it to the directory
+// Create creates an account with a given number of msats and add it to the directory.
 func (t *Terminus) Create(msats int) account.DB {
 	name := t.directory.GenerateAccountName()
 	acct := account.NewAccountDb(name, t.config)
@@ -164,7 +162,7 @@ func (t *Terminus) Create(msats int) account.DB {
 	return acct
 }
 
-// RetryConnectionLoop retries a connection on a loop
+// RetryConnectionLoop retries a connection on a loop.
 func (t *Terminus) RetryConnectionLoop() {
 	for {
 		for _, acct := range t.directory.GetAccountList() {
@@ -183,7 +181,7 @@ func (t *Terminus) RetryConnectionLoop() {
 	}
 }
 
-// Listen listens on a port. Raw shared seed is optional
+// Listen listens on a port. Raw shared seed is optional.
 func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon string, err error) {
 	acct := t.directory.LookupByName(rawAcct)
 	if acct == nil {
@@ -211,7 +209,7 @@ func (t *Terminus) Listen(rawAcct string, rawSharedSeed string) (encodedBeacon s
 	return bcn.ToBech32Str(), nil
 }
 
-// LoadPersisted loads persisted accounts from the disk
+// LoadPersisted loads persisted accounts from the disk.
 func (t *Terminus) LoadPersisted() {
 	for _, adb := range account.GetPersistedAccounts(t.config) {
 		t.directory.AddAccount(adb)
@@ -234,7 +232,7 @@ func (t *Terminus) LoadPersisted() {
 	}
 }
 
-// Start starts the server
+// Start starts the server.
 func (t *Terminus) Start(ctx context.Context) error {
 	g, _ := errgroup.WithContext(ctx)
 

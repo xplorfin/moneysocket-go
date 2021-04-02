@@ -3,10 +3,9 @@ package websocket
 import (
 	"net/http"
 
-	uuid "github.com/satori/go.uuid"
-
 	"github.com/gorilla/websocket"
 	"github.com/prometheus/common/log"
+	uuid "github.com/satori/go.uuid"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon"
 	"github.com/xplorfin/moneysocket-go/moneysocket/layer"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
@@ -15,10 +14,10 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
-// OutgoingSocketName is the name of the outgoing socket
+// OutgoingSocketName is the name of the outgoing socket.
 const OutgoingSocketName = "OutgoingSocket"
 
-// OutgoingSocket is the outgoing socket
+// OutgoingSocket is the outgoing socket.
 type OutgoingSocket struct {
 	client.WebsocketClientProtocol
 	wasAnnounced bool
@@ -36,7 +35,7 @@ type OutgoingSocket struct {
 	onBinMessage nexusHelper.OnBinMessage
 }
 
-// NewOutgoingSocket creates a new incoming websocket nexus (accepts request)
+// NewOutgoingSocket creates a new incoming websocket nexus (accepts request).
 func NewOutgoingSocket() *OutgoingSocket {
 	return &OutgoingSocket{
 		WebsocketClientProtocol: client.NewBaseWebsocketClient(),
@@ -47,12 +46,12 @@ func NewOutgoingSocket() *OutgoingSocket {
 	}
 }
 
-// SharedSeed gets the shared seed of the outgoing socket
+// SharedSeed gets the shared seed of the outgoing socket.
 func (i *OutgoingSocket) SharedSeed() *beacon.SharedSeed {
 	return i.OutgoingSharedSeed
 }
 
-// Send sends a message
+// Send sends a message.
 func (i *OutgoingSocket) Send(msg moneysocket_message.MoneysocketMessage) error {
 	log.Infof("encoding msg %s", msg)
 	ss := i.OutgoingSharedSeed
@@ -63,41 +62,41 @@ func (i *OutgoingSocket) Send(msg moneysocket_message.MoneysocketMessage) error 
 	return i.WebsocketClientProtocol.SendBin(msgBytes)
 }
 
-// SendBin sends a binary message
+// SendBin sends a binary message.
 func (i *OutgoingSocket) SendBin(msg []byte) error {
 	return i.WebsocketClientProtocol.SendBin(msg)
 }
 
-// OnConnecting is a connecting websocket event
+// OnConnecting is a connecting websocket event.
 func (i OutgoingSocket) OnConnecting() {
 	log.Info("Websocket connecting")
 }
 
-// OnConnect manages a websocket connection
+// OnConnect manages a websocket connection.
 func (i OutgoingSocket) OnConnect(conn *websocket.Conn, r *http.Response) {
 	i.WebsocketClientProtocol.OnConnect(conn, r)
 	log.Info("Client connecting")
 }
 
-// OnOpen opens a websocket connection
+// OnOpen opens a websocket connection.
 func (i *OutgoingSocket) OnOpen() {
 	log.Info("websocket connection open")
 	i.FactoryMsProtocolLayer.AnnounceNexus(i)
 	i.wasAnnounced = true
 }
 
-// OnMessage corresponds to the nexus interface, handles a message
+// OnMessage corresponds to the nexus interface, handles a message.
 func (i *OutgoingSocket) OnMessage(belowNexus nexusHelper.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	log.Info("websocket nexus got message")
 	i.onMessage(belowNexus, msg)
 }
 
-// OnBinMessage corresponds to the nexus interface, handles a binary message
+// OnBinMessage corresponds to the nexus interface, handles a binary message.
 func (i *OutgoingSocket) OnBinMessage(belowNexus nexusHelper.Nexus, msg []byte) {
 	i.onBinMessage(belowNexus, msg)
 }
 
-// OnWsMessage processes a websocket message
+// OnWsMessage processes a websocket message.
 func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
 	log.Info("outgoing message")
 	if isBinary {
@@ -160,8 +159,8 @@ func (i *OutgoingSocket) OnClose(wasClean bool, code int, reason string) {
 	i.wasAnnounced = false
 }
 
-// assert type is valid socket
+// assert type is valid socket.
 var _ client.WebsocketClientProtocol = &OutgoingSocket{}
 
-// assert type is valid nexus
+// assert type is valid nexus.
 var _ nexusHelper.Nexus = &OutgoingSocket{}

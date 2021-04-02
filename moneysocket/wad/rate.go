@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Rate is the conversion rate
+// Rate is the conversion rate.
 type Rate struct {
 	// BaseCode is the rate we're converting from
 	BaseCode string
@@ -17,7 +17,7 @@ type Rate struct {
 	Timestamp time.Time
 }
 
-// NewRate creates a rate from base quote->quote code (rate)
+// NewRate creates a rate from base quote->quote code (rate).
 func NewRate(baseCode string, quoteCode string, rate float64) Rate {
 	return Rate{
 		BaseCode:  baseCode,
@@ -27,17 +27,17 @@ func NewRate(baseCode string, quoteCode string, rate float64) Rate {
 	}
 }
 
-// ToString converts the rate to a string
+// ToString converts the rate to a string.
 func (r Rate) ToString() string {
 	return fmt.Sprintf("%.8f %s%s", r.RateValue, r.BaseCode, r.QuoteCode)
 }
 
-// Includes determines whether or not the Rate.BaseCode is Rate.BaseCode or the Rate.QuoteCode
+// Includes determines whether or not the Rate.BaseCode is Rate.BaseCode or the Rate.QuoteCode.
 func (r Rate) Includes(quote string) bool {
 	return r.BaseCode == quote || r.QuoteCode == quote
 }
 
-// Invert inverts the wad by flipping the currency conversion
+// Invert inverts the wad by flipping the currency conversion.
 func (r Rate) Invert() Rate {
 	return Rate{
 		BaseCode:  r.QuoteCode,
@@ -47,7 +47,7 @@ func (r Rate) Invert() Rate {
 	}
 }
 
-// Other determines if base get quote if quote get base
+// Other determines if base get quote if quote get base.
 func (r Rate) Other(code string) string {
 	if !r.Includes(code) {
 		panic(fmt.Errorf("Code must be %s or %s to use other", r.QuoteCode, r.BaseCode))
@@ -58,7 +58,7 @@ func (r Rate) Other(code string) string {
 	return r.BaseCode
 }
 
-// Convert converts a value/code into a new currency
+// Convert converts a value/code into a new currency.
 func (r Rate) Convert(value float64, valueCode string) (converted float64, code string) {
 	if valueCode == r.BaseCode {
 		return value * r.RateValue, r.QuoteCode
@@ -68,7 +68,7 @@ func (r Rate) Convert(value float64, valueCode string) (converted float64, code 
 	panic(fmt.Errorf("expected Code to be either %s or %s", r.QuoteCode, r.BaseCode))
 }
 
-// DeriveRate does a cross-currency rate conversion
+// DeriveRate does a cross-currency rate conversion.
 func DeriveRate(baseQuote string, quoteCode string, rates [2]Rate) Rate {
 	if !(rates[0].Includes(baseQuote) || rates[1].Includes(baseQuote)) {
 		panic(fmt.Errorf("at least one rate must use baseQuote %s", baseQuote))
@@ -111,7 +111,7 @@ func DeriveRate(baseQuote string, quoteCode string, rates [2]Rate) Rate {
 	}
 }
 
-// minTime is a helper function that get the lesser of two times
+// minTime is a helper function that get the lesser of two times.
 func minTime(time1 time.Time, time2 time.Time) time.Time {
 	if time1.Before(time2) {
 		return time1

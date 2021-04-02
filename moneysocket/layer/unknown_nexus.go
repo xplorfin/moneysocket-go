@@ -7,7 +7,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-// UnknownNexus is a non-existent nexus that allows us to avoid returning a null value
+// UnknownNexus is a non-existent nexus that allows us to avoid returning a null value.
 type UnknownNexus struct{}
 
 // nolint

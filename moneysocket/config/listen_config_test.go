@@ -17,7 +17,7 @@ type ListenConfigTest struct {
 	config ListenConfig
 }
 
-// test variations where tls is false
+// test variations where tls is false.
 func makeListenTLSFalseVariations(t *testing.T) []ListenConfigTest {
 	return []ListenConfigTest{
 		{
@@ -98,7 +98,7 @@ func makeListenTLSFalseVariations(t *testing.T) []ListenConfigTest {
 	}
 }
 
-// test variations where tls is false
+// test variations where tls is false.
 func makeListenCertVariations(t *testing.T) []ListenConfigTest {
 	validCertFile, validKeyFile := tlsmock.TemporaryCert(t)
 	chainFile, serverCertFile, serverKeyFile := tlsmock.TemporaryCertInChain(t)

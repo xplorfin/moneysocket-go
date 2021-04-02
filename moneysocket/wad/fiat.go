@@ -1,6 +1,6 @@
 package wad
 
-// Currency is a currency type
+// Currency is a currency type.
 type Currency struct {
 	// Code is the currency code (e.g. usd)
 	Code string `json:"code"`
@@ -16,10 +16,10 @@ type Currency struct {
 	Symbol string `json:"symbol"`
 }
 
-// CurrencyMap of code->currency
+// CurrencyMap of code->currency.
 type CurrencyMap = map[string]Currency
 
-// Fiat is a list of fiat currencies
+// Fiat is a list of fiat currencies.
 var Fiat = CurrencyMap{
 	"AED": {
 		Code:      "AED",

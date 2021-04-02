@@ -8,14 +8,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// NotifyPreimage is a notification that a preimage is ready
+// NotifyPreimage is a notification that a preimage is ready.
 type NotifyPreimage struct {
 	BaseMoneySocketNotification
 	Preimage string
 	Ext      string
 }
 
-// NewNotifyPreimage creates a notify preimages
+// NewNotifyPreimage creates a notify preimages.
 func NewNotifyPreimage(preimage, ext, requestUUID string) NotifyPreimage {
 	return NotifyPreimage{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyPreimage, requestUUID),
@@ -24,7 +24,7 @@ func NewNotifyPreimage(preimage, ext, requestUUID string) NotifyPreimage {
 	}
 }
 
-// MustBeClearText determines wether the message must be clear text
+// MustBeClearText determines wether the message must be clear text.
 func (n NotifyPreimage) MustBeClearText() bool {
 	return false
 }
@@ -34,7 +34,7 @@ const (
 	extKey      = "ext"
 )
 
-// ToJSON converts the message to json
+// ToJSON converts the message to json.
 func (n NotifyPreimage) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneySocketNotification(n, m)
@@ -46,7 +46,7 @@ func (n NotifyPreimage) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
-// IsValid determines whether the notification is valid
+// IsValid determines whether the notification is valid.
 func (n NotifyPreimage) IsValid() (bool, error) {
 	_, err := strconv.ParseUint(n.Preimage, 16, 64)
 	if err != nil {

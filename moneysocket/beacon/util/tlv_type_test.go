@@ -22,7 +22,7 @@ func TestBolt1MinSpec(t *testing.T) {
 
 type TlvSlice []tlv.Type
 
-// check if a tlv slice contains a tlv
+// check if a tlv slice contains a tlv.
 func (s TlvSlice) Contains(p tlv.Type) bool {
 	for _, t := range s {
 		if t == p {

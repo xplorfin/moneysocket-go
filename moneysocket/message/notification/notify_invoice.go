@@ -8,13 +8,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// NotifyInvoice gets a Bolt11 invoice from a payload
+// NotifyInvoice gets a Bolt11 invoice from a payload.
 type NotifyInvoice struct {
 	BaseMoneySocketNotification
 	Bolt11 string
 }
 
-// NewNotifyInvoice creates a NotifyInvoice bolt11/requestUUID
+// NewNotifyInvoice creates a NotifyInvoice bolt11/requestUUID.
 func NewNotifyInvoice(bolt11, requestUUID string) NotifyInvoice {
 	return NotifyInvoice{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyInvoiceNotification, requestUUID),
@@ -24,12 +24,12 @@ func NewNotifyInvoice(bolt11, requestUUID string) NotifyInvoice {
 
 const bolt11Key = "bolt11"
 
-// MustBeClearText says NotifyInvoice can be encrypted
+// MustBeClearText says NotifyInvoice can be encrypted.
 func (o NotifyInvoice) MustBeClearText() bool {
 	return false
 }
 
-// ToJSON gets a json payload from NotifyInvoice
+// ToJSON gets a json payload from NotifyInvoice.
 func (o NotifyInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneySocketNotification(o, m)
@@ -40,7 +40,7 @@ func (o NotifyInvoice) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
-// IsValid determines if the NotifyInvoice is valid
+// IsValid determines if the NotifyInvoice is valid.
 func (o NotifyInvoice) IsValid() (bool, error) {
 	if len(o.Bolt11) < 4 {
 		return false, fmt.Errorf("must be bult11")
@@ -51,7 +51,7 @@ func (o NotifyInvoice) IsValid() (bool, error) {
 	return true, nil
 }
 
-// DecodeNotifyInvoice gets a NotifyInvoice from a payload
+// DecodeNotifyInvoice gets a NotifyInvoice from a payload.
 func DecodeNotifyInvoice(payload []byte) (NotifyInvoice, error) {
 	notification, err := DecodeRequest(payload)
 	if err != nil {

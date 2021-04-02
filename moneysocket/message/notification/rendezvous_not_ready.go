@@ -7,13 +7,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// RendezvousNotReady is a message saying a given rendezvous is not ready
+// RendezvousNotReady is a message saying a given rendezvous is not ready.
 type RendezvousNotReady struct {
 	BaseMoneySocketNotification
 	rendezvousID string
 }
 
-// NewRendezvousNotReady creates a new rendezvous end notification with a given rendezvous id
+// NewRendezvousNotReady creates a new rendezvous end notification with a given rendezvous id.
 func NewRendezvousNotReady(rid, requestUUID string) RendezvousNotReady {
 	return RendezvousNotReady{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyRendezvousNotReadyNotification, requestUUID),
@@ -21,12 +21,12 @@ func NewRendezvousNotReady(rid, requestUUID string) RendezvousNotReady {
 	}
 }
 
-// MustBeClearText is wether or not the message is clear
+// MustBeClearText is wether or not the message is clear.
 func (r RendezvousNotReady) MustBeClearText() bool {
 	return true
 }
 
-// ToJSON converts the message to json
+// ToJSON converts the message to json.
 func (r RendezvousNotReady) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneySocketNotification(r, m)
@@ -37,7 +37,7 @@ func (r RendezvousNotReady) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
-// DecodeRendezvousNotReady converts the payload to RendezvousNotReady
+// DecodeRendezvousNotReady converts the payload to RendezvousNotReady.
 func DecodeRendezvousNotReady(payload []byte) (RendezvousNotReady, error) {
 	notiification, err := DecodeRequest(payload)
 	if err != nil {

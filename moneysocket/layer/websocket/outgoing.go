@@ -11,7 +11,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
-// OutgoingWebsocketLayer processes outgoing websocket connections
+// OutgoingWebsocketLayer processes outgoing websocket connections.
 type OutgoingWebsocketLayer struct {
 	layer.BaseLayer
 	// NexusBySharedSeed trackers nexuses by shared seed
@@ -20,7 +20,7 @@ type OutgoingWebsocketLayer struct {
 	OutgoingSocketProtocol *nws.OutgoingSocket
 }
 
-// NewOutgoingWebsocketLayer creates a OutgoingWebsocketLayer
+// NewOutgoingWebsocketLayer creates a OutgoingWebsocketLayer.
 func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 	outgoingSocket := nws.NewOutgoingSocket()
 	os := OutgoingWebsocketLayer{
@@ -32,7 +32,7 @@ func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 	return &os
 }
 
-// AnnounceNexus creates a new nws.WebsocketNexus and registers it
+// AnnounceNexus creates a new nws.WebsocketNexus and registers it.
 func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	websocketNexus := nws.NewWebsocketNexus(belowNexus, o)
 	o.TrackNexus(websocketNexus, belowNexus)
@@ -46,7 +46,7 @@ func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-// Connect connects to the outgoing layer
+// Connect connects to the outgoing layer.
 func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, seed *beacon.SharedSeed) (*nws.OutgoingSocket, error) {
 	o.OutgoingSocketProtocol.FactoryMsProtocolLayer = o
 	o.OutgoingSocketProtocol.OutgoingSharedSeed = seed
@@ -57,13 +57,13 @@ func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, se
 	return o.OutgoingSocketProtocol, nil
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)
 }
 
-// InitiateCloseAll closes all nexuses associated with the layer
+// InitiateCloseAll closes all nexuses associated with the layer.
 func (o *OutgoingWebsocketLayer) InitiateCloseAll() {
 	o.Nexuses.Range(func(key uuid.UUID, nexus nexus.Nexus) bool {
 		nexus.InitiateClose()

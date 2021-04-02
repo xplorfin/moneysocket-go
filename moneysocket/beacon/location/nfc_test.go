@@ -8,7 +8,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
 )
 
-// NFCTestCase is a test case to test out encoding/decoding an NFCLocation
+// NFCTestCase is a test case to test out encoding/decoding an NFCLocation.
 type NFCTestCase struct {
 	// PlaceholderString contains the placeholder string we test against
 	PlaceholderString string
@@ -23,7 +23,7 @@ var nfcTestCases = []NFCTestCase{
 	},
 }
 
-// TestNFCEncoding makes sure that NFCLocation has parity with python test cases
+// TestNFCEncoding makes sure that NFCLocation has parity with python test cases.
 func TestNFCEncoding(t *testing.T) {
 	for _, testCase := range nfcTestCases {
 		nlc := NewNFCLocation()

@@ -63,6 +63,7 @@ func TestConfigFromFile(t *testing.T) {
 		}
 	}
 }
+
 func MakeConfig(t *testing.T, config string) (newConfigPath string, fileConfig TestFileConfig) {
 	buf := new(bytes.Buffer)
 	templ := template.Must(template.New("config").Parse(config))

@@ -4,7 +4,7 @@ import (
 	"github.com/btcsuite/btcutil/bech32"
 )
 
-// Bech32EncodeBytes encodes a bech32 string
+// Bech32EncodeBytes encodes a bech32 string.
 func Bech32EncodeBytes(toEncode []byte, hrp string) (encodedBytes string, err error) {
 	convertedBytes, err := bech32.ConvertBits(toEncode, 8, 5, true)
 	if err != nil {
@@ -17,7 +17,7 @@ func Bech32EncodeBytes(toEncode []byte, hrp string) (encodedBytes string, err er
 	return encodedBytes, nil
 }
 
-// Bech32DecodeBytes decodes a bech32 string
+// Bech32DecodeBytes decodes a bech32 string.
 func Bech32DecodeBytes(rawString string) (hrp string, decodedKey []byte, err error) {
 	hrp, decodedKey, err = decodeBech32(rawString)
 	if err != nil {

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/xplorfin/netutils/testutils"
-
 	. "github.com/stretchr/testify/assert"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
+	"github.com/xplorfin/netutils/testutils"
 )
 
 func TestNewIncomingWebsocketLayerUnsecure(t *testing.T) {

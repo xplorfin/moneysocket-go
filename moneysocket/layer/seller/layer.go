@@ -13,7 +13,7 @@ import (
 
 // Layer is meant to simulate the seller layer in the js seller app
 // this struct should not be initialized directly, the NewSellerLayer() method
-// below should be used instead
+// below should be used instead.
 type Layer struct {
 	layer.BaseLayer
 	// nexuses's we're waiting to initialize
@@ -28,7 +28,7 @@ type Layer struct {
 	SellerNexus *seller.Nexus
 }
 
-// NewSellerLayer creates a new seller layer
+// NewSellerLayer creates a new seller layer.
 func NewSellerLayer() *Layer {
 	return &Layer{
 		BaseLayer:         layer.NewBaseLayer(),
@@ -37,22 +37,22 @@ func NewSellerLayer() *Layer {
 	}
 }
 
-// HandleOpinionInvoiceRequest calls the client supplied handleOpinionInvoiceRequest method if present
+// HandleOpinionInvoiceRequest calls the client supplied handleOpinionInvoiceRequest method if present.
 func (s *Layer) HandleOpinionInvoiceRequest(nx nexus.Nexus, itemID string, requestUUID string) {
 	s.handleOpinionInvoiceRequest(nx, itemID, requestUUID)
 }
 
-// SetHandleOpinionInvoiceRequest sets the client supplied handleOpinionInvoiceRequest method. This method is null by default
+// SetHandleOpinionInvoiceRequest sets the client supplied handleOpinionInvoiceRequest method. This method is null by default.
 func (s *Layer) SetHandleOpinionInvoiceRequest(request compat.HandleOpinionInvoiceRequest) {
 	s.handleOpinionInvoiceRequest = request
 }
 
-// SetHandleSellerInfoRequest sets the client supplied handleSellerInfoRequest method. This method is null by default
+// SetHandleSellerInfoRequest sets the client supplied handleSellerInfoRequest method. This method is null by default.
 func (s *Layer) SetHandleSellerInfoRequest(handler func() seller.Info) {
 	s.handleSellerInfoRequest = handler
 }
 
-// SetupSellerNexus starts the seller nexus and initializes the callbacks
+// SetupSellerNexus starts the seller nexus and initializes the callbacks.
 func (s *Layer) SetupSellerNexus(belowNexus nexus.Nexus) *seller.Nexus {
 	n := seller.NewSellerNexus(belowNexus, s)
 	n.SetHandleOpinionInvoiceRequest(func(nx nexus.Nexus, itemId string, requestUuid string) {
@@ -64,14 +64,14 @@ func (s *Layer) SetupSellerNexus(belowNexus nexus.Nexus) *seller.Nexus {
 	return n
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (s *Layer) RegisterAboveLayer(belowLayer layer.Base) {
 	s.SetOnAnnounce(belowLayer.AnnounceNexus)
 	s.SetOnRevoke(belowLayer.RevokeNexus)
 }
 
 // AnnounceNexus creates a new SellerNexus and registers it
-// also registers the sellerFinished callback
+// also registers the sellerFinished callback.
 func (s *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	log.Println("buyer layer got nexus, starting handshake")
 	s.SellerNexus = s.SetupSellerNexus(belowNexus)
@@ -81,7 +81,7 @@ func (s *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	s.SellerNexus.WaitForBuyer(s.sellerFinishedCb)
 }
 
-// callback for seller finished
+// callback for seller finished.
 func (s *Layer) sellerFinishedCb(nx nexus.Nexus) {
 	s.TrackNexusAnnounced(nx)
 	s.SendLayerEvent(nx, message.NexusAnnounced)
@@ -90,7 +90,7 @@ func (s *Layer) sellerFinishedCb(nx nexus.Nexus) {
 	}
 }
 
-// SellerNowReadyFromApp sets the seller's status to ready (open store)
+// SellerNowReadyFromApp sets the seller's status to ready (open store).
 func (s *Layer) SellerNowReadyFromApp() {
 	log.Println("-- seller now ready")
 	for seed, _ := range s.WaitingForApp { // nolint
@@ -101,13 +101,15 @@ func (s *Layer) SellerNowReadyFromApp() {
 	}
 }
 
-// NexusWaitingForApp sets the seller's status to waiting
+// NexusWaitingForApp sets the seller's status to waiting.
 func (s *Layer) NexusWaitingForApp(seed *beacon.SharedSeed, sellerNexus nexus.Nexus) {
 	log.Println("-- waiting for app")
 	s.WaitingForApp[seed.ToString()] = sellerNexus
 }
 
 // make sure that the seller layer is compatible with interfaces used for calling
-// non-standard layer methods and standard layer methods
-var _ compat.SellingLayerInterface = &Layer{}
-var _ layer.Base = &Layer{}
+// non-standard layer methods and standard layer methods.
+var (
+	_ compat.SellingLayerInterface = &Layer{}
+	_ layer.Base                   = &Layer{}
+)

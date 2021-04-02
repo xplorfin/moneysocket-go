@@ -14,7 +14,7 @@ import (
 )
 
 // SellerApp is a prototype based on https://git.io/JmVLj designed to test interactions
-// between two accounts on terminus
+// between two accounts on terminus.
 type SellerApp struct {
 	// SellerStack is a stack of layers to manage events in the seller provider app https://git.io/JmVq7
 	SellerStack *stack.SellerStack
@@ -32,7 +32,7 @@ type SellerApp struct {
 	ProviderInfo seller.Info
 }
 
-// NewSellerApp initializes a seller app with a beacon (that contains the location we communicate with)
+// NewSellerApp initializes a seller app with a beacon (that contains the location we communicate with).
 func NewSellerApp(beacon beacon.Beacon) *SellerApp {
 	walletConsumer := NewWalletConsumer(beacon)
 	sellerStack := stack.NewSellerStack()
@@ -46,40 +46,40 @@ func NewSellerApp(beacon beacon.Beacon) *SellerApp {
 	return &sa
 }
 
-// OpenStore opens the shop
+// OpenStore opens the shop.
 func (sa *SellerApp) OpenStore() {
 	sa.StoreOpen = true
 	sa.SellerStack.SellerNowReadyFromApp()
 }
 
-// CloseStore closes the shop
+// CloseStore closes the shop.
 func (sa *SellerApp) CloseStore() {
 	sa.StoreOpen = false
 	sa.SellerStack.DoDisconnect()
 }
 
-// UpdatePrices updates the prices in the state
+// UpdatePrices updates the prices in the state.
 func (sa *SellerApp) UpdatePrices() {
 	sa.SellerStack.UpdatePrices()
 }
 
-// items names/prices/descriptions
+// items names/prices/descriptions.
 const (
-	// names
+	// names.
 	helloName   = "hello"
 	timeName    = "time"
 	outlookName = "outlook"
-	// prices
+	// prices.
 	helloPrice   = 50
 	timePrice    = 100
 	outlookPrice = 150
-	// description
+	// description.
 	helloDescription         = "Hello World"
 	timestampDescription     = "Current Timestamp"
 	marketOutlookDescription = "Market Outlook"
 )
 
-// SetupSellerStack creates eevent handlers on the seller stack for interacting w/ the consuer stack
+// SetupSellerStack creates eevent handlers on the seller stack for interacting w/ the consuer stack.
 func (sa *SellerApp) SetupSellerStack() {
 	sa.SellerStack.SetOnAnnounce(func(nexus nexus.Nexus) {
 		log.Println("provider online")
