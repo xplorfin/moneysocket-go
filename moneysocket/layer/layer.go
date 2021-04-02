@@ -5,34 +5,40 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
+// OnLayerEventFn is a function downstream layers call on an event
 type OnLayerEventFn = func(layerName string, nexus nexusHelper.Nexus, event string)
+
+// OnAnnounceFn is the announce function for the nexus
 type OnAnnounceFn = func(nexus nexusHelper.Nexus)
+
+// OnRevokeFn is the revoke function for the nexus
 type OnRevokeFn = func(nexus nexusHelper.Nexus)
 
-type Layer interface {
-	// set on layer event
+// Base is the base class for all layers
+type Base interface {
+	// SetOnLayerEvent set on layer event
 	SetOnLayerEvent(o OnLayerEventFn)
-	// set on announce event
+	// SetOnAnnounce on announce event
 	SetOnAnnounce(o OnAnnounceFn)
-	// set on revoke event
+	// SetOnRevoke on revoke event
 	SetOnRevoke(o OnAnnounceFn)
-	// register above layer events with current layer
+	// RegisterAboveLayer above layer events with current layer
 	// must be done here since announce nexus
 	// is not available form base layer
-	RegisterAboveLayer(belowLayer Layer)
-	// register layer event with nexuses
+	RegisterAboveLayer(belowLayer Base)
+	// RegisterLayerEvent layer event with nexuses
 	RegisterLayerEvent(fn OnLayerEventFn, layerName string)
-	// announce nexusHelper
+	// AnnounceNexus nexusHelper
 	AnnounceNexus(belowNexus nexusHelper.Nexus)
-	// track nexusHelper events
+	// TrackNexus nexusHelper events
 	TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus)
-	// remove tracker from nexusHelper events
+	// UntrackNexus remove's tracker from nexusHelper events
 	UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus)
-	// track that a nexus has been announced
+	// TrackNexusAnnounced tracks that a nexus has been announced
 	TrackNexusAnnounced(nexus nexusHelper.Nexus)
-	// check wether or not a nexus has been announced
+	// IsNexusAnnounced checks wether or not a nexus has been announced
 	IsNexusAnnounced(nexus nexusHelper.Nexus) bool
-	// revoke a nexus
+	// RevokeNexus revokes a nexus
 	RevokeNexus(belowNexus nexusHelper.Nexus)
 }
 
@@ -60,23 +66,28 @@ type BaseLayer struct {
 	BelowByNexus NexusUUIDMap
 }
 
+// SetOnLayerEvent sets the layer event
 func (l *BaseLayer) SetOnLayerEvent(o OnLayerEventFn) {
 	l.OnLayerEvent = o
 }
 
+// SetOnAnnounce sets an on announce function
 func (l *BaseLayer) SetOnAnnounce(o OnAnnounceFn) {
 	l.OnAnnounce = o
 }
 
+// SetOnRevoke sets the revoke callback
 func (l *BaseLayer) SetOnRevoke(o OnRevokeFn) {
 	l.OnRevoke = o
 }
 
+// RegisterLayerEvent registers the layer event
 func (l *BaseLayer) RegisterLayerEvent(fn OnLayerEventFn, layerName string) {
 	l.LayerName = layerName
 	l.OnLayerEvent = fn
 }
 
+// TrackNexus trackers the nexus
 func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
 	l.Nexuses.Store(nexus.UUID(), nexus)
 	l.BelowNexuses.Store(belowNexus.UUID(), belowNexus)
@@ -85,6 +96,7 @@ func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.N
 	l.SendLayerEvent(nexus, message.NexusCreated)
 }
 
+// UntrackNexus untracks the nexus
 func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
 	l.Nexuses.Delete(nexus.UUID())
 	l.BelowByNexus.Delete(belowNexus.UUID())
@@ -93,10 +105,12 @@ func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper
 	l.SendLayerEvent(nexus, message.NexusDestroyed)
 }
 
+// TrackNexusAnnounced tracks the nexus
 func (l *BaseLayer) TrackNexusAnnounced(nexus nexusHelper.Nexus) {
 	l.Announced.Store(nexus.UUID(), nexus)
 }
 
+// IsNexusAnnounced determines wether or not a given nexus has been announced
 func (l *BaseLayer) IsNexusAnnounced(nexus nexusHelper.Nexus) bool {
 	if _, ok := l.Announced.Get(nexus.UUID()); ok {
 		return true
@@ -104,12 +118,14 @@ func (l *BaseLayer) IsNexusAnnounced(nexus nexusHelper.Nexus) bool {
 	return false
 }
 
+// SendLayerEvent sends an event up the chain
 func (l *BaseLayer) SendLayerEvent(nexus nexusHelper.Nexus, status string) {
 	if l.OnLayerEvent != nil {
 		l.OnLayerEvent(l.LayerName, nexus, status)
 	}
 }
 
+// TrackNexusRevoked tracks that a nexus has been revoked
 func (l *BaseLayer) TrackNexusRevoked(nexus nexusHelper.Nexus) {
 	if l.IsNexusAnnounced(nexus) {
 		l.Announced.Delete(nexus.UUID())
@@ -130,7 +146,7 @@ func (l *BaseLayer) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
-// create a new base layer, note you still have to call register_above nexus
+// NewBaseLayer creates a new base layer, note you still have to call register_above nexus
 func NewBaseLayer() BaseLayer {
 	return BaseLayer{
 		Nexuses:      NexusMap{},

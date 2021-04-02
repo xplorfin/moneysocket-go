@@ -8,37 +8,44 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
+// Directory is a terminus directory that manages account lists/maps
 type Directory struct {
-	config                *config.Config
-	AccountBySharedSeed   map[string]account.Db
-	SharedSeedsByAccount  map[string][]beacon.SharedSeed
-	Accounts              map[string]account.Db
-	AccountsByPaymentHash map[string]account.Db
+	config *config.Config
+	// AccountBySharedSeed is a list of accounts by shared seed
+	AccountBySharedSeed map[string]account.DB
+	// SharedSeedsByAccount is a list of accounts by shared seed
+	SharedSeedsByAccount map[string][]beacon.SharedSeed
+	// Accounts is a list of accounts
+	Accounts map[string]account.DB
+	// AccountsByPaymentHash is a list of accounts organized by payment hash
+	AccountsByPaymentHash map[string]account.DB
 }
 
+// NewTerminusDirectory gets  anew terminus directory
 func NewTerminusDirectory(config *config.Config) *Directory {
 	return &Directory{
 		config:                config,
-		AccountBySharedSeed:   make(map[string]account.Db),
+		AccountBySharedSeed:   make(map[string]account.DB),
 		SharedSeedsByAccount:  make(map[string][]beacon.SharedSeed),
-		Accounts:              make(map[string]account.Db),
-		AccountsByPaymentHash: make(map[string]account.Db),
+		Accounts:              make(map[string]account.DB),
+		AccountsByPaymentHash: make(map[string]account.DB),
 	}
 }
 
-// python version is an iterator
-func (t *Directory) GetAccounts() (accounts []account.Db) {
+// GetAccounts python version is an iterator
+func (t *Directory) GetAccounts() (accounts []account.DB) {
 	for _, v := range t.Accounts {
 		accounts = append(accounts, v)
 	}
 	return accounts
 }
 
-func (t *Directory) GetAccountList() []account.Db {
+// GetAccountList gets a list of accounts
+func (t *Directory) GetAccountList() []account.DB {
 	return t.GetAccounts()
 }
 
-// generate an account name from an autoincrementing int
+// GenerateAccountName generates an account name from an autoincrementing int
 func (t *Directory) GenerateAccountName() string {
 	for i := 0; i < 1000; i++ {
 		acct := t.LookupByName(strconv.Itoa(i))
@@ -49,7 +56,7 @@ func (t *Directory) GenerateAccountName() string {
 	panic("more than 1,000 accounts exist")
 }
 
-// get list of acount names
+// GetAccountNameSet gets a list of acount names
 func (t *Directory) GetAccountNameSet() (accounts []string) {
 	for _, account := range t.Accounts {
 		accounts = append(accounts, account.Details.AccountName)
@@ -57,26 +64,31 @@ func (t *Directory) GetAccountNameSet() (accounts []string) {
 	return accounts
 }
 
-func (t *Directory) LookupByName(name string) *account.Db {
+// LookupByName looks up an account by name
+func (t *Directory) LookupByName(name string) *account.DB {
 	if val, ok := t.Accounts[name]; ok {
 		return &val
 	}
 	return nil
 }
 
-func (t *Directory) LookupBySeed(seed beacon.SharedSeed) account.Db {
+// LookupBySeed  looks up an item by seed
+func (t *Directory) LookupBySeed(seed beacon.SharedSeed) account.DB {
 	return t.AccountBySharedSeed[seed.ToString()]
 }
 
+// LookupByPaymentHash looks up a payment by hash
 func (t *Directory) LookupByPaymentHash(hash string) {
 	panic("method not yet implemented")
 }
 
-func (t *Directory) ReindexAccount(acct account.Db) {
+// ReindexAccount reindexes an account
+func (t *Directory) ReindexAccount(acct account.DB) {
 	t.AddAccount(acct)
 }
 
-func (t *Directory) AddAccount(acct account.Db) {
+// AddAccount creates an account
+func (t *Directory) AddAccount(acct account.DB) {
 	details := acct.Details
 	acct.ConnectionAttempts = make(map[string]error)
 	t.Accounts[details.AccountName] = acct

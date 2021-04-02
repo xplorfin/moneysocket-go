@@ -6,27 +6,31 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// OnMessage is a handler function for processing a base.MoneysocketMessage
 type OnMessage = func(belowNexus Nexus, msg base.MoneysocketMessage)
+
+// OnBinMessage is a handler function for processing a binary message
 type OnBinMessage = func(belowNexus Nexus, msg []byte)
 
+// Nexus is the nexus interface
 type Nexus interface {
-	// get the id for a given nexus
+	// UUID gets the id for a given nexus
 	UUID() uuid.UUID
-	// wether or not two nexuses are equal
+	// IsEqual is wether or not two nexuses are equal
 	IsEqual(n Nexus) bool
-	// called on a message, set in constructor
+	// OnMessage is called on a message, set in constructor
 	OnMessage(belowNexus Nexus, msg base.MoneysocketMessage)
-	// called on a binary message, set in constructor
+	// OnBinMessage is called on a binary message, set in constructor
 	OnBinMessage(belowNexus Nexus, msg []byte)
-	// list all nexuses
+	// GetDownwardNexusList lists all nexuses
 	GetDownwardNexusList() []Nexus
-	// send a message
+	// Send sends a message
 	Send(msg base.MoneysocketMessage) error
-	// send a binary message
+	// SendBin sends a binary message
 	SendBin(msg []byte) error
-	// initiate a close
+	// InitiateClose initiates a close
 	InitiateClose()
-	// shared seed
+	// SharedSeed gets a shared seed
 	SharedSeed() *beacon.SharedSeed
 	// get name of the nexus
 	Name() string

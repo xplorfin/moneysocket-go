@@ -7,13 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// Rendezvous is a rendezvous request
 type Rendezvous struct {
 	BaseMoneySocketRequest
-	// the id of the rendezvous we're requesting (normally derived  from the shared seed)
+	// RendezvousID is the id of the rendezvous we're requesting (normally derived  from the shared seed)
 	RendezvousID string
 }
 
-// request the server start a rendezvous w/ a given rendezvous id
+// NewRendezvousRequest is the request the server start a rendezvous w/ a given rendezvous id
 func NewRendezvousRequest(id string) Rendezvous {
 	return Rendezvous{
 		NewBaseMoneySocketRequest(base.RendezvousRequest),
@@ -23,6 +24,7 @@ func NewRendezvousRequest(id string) Rendezvous {
 
 const rendezvousIDKey = "rendezvous_id"
 
+// ToJSON marshals the Rendezvous message
 func (r Rendezvous) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	m[rendezvousIDKey] = r.RendezvousID
@@ -33,10 +35,12 @@ func (r Rendezvous) ToJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
+// MustBeClearText determines that a rendezvous message can be a clear text message
 func (r Rendezvous) MustBeClearText() bool {
 	return true
 }
 
+// DecodeRendezvousRequest decodes a Rendezvous request from a payload
 func DecodeRendezvousRequest(payload []byte) (r Rendezvous, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {

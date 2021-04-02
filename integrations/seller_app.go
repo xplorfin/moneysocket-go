@@ -129,7 +129,7 @@ func (sa *SellerApp) SetupSellerStack() {
 		}
 		return seller.Info{Ready: false}
 	})
-	sa.SellerStack.SetHandleProviderInfoRequest(func(seed beacon.SharedSeed) account.Db {
+	sa.SellerStack.SetHandleProviderInfoRequest(func(seed beacon.SharedSeed) account.DB {
 		panic("TODO")
 	})
 }

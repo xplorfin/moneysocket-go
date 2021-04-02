@@ -1,6 +1,6 @@
 package lightning
 
-// TODO this is a callback
+// PaidCallback is a function for when ln image is paid
 type PaidCallback func(preimage string, msats int)
 
 // Lightning is an implementable interface for interacting with different lightning clients

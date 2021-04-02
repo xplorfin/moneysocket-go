@@ -41,7 +41,7 @@ type Client struct {
 func (c *Client) readPump() error {
 	defer func() {
 		c.hub.unregister <- c
-		c.conn.Close()
+		_ = c.conn.Close()
 		(*c.protocol).OnClose(true, 0, "")
 	}()
 	//c.conn.SetReadLimit(maxMessageSize)
@@ -70,7 +70,7 @@ func (c *Client) writePump() error {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		c.conn.Close()
+		_ = c.conn.Close()
 	}()
 	for {
 		select {
@@ -108,11 +108,12 @@ func (c *Client) writePump() error {
 	}
 }
 
-// a test websocket client
+// WebsocketClientRoute handles http request
 func WebsocketClientRoute(host string, w http.ResponseWriter, r *http.Request) {
 	_ = WebsocketTemplate.Execute(w, host)
 }
 
+// WebsocketTemplate is a template for a websocket
 var WebsocketTemplate = template.Must(template.New("").Parse(`
 <!DOCTYPE html>
 <html>

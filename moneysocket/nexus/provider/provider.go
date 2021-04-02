@@ -10,15 +10,20 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
+// NexusName is the ProviderNexus
 const NexusName = "ProviderNexus"
 
+// Nexus is the provider
 type Nexus struct {
 	*base.NexusBase
+	// RequestReferenceUUID is the reference uuid
 	RequestReferenceUUID      string
 	handleProviderInfoRequest compat.HandleProviderInfoRequest
-	ProviderFinishedCb        func(nx nexus.Nexus)
+	// ProviderFinishedCb is the callback for when providers finish
+	ProviderFinishedCb func(nx nexus.Nexus)
 }
 
+// NewProviderNexus creates a new nexus
 func NewProviderNexus(belowNexus nexus.Nexus) *Nexus {
 	baseNexus := base.NewBaseNexusBelow(NexusName, belowNexus)
 	pn := Nexus{baseNexus, "", nil, nil}
@@ -27,6 +32,7 @@ func NewProviderNexus(belowNexus nexus.Nexus) *Nexus {
 	return &pn
 }
 
+// IsLayerMessage decides if a message should be processed by a layer
 func (o *Nexus) IsLayerMessage(message message_base.MoneysocketMessage) bool {
 	if message.MessageClass() == message_base.Request {
 		return false
@@ -35,16 +41,19 @@ func (o *Nexus) IsLayerMessage(message message_base.MoneysocketMessage) bool {
 	return ntfn.RequestType() == message_base.ProviderRequest || ntfn.RequestType() == message_base.PingRequest
 }
 
+// NotifyProvider sends a notification to a provider
 func (o *Nexus) NotifyProvider() {
 	ss := o.SharedSeed()
 	providerInfo := o.handleProviderInfoRequest(*ss)
 	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUUID))
 }
 
+// NotifyProviderNotReady notifies a provider is not ready yet
 func (o *Nexus) NotifyProviderNotReady() {
 	_ = o.Send(notification.NewNotifyProviderNotReady(o.RequestReferenceUUID))
 }
 
+// OnMessage processes the message for this layer
 func (o *Nexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
 	log.Println("provider nexus got message")
 	if !o.IsLayerMessage(msg) {
@@ -68,19 +77,23 @@ func (o *Nexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMe
 
 }
 
+// NotifyPong sends a pong message
 func (o *Nexus) NotifyPong() {
 	_ = o.Send(notification.NewNotifyPong(o.RequestReferenceUUID))
 }
 
+// OnBinMessage calls the binary message handler
 func (o *Nexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	log.Println("provider nexus got raw msg")
 	o.NexusBase.OnBinMessage(belowNexus, msg)
 }
 
+// WaitForConsumer notifies the providerFinishedCb
 func (o *Nexus) WaitForConsumer(providerFinishedCb func(nexus2 nexus.Nexus)) {
 	o.ProviderFinishedCb = providerFinishedCb
 }
 
+// NotifyProviderReady notifies provider is ready
 func (o *Nexus) NotifyProviderReady() {
 	ss := o.SharedSeed()
 	providerInfo := o.Layer.(compat.ProviderTransactLayerInterface).HandleProviderInfoRequest(*ss)
@@ -89,6 +102,8 @@ func (o *Nexus) NotifyProviderReady() {
 	}
 	_ = o.Send(notification.NewNotifyProvider(o.UUID().String(), providerInfo.Details.Payer(), providerInfo.Details.Payee(), providerInfo.Details.Wad, o.RequestReferenceUUID))
 }
+
+// ProviderNowReady notifies provider is ready
 func (o *Nexus) ProviderNowReady() {
 	o.NotifyProviderReady()
 }

@@ -2,49 +2,52 @@ package message
 
 import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
-	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 )
 
-// keys
+// MessageClass is the class of the message
 const MessageClass = base.MessageClassKey
-const NotificationName = "notification_name"
-const RequestName = request.NameKey
-
-// notification types
-const (
-	NotifyProvider         = "NOTIFY_PROVIDER"
-	NotifyProviderNotReady = "NOTIFY_PROVIDER_NOT_READY"
-	NotifyPing             = "NOTIFY_PING"
-	NotifyPong             = "NOTIFY_PONG"
-	// rendezcous notification types
-	NotifyRendezvous         = "NOTIFY_RENDEZVOUS"
-	NotifyRendezvousNotReady = "NOTIFY_RENDEZVOUS_NOT_READY"
-	NotifyRendezvousEnd      = "NOTIFY_RENDEZVOUS_END"
-)
 
 // nexus lifecycle events
 const (
-	NexusCreated   = "NEXUS_CREATED"
+	// NexusCreated announces a nexus has been created
+	NexusCreated = "NEXUS_CREATED"
+	// NexusAnnounced announces a nexus has been announced
 	NexusAnnounced = "NEXUS_ANNOUNCED"
-	NexusWaiting   = "NEXUS_WAITING"
+	// NexusWaiting announces a nexus has been announced
+	NexusWaiting = "NEXUS_WAITING"
+	// NexusDestroyed announces a nexus has been destroyed
 	NexusDestroyed = "NEXUS_DESTROYED"
-	NexusRevoked   = "NEXUS_REVOKED"
+	// NexusDestroyed announces a nexus has been destroyed
+	NexusRevoked = "NEXUS_REVOKED"
 )
 
 // layers
 
 const (
-	Consumer           = "CONSUMER"
-	Relay              = "RELAY"
-	OutgoingLocal      = "OUTGOING_LOCAL"
-	IncomingWebsocket  = "INCOMING_WEBSOCKET"
-	IncomingLocal      = "INCOMING_LOCAL"
-	OutgoingWebsocket  = "OUTGOING_WEBSOCKET"
+	// Consumer layer name
+	Consumer = "CONSUMER"
+	// Relay layer name
+	Relay = "RELAY"
+	// OutgoingLocal layer name
+	OutgoingLocal = "OUTGOING_LOCAL"
+	// IncomingWebsocket layer name
+	IncomingWebsocket = "INCOMING_WEBSOCKET"
+	// IncomingLocal layer name
+	IncomingLocal = "INCOMING_LOCAL"
+	// OutgoingWebsocket layer name
+	OutgoingWebsocket = "OUTGOING_WEBSOCKET"
+	// OutgoingRendezvous layer name
 	OutgoingRendezvous = "OUTGOING_RENDEZVOUS"
+	// IncomingRendezvous layer name
 	IncomingRendezvous = "INCOMING_RENDEZVOUS"
-	RequestRendezvous  = "REQUEST_RENDEZVOUS"
-	Provider           = "PROVIDER"
-	ProviderTransact   = "PROVIDER_TRANSACT"
-	Terminus           = "TERMINUS"
-	Seller             = "SELLER"
+	// RequestRendezvous  layer name
+	RequestRendezvous = "REQUEST_RENDEZVOUS"
+	// Provider layer name
+	Provider = "PROVIDER"
+	// ProviderTransact layer name
+	ProviderTransact = "PROVIDER_TRANSACT"
+	// Terminus layer name
+	Terminus = "TERMINUS"
+	// Seller layer name
+	Seller = "SELLER"
 )

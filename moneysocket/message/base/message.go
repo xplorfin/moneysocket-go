@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// this is probably one of the worst ways to handle json in go
+// MoneysocketMessage is probably one of the worst ways to handle json in go
 // but I wanted to make sure the first vresion was as close to moneysocket as possible
 // architecturally so I could safely refactor with test cases in place
 type MoneysocketMessage interface {
@@ -35,7 +35,7 @@ const (
 	MessageClassKey = "message_class"
 )
 
-// maps are passed by reference by default https://bit.ly/35KrDps
+// EncodeMoneysocketMessage maps are passed by reference by default https://bit.ly/35KrDps
 func EncodeMoneysocketMessage(msg MoneysocketMessage, toEncode map[string]interface{}) error {
 	if toEncode == nil {
 		return fmt.Errorf("map must be initialized")

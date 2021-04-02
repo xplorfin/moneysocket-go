@@ -10,6 +10,8 @@ run:
   timeout: 10m
 
 linters-settings:
+  golint:
+    min-confidence: 0.8
   gofmt:
     # simplify code: gofmt with `-s` option, true by default
     simplify: true
@@ -21,8 +23,10 @@ linters:
     - gosimple
     - unconvert
     - goimports
-    - misspell
     - golint
-    - gosimple
+    - misspell
   disable-all: false
   fast: false
+
+issues:
+  exclude-use-default: false

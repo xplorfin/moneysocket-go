@@ -7,11 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// OpinionInvoice is a request for payment of a given ItemId
 type OpinionInvoice struct {
 	BaseMoneySocketRequest
+	// ItemID is the item we're invoicing for
 	ItemID string
 }
 
+// NewRequestOpinionInvoice creates a new OpinionInvoice
 func NewRequestOpinionInvoice(itemID, requestUUID string) OpinionInvoice {
 	r := OpinionInvoice{
 		BaseMoneySocketRequest: NewBaseMoneySocketRequest(base.RequestOpinionInvoice),
@@ -23,6 +26,7 @@ func NewRequestOpinionInvoice(itemID, requestUUID string) OpinionInvoice {
 
 const itemIDKey = "item_id"
 
+// ToJSON encodes an OpinionInvoice to json
 func (r OpinionInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	m[itemIDKey] = r.ItemID
@@ -34,6 +38,7 @@ func (r OpinionInvoice) ToJSON() ([]byte, error) {
 	return encodedRequest, err
 }
 
+// DecodeRequestOpinionInvoice decodes an OpinionInvoice from json
 func DecodeRequestOpinionInvoice(payload []byte) (r OpinionInvoice, err error) {
 	request, err := DecodeRequest(payload)
 	if err != nil {

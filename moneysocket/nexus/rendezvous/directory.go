@@ -8,7 +8,7 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-// RendezvousDirectory stores nexus peering data
+// Directory stores nexus peering data
 type Directory struct {
 	// todo switch to sync maps with individual mutexes
 	// this can probably be removed rn

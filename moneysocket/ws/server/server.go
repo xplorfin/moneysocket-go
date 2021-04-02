@@ -11,17 +11,19 @@ import (
 )
 
 const (
-	SecurePrefix   = "wss://"
+	// SecurePrefix is used for secure websocket connections
+	SecurePrefix = "wss://"
+	// UnsecurePrefix is used for unsecured websocket connetions
 	UnsecurePrefix = "ws://"
 )
 
-// listener for websocket
+// WebsocketListener is the listener for websocket
 type WebsocketListener struct{}
 
-// TODO
+// TLSInfo is a struct that contains ssl serving data
 type TLSInfo struct{}
 
-// helper for serving http and http servers
+// Listen is helper for serving http and http servers
 func Listen(rawWsURL string, tlsInfo *TLSInfo, handler http.HandlerFunc) error {
 	wsURL, err := url.Parse(rawWsURL)
 	if err != nil {
@@ -47,6 +49,7 @@ func Listen(rawWsURL string, tlsInfo *TLSInfo, handler http.HandlerFunc) error {
 	return nil
 }
 
+// ServeHTTP processes http request
 func ServeHTTP(p WebSocketServerProtocol, w http.ResponseWriter, r *http.Request) {
 	g, _ := errgroup.WithContext(p.Context())
 

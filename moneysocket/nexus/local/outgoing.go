@@ -12,15 +12,18 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
+// OutgoingLocalNexus is an outgoing local nexus
 type OutgoingLocalNexus struct {
 	*base.NexusBase
 	belowNexus *JoinedLocalNexus
 	sharedSeed beacon.SharedSeed
 }
 
+// OutgoingLocalNexusName is the name of an outgoing local enxus
 const OutgoingLocalNexusName = "OutgoingLocalNexus"
 
-func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
+// NewOutgoingLocalNexus creates an outgoing local nexus
+func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Base, sharedSeed beacon.SharedSeed) *OutgoingLocalNexus {
 	bnf := base.NewBaseNexusFull(OutgoingLocalNexusName, belowNexus, layer)
 	og := OutgoingLocalNexus{
 		NexusBase:  &bnf,
@@ -35,11 +38,13 @@ func NewOutgoingLocalNexus(belowNexus *JoinedLocalNexus, layer layer.Layer, shar
 	return &og
 }
 
+// OnMessage processes messages for this layer
 func (o *OutgoingLocalNexus) OnMessage(belowNexus nexus.Nexus, msg base_moneysocket.MoneysocketMessage) {
 	log.Printf("outgoing local nexus got msg %s", msg)
 	o.NexusBase.OnMessage(belowNexus, msg)
 }
 
+// OnBinMessage processes a mmessage after it's sent
 func (o OutgoingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	log.Printf("outgoing local nexus got raw msg: %d", len(msg))
 
@@ -53,6 +58,7 @@ func (o OutgoingLocalNexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 
 }
 
+// Send gets the message from a nexus
 func (o OutgoingLocalNexus) Send(msg base_moneysocket.MoneysocketMessage) error {
 	isEncrypted, msgOrBytes := message.LocalEncode(msg, o.SharedSeed())
 	if isEncrypted {
@@ -64,10 +70,12 @@ func (o OutgoingLocalNexus) Send(msg base_moneysocket.MoneysocketMessage) error 
 	return nil
 }
 
+// SharedSeed gets the shared seed
 func (o OutgoingLocalNexus) SharedSeed() *beacon.SharedSeed {
 	return &o.sharedSeed
 }
 
+// RevokeFromLayer revokes a message from the layer
 func (o *OutgoingLocalNexus) RevokeFromLayer() {
 	o.Layer.RevokeNexus(o)
 }

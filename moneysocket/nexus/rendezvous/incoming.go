@@ -11,6 +11,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
+// IncomingRendezvousNexus manages rendezvous nexuses
 type IncomingRendezvousNexus struct {
 	*base.NexusBase
 	rendezvousFinishedCb func(nexus.Nexus)
@@ -20,9 +21,11 @@ type IncomingRendezvousNexus struct {
 	// TODO directory
 }
 
+// IncomingRendezvousNexusName is the nexues name
 const IncomingRendezvousNexusName = "IncomingRendezvousNexus"
 
-func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, directory *Directory) *IncomingRendezvousNexus {
+// NewIncomingRendezvousNexus creates a new IncomingRendezvousNexus
+func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Base, directory *Directory) *IncomingRendezvousNexus {
 	baseNexus := base.NewBaseNexusFull(IncomingRendezvousNexusName, belowNexus, layer)
 	og := IncomingRendezvousNexus{
 		NexusBase: &baseNexus,
@@ -34,6 +37,7 @@ func NewIncomingRendezvousNexus(belowNexus nexus.Nexus, layer layer.Layer, direc
 	return &og
 }
 
+// IsLayerMessage determines wether or not the message acn be processed by the current layer
 func (i *IncomingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMessage) bool {
 	if msg.MessageClass() != message_base.Request {
 		return false
@@ -42,10 +46,12 @@ func (i *IncomingRendezvousNexus) IsLayerMessage(msg message_base.MoneysocketMes
 	return req.MessageType() == message_base.RendezvousRequest
 }
 
+// WaitForRendezvous waits for the rendezvous
 func (i *IncomingRendezvousNexus) WaitForRendezvous(rendezvousFinishedCb func(nexus.Nexus)) {
 	i.rendezvousFinishedCb = rendezvousFinishedCb
 }
 
+// OnMessage processes the message
 func (i *IncomingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_base.MoneysocketMessage) {
 	log.Println("rdv nexus got message")
 	if !i.IsLayerMessage(msg) {
@@ -72,12 +78,13 @@ func (i *IncomingRendezvousNexus) OnMessage(belowNexus nexus.Nexus, msg message_
 	}
 }
 
+// OnBinMessage processes the binary message
 func (i *IncomingRendezvousNexus) OnBinMessage(belowNexus nexus.Nexus, msgByte []byte) {
 	log.Println("rdv nexus got raw message")
 	i.NexusBase.OnBinMessage(belowNexus, msgByte)
 }
 
-// called by other peer
+// RendezvousAcheived is called by other peer
 func (i *IncomingRendezvousNexus) RendezvousAcheived() {
 	if !i.directory.IsRidPeered(i.rendezvousID) {
 		panic("expected rendezvous to be peered")
@@ -86,6 +93,7 @@ func (i *IncomingRendezvousNexus) RendezvousAcheived() {
 	i.rendezvousFinishedCb(i)
 }
 
+// EndRendezvous ends the rendezvous
 func (i *IncomingRendezvousNexus) EndRendezvous() {
 	i.directory.RemoveNexus(i)
 	_ = i.Send(notification.NewRendezvousEnd(i.rendezvousID, ""))

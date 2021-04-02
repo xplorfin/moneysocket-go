@@ -15,22 +15,24 @@ import (
 	"github.com/xplorfin/ozzo-validators/rules"
 )
 
-// represents the data store for a single account
-type Db struct {
+// DB represents the data store for a single account
+type DB struct {
 	Details Account
 	config  *config.Config
 	// map of beacon string to most recent error when trying to connect
 	ConnectionAttempts map[string]error
 }
 
-func GetPersistedAccounts(config *config.Config) (accts []Db) {
+// GetPersistedAccounts gets a list of accounts from a file DB
+func GetPersistedAccounts(config *config.Config) (accts []DB) {
 	persistedDbs := GetAccountDbs(config)
 	accts = append(accts, persistedDbs...)
 	return accts
 }
 
-func NewAccountDb(accountName string, config *config.Config) (adb Db) {
-	adb = Db{
+// NewAccountDb creates an account db from a name/config
+func NewAccountDb(accountName string, config *config.Config) (adb DB) {
+	adb = DB{
 		ConnectionAttempts: make(map[string]error),
 		config:             config,
 		Details: Account{
@@ -53,10 +55,10 @@ func NewAccountDb(accountName string, config *config.Config) (adb Db) {
 	return adb
 }
 
-// get a list of accoutdbs from our config file
+// GetAccountDbs get a list of accoutdbs from our config file
 // in python this is an iter, but I can only assume we're not using this
 // for a large number of accounts (hopefully)
-func GetAccountDbs(configuration *config.Config) (adList []Db) {
+func GetAccountDbs(configuration *config.Config) (adList []DB) {
 	fmt.Println(configuration.GetAccountPersistDir())
 	err := filepath.Walk(configuration.GetAccountPersistDir(), func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
@@ -64,7 +66,7 @@ func GetAccountDbs(configuration *config.Config) (adList []Db) {
 			if err != nil {
 				return err
 			}
-			adList = append(adList, Db{Details: adb, config: configuration})
+			adList = append(adList, DB{Details: adb, config: configuration})
 		}
 		return err
 	})
@@ -74,14 +76,16 @@ func GetAccountDbs(configuration *config.Config) (adList []Db) {
 	return adList
 }
 
-// read an account db out of a file
+// AdbFromFile reads an account db out of a file
 func AdbFromFile(filename string) (adb Account, err error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return adb, err
 	}
 
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	byteValue, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -95,17 +99,20 @@ func AdbFromFile(filename string) (adb Account, err error) {
 	return adb, nil
 }
 
-// read account details from file
-func (a Db) readDetails() (adb Account, err error) {
+// readDetails reads account details from file
+func (a DB) readDetails() (adb Account, err error) {
 	return AdbFromFile(a.filename())
 }
 
-func (a Db) Persist() error {
+// Persist saves an account to the database
+func (a DB) Persist() error {
 	file, err := os.Create(a.filename())
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	accountDetails, err := json.Marshal(&a.Details)
 	if err != nil {
@@ -116,28 +123,29 @@ func (a Db) Persist() error {
 }
 
 // create the account db file if it doesn't already exist
-func (a Db) makeDbIfNotExists() error {
+func (a DB) makeDbIfNotExists() error {
 	if rules.IsFile(a.filename()) {
 		return nil
 	}
 	return a.Persist()
 }
 
-func (a Db) Depersist() error {
+// DePersist removes an account from the database
+func (a DB) DePersist() error {
 	return os.Remove(a.filename())
 }
 
-func (a Db) filename() string {
+func (a DB) filename() string {
 	return fmt.Sprintf("%s/%s.json", a.config.GetAccountPersistDir(), a.Details.AccountName)
 }
 
-// add a connection attempt for the current account
-func (a *Db) AddConnectionAttempt(attemptedBeacon beacon.Beacon, err error) {
+// AddConnectionAttempt adds a connection attempt to the current account
+func (a *DB) AddConnectionAttempt(attemptedBeacon beacon.Beacon, err error) {
 	a.ConnectionAttempts[attemptedBeacon.ToBech32Str()] = err
 }
 
-// get array of beacons which have disconnected
-func (a *Db) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
+// GetDisconnectedBeacons gets an array of beacons which have disconnected
+func (a *DB) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
 	for _, detailBeacon := range a.Details.Beacons {
 		beaconStr := detailBeacon.ToBech32Str()
 		if val, ok := a.ConnectionAttempts[beaconStr]; ok {
@@ -151,7 +159,8 @@ func (a *Db) GetDisconnectedBeacons() (beacons []beacon.Beacon) {
 	return beacons
 }
 
-func (a Db) GetSummaryString(locations []location.Location) (summaryStr string) {
+// GetSummaryString gets a list of all beacons/locations/etc in the database
+func (a DB) GetSummaryString(locations []location.Location) (summaryStr string) {
 	summaryStr += fmt.Sprintf("\n%s: wad: %s\n", a.Details.AccountName, a.Details.Wad.FmtLong())
 	for _, detailBeacon := range a.Details.Beacons {
 		beaconStr := detailBeacon.ToBech32Str()

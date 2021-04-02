@@ -7,11 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// NotifyOpinionInvoice message
 type NotifyOpinionInvoice struct {
 	BaseMoneySocketNotification
+	// Bolt11 is the bolt11 invoice
 	Bolt11 string
 }
 
+// NewNotifyOpinionInvoice creates a new NotifyOpinionInvoice message
 func NewNotifyOpinionInvoice(requestUUID, bolt11 string) NotifyOpinionInvoice {
 	return NotifyOpinionInvoice{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyOpinionInvoice, requestUUID),
@@ -19,9 +22,10 @@ func NewNotifyOpinionInvoice(requestUUID, bolt11 string) NotifyOpinionInvoice {
 	}
 }
 
+// ToJSON converts a NotifyOpinionInvoice to a json payload
 func (n NotifyOpinionInvoice) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
-	err := EncodeMoneysocketNotification(n, m)
+	err := EncodeMoneySocketNotification(n, m)
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +33,7 @@ func (n NotifyOpinionInvoice) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
+// DecodeNotifyOpinionInvoice creates a new NotifyOpinionInvoice from a payload
 func DecodeNotifyOpinionInvoice(payload []byte) (NotifyOpinionInvoice, error) {
 	notification, err := DecodeRequest(payload)
 	if err != nil {

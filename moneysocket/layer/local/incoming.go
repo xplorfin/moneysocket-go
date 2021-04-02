@@ -7,10 +7,12 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/local"
 )
 
+// IncomingLocalLayer is the incoming local layer
 type IncomingLocalLayer struct {
 	layer.BaseLayer
 }
 
+// NewIncomingLocalLayer creates a new incoming local layer
 func NewIncomingLocalLayer() *IncomingLocalLayer {
 	return &IncomingLocalLayer{
 		BaseLayer: layer.NewBaseLayer(),
@@ -18,7 +20,7 @@ func NewIncomingLocalLayer() *IncomingLocalLayer {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (i *IncomingLocalLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (i *IncomingLocalLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(i.AnnounceNexus)
 	belowLayer.SetOnRevoke(i.RevokeNexus)
 }

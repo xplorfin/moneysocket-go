@@ -11,13 +11,16 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
-// TODO this needs to be fully implemented
+// OutgoingWebsocketLayer processes outgoing websocket connections
 type OutgoingWebsocketLayer struct {
 	layer.BaseLayer
-	NexusBySharedSeed      layer.NexusStringMap
+	// NexusBySharedSeed trackers nexuses by shared seed
+	NexusBySharedSeed layer.NexusStringMap
+	// OutgoingSocketProtocol
 	OutgoingSocketProtocol *nws.OutgoingSocket
 }
 
+// NewOutgoingWebsocketLayer creates a OutgoingWebsocketLayer
 func NewOutgoingWebsocketLayer() *OutgoingWebsocketLayer {
 	outgoingSocket := nws.NewOutgoingSocket()
 	os := OutgoingWebsocketLayer{
@@ -43,6 +46,7 @@ func (o *OutgoingWebsocketLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
+// Connect connects to the outgoing layer
 func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, seed *beacon.SharedSeed) (*nws.OutgoingSocket, error) {
 	o.OutgoingSocketProtocol.FactoryMsProtocolLayer = o
 	o.OutgoingSocketProtocol.OutgoingSharedSeed = seed
@@ -54,11 +58,12 @@ func (o *OutgoingWebsocketLayer) Connect(location location.WebsocketLocation, se
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Layer) {
+func (o *OutgoingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.OnAnnounce)
 	belowLayer.SetOnRevoke(o.OnRevoke)
 }
 
+// InitiateCloseAll closes all nexuses associated with the layer
 func (o *OutgoingWebsocketLayer) InitiateCloseAll() {
 	o.Nexuses.Range(func(key uuid.UUID, nexus nexus.Nexus) bool {
 		nexus.InitiateClose()
@@ -66,4 +71,4 @@ func (o *OutgoingWebsocketLayer) InitiateCloseAll() {
 	})
 }
 
-var _ layer.Layer = &OutgoingWebsocketLayer{}
+var _ layer.Base = &OutgoingWebsocketLayer{}

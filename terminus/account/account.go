@@ -7,34 +7,42 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/wad"
 )
 
-// represents a terminus account
+// Account represents a terminus account
 type Account struct {
-	AccountName string  `json:"account_name"`
-	AccountUUID string  `json:"account_uuid"`
-	Wad         wad.Wad `json:"wad"`
-	// pending TODO
+	// AccountName is the name of the account
+	AccountName string `json:"account_name"`
+	// AccountUUID is the uuid for the account
+	AccountUUID string `json:"account_uuid"`
+	// Wad is the wad used by the account
+	Wad wad.Wad `json:"wad"`
+	// SharedSeeds is a list of shared seeds nicluded with the account
 	SharedSeeds []beacon.SharedSeed `json:"shared_seeds"`
-	Beacons     []beacon.Beacon     `json:"beacons"`
+	// Beacons is a list of beacons associated with the account
+	Beacons []beacon.Beacon `json:"beacons"`
 }
 
+// AddBeacon adds a beacon to the account
 func (a *Account) AddBeacon(newBeacon beacon.Beacon) {
 	a.Beacons = append(a.Beacons, newBeacon)
 }
 
-// wether or not account is payer, always true in terminus
+// Payer is whether or not account is payer, always true in terminus
 func (a *Account) Payer() bool {
 	return true
 }
 
-// wether or not account is payee, always true in terminus
+// Payee is whether or not account is payee, always true in terminus
 func (a *Account) Payee() bool {
 	return true
 }
 
+// Ready determines if an account is ready for use. Right now this always
+// returns true since the account's only use files right now
 func (a *Account) Ready() bool {
 	return true
 }
 
+// RemoveBeacon removes a beacon from the Account
 func (a *Account) RemoveBeacon(toRemove beacon.Beacon) {
 	for index, tmpBeacon := range a.Beacons {
 		if toRemove.ToBech32Str() == tmpBeacon.ToBech32Str() {
@@ -43,10 +51,12 @@ func (a *Account) RemoveBeacon(toRemove beacon.Beacon) {
 	}
 }
 
+// AddSharedSeed adds a shared seed from the account
 func (a *Account) AddSharedSeed(ss beacon.SharedSeed) {
 	a.SharedSeeds = append(a.SharedSeeds, ss)
 }
 
+// RemoveSharedSeed removes a shared seed from the account
 func (a *Account) RemoveSharedSeed(ss beacon.SharedSeed) {
 	for index, tmpSeed := range a.SharedSeeds {
 		if ss.Equal(tmpSeed) {
@@ -55,6 +65,7 @@ func (a *Account) RemoveSharedSeed(ss beacon.SharedSeed) {
 	}
 }
 
+// UnmarshalJSON decodes an account from a json payload
 func (a *Account) UnmarshalJSON(b []byte) (err error) {
 	type AccountJSON struct {
 		AccountName string  `json:"account_name"`
@@ -91,6 +102,7 @@ func (a *Account) UnmarshalJSON(b []byte) (err error) {
 	return err
 }
 
+// MarshalJSON encodes an Account as a json payload
 func (a *Account) MarshalJSON() ([]byte, error) {
 	type Alias Account
 	// overwrite struct fields with converted counterparts
