@@ -2,7 +2,6 @@ package lightning
 
 import (
 	"crypto/tls"
-	"github.com/lightningnetwork/lnd/lnrpc"
 	"testing"
 
 	. "github.com/stretchr/testify/assert"
@@ -155,6 +154,7 @@ func TestLnd(t *testing.T) {
 	// create bob lnd node
 	bobLnd, err := NewLnd(&terminusConfig.Config{LndConfig: bob.LndConfig()})
 	Nil(t, err)
+
 	_, _, err = bobLnd.PayInvoice(payRequest)
 	Nil(t, err)
 }
