@@ -2,6 +2,7 @@ package lightning
 
 import (
 	"crypto/tls"
+	// nolint
 	"github.com/lightningnetwork/lnd/lnrpc"
 	"testing"
 

@@ -20,7 +20,8 @@ linters:
   disable:
     # Global variables are used in many places throughout the code base.
     - gochecknoglobals
-
+    # interfes with goimports
+    - gci
     # Some lines are over 80 characters on purpose and we don't want to make them
     # even longer by marking them as 'nolint'.
     - lll
