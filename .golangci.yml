@@ -17,14 +17,6 @@ linters-settings:
     simplify: true
 
 linters:
-#  enable:
-#    - gofmt
-#    - govet
-#    - gosimple
-#    - unconvert
-#    - goimports
-#    - golint
-#    - misspell
   disable:
     # Global variables are used in many places throughout the code base.
     - gochecknoglobals
