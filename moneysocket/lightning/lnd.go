@@ -8,7 +8,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 )
 
-// Lnd is the Lightning interface for lnd
+// Lnd is the Lightning interface for lnd.
 type Lnd struct {
 	// config contains the terminus config
 	config *config.Config
@@ -21,7 +21,7 @@ type Lnd struct {
 }
 
 // NewLnd generates a new lnd client from a given config
-// TODO use streaming for invoices
+// TODO use streaming for invoices.
 func NewLnd(config *config.Config) (lnd *Lnd, err error) {
 	client, err := config.LndConfig.RPCClient(context.Background())
 	if err != nil {
@@ -35,17 +35,17 @@ func NewLnd(config *config.Config) (lnd *Lnd, err error) {
 	}, nil
 }
 
-// RecvPaid receives an invoice payment
+// RecvPaid receives an invoice payment.
 func (l *Lnd) RecvPaid(preimage string, msats int) {
 	l.paidRecvCb(preimage, msats)
 }
 
-// RegisterPaidRecvCb registers the callback
+// RegisterPaidRecvCb registers the callback.
 func (l *Lnd) RegisterPaidRecvCb(callback PaidCallback) {
 	l.paidRecvCb = callback
 }
 
-// GetInvoice gets an invoice (paymentRequest) fora given amount msatAmount
+// GetInvoice gets an invoice (paymentRequest) fora given amount msatAmount.
 func (l *Lnd) GetInvoice(msatAmount int) (paymentRequest string, err error) {
 	log.Printf("getting invoice %d msats", msatAmount)
 
@@ -64,7 +64,7 @@ func (l *Lnd) GetInvoice(msatAmount int) (paymentRequest string, err error) {
 	return resp.PaymentRequest, err
 }
 
-// PayInvoice sends a payment for a bolt-11 invoice
+// PayInvoice sends a payment for a bolt-11 invoice.
 func (l *Lnd) PayInvoice(bolt11 string) (preimage []byte, msatAmount int, err error) {
 	log.Printf("paying invoice %s", bolt11)
 	// TODO figure out deprecation status hre

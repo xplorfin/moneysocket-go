@@ -6,7 +6,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// MoneysocketRequest is an interface for requests
+// MoneysocketRequest is an interface for requests.
 type MoneysocketRequest interface {
 	base.MoneysocketMessage
 	// UUID is the uuid of the of the request
@@ -17,7 +17,7 @@ type MoneysocketRequest interface {
 	MessageType() base.MessageType
 }
 
-// BaseMoneySocketRequest is a moneysocket request
+// BaseMoneySocketRequest is a moneysocket request.
 type BaseMoneySocketRequest struct {
 	base.MoneysocketMessage
 	// BaseUUID is the uuid of the request
@@ -26,34 +26,34 @@ type BaseMoneySocketRequest struct {
 	RequestType base.MessageType
 }
 
-// MessageClass is the base.MessageClass. This is always base.Request
+// MessageClass is the base.MessageClass. This is always base.Request.
 func (b BaseMoneySocketRequest) MessageClass() base.MessageClass {
 	return base.Request
 }
 
-// UUID is the uuid of the BaseMoneySocketRequest
+// UUID is the uuid of the BaseMoneySocketRequest.
 func (b BaseMoneySocketRequest) UUID() string {
 	return b.BaseUUID
 }
 
-// RequestName gets the request name from the MessageClass
+// RequestName gets the request name from the MessageClass.
 func (b BaseMoneySocketRequest) RequestName() string {
 	return b.MessageType().ToString()
 }
 
-// MessageType gets the message type
+// MessageType gets the message type.
 func (b BaseMoneySocketRequest) MessageType() base.MessageType {
 	return b.RequestType
 }
 
 const (
-	// UUIDKey is the key used when encoding json
+	// UUIDKey is the key used when encoding json.
 	UUIDKey = "request_uuid"
-	// NameKey is the key used for encoding json
+	// NameKey is the key used for encoding json.
 	NameKey = "request_name"
 )
 
-// EncodeMoneysocketRequest creates a moneysocket request
+// EncodeMoneysocketRequest creates a moneysocket request.
 func EncodeMoneysocketRequest(msg MoneysocketRequest, toEncode map[string]interface{}) error {
 	err := base.EncodeMoneysocketMessage(msg, toEncode)
 	if err != nil {
@@ -64,7 +64,7 @@ func EncodeMoneysocketRequest(msg MoneysocketRequest, toEncode map[string]interf
 	return nil
 }
 
-// NewBaseMoneySocketRequest generates a new base moneysocket request. Should only be used by other message classes
+// NewBaseMoneySocketRequest generates a new base moneysocket request. Should only be used by other message classes.
 func NewBaseMoneySocketRequest(requestType base.MessageType) BaseMoneySocketRequest {
 	return BaseMoneySocketRequest{
 		base.NewBaseBaseMoneysocketMessage(base.Request),
@@ -73,7 +73,7 @@ func NewBaseMoneySocketRequest(requestType base.MessageType) BaseMoneySocketRequ
 	}
 }
 
-// DecodeRequest decodes a base moneysocket request
+// DecodeRequest decodes a base moneysocket request.
 func DecodeRequest(request []byte) (b BaseMoneySocketRequest, err error) {
 	baseMessage, err := base.DecodeBaseBaseMoneysocketMessage(request)
 	if err != nil {

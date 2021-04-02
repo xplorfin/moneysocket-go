@@ -7,14 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/rendezvous"
 )
 
-// IncomingRendezvousLayer is responsible for managing rendezvous' between peernexuses
+// IncomingRendezvousLayer is responsible for managing rendezvous' between peernexuses.
 type IncomingRendezvousLayer struct {
 	*layer.BaseLayer
 	// directory is used for peering nexuses
 	directory *rendezvous.Directory
 }
 
-// NewIncomingRendezvousLayer creates an IncomingRendezvousLayer
+// NewIncomingRendezvousLayer creates an IncomingRendezvousLayer.
 func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
 	baseLayer := layer.NewBaseLayer()
 	il := IncomingRendezvousLayer{
@@ -26,7 +26,7 @@ func NewIncomingRendezvousLayer() *IncomingRendezvousLayer {
 	return &il
 }
 
-// AnnounceNexus creates a new rendezvous.IncomingRendezvousNexus and registers it
+// AnnounceNexus creates a new rendezvous.IncomingRendezvousNexus and registers it.
 func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus := rendezvous.NewIncomingRendezvousNexus(belowNexus, o, o.directory)
 
@@ -34,13 +34,13 @@ func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	rendezvousNexus.WaitForRendezvous(o.RendezvousFinishedCb)
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
-// RendezvousFinishedCb is the callback for after a rendezvous is finished
+// RendezvousFinishedCb is the callback for after a rendezvous is finished.
 func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nexus) {
 	o.TrackNexusAnnounced(rendezvousNexus)
 	o.SendLayerEvent(rendezvousNexus, message.NexusAnnounced)
@@ -49,12 +49,12 @@ func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nex
 	}
 }
 
-// ToString converts a directory to a string
+// ToString converts a directory to a string.
 func (o *IncomingRendezvousLayer) ToString() string {
 	return o.directory.ToString()
 }
 
-// RevokeNexus removes the nexus from directories/layers
+// RevokeNexus removes the nexus from directories/layers.
 func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	belowUUID, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	rendezvousNexus, _ := o.Nexuses.Get(belowUUID)
@@ -67,7 +67,7 @@ func (o *IncomingRendezvousLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-// GetPeerNexus is the gets the peered nexus from the directory for a nexus (using uuid)
+// GetPeerNexus is the gets the peered nexus from the directory for a nexus (using uuid).
 func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) *nexus.Nexus {
 	return o.directory.GetPeerNexus(rendezvousNexus.UUID())
 }

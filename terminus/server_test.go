@@ -5,13 +5,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"github.com/xplorfin/filet"
 	"github.com/xplorfin/moneysocket-go/moneysocket/config"
 	nettest "github.com/xplorfin/netutils/testutils"
 )
 
-// create a new test server on port specified in config.port on localhost for testing
+// create a new test server on port specified in config.port on localhost for testing.
 func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config) {
 	configuration = config.NewConfig()
 	configuration.AccountPersistDir = filet.TmpDir(t, "")
@@ -25,7 +24,7 @@ func GetTestServer(t *testing.T) (server Terminus, configuration *config.Config)
 	return server, configuration
 }
 
-// start a test server on port specified in config on server
+// start a test server on port specified in config on server.
 func GetStartedTestServer(t *testing.T) (server Terminus, config *config.Config) {
 	server, config = GetTestServer(t)
 	go func() {

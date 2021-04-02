@@ -16,7 +16,7 @@ type RelayConfigTest struct {
 	config RelayConfig
 }
 
-// test variations where tls is false
+// test variations where tls is false.
 func makeTLSFalseVariations(t *testing.T) []RelayConfigTest {
 	return []RelayConfigTest{
 		{
@@ -61,7 +61,7 @@ func makeTLSFalseVariations(t *testing.T) []RelayConfigTest {
 	}
 }
 
-// test variations where tls is false
+// test variations where tls is false.
 func makeCertVariations(t *testing.T) []RelayConfigTest {
 	validCertFile, validKeyFile := tlsmock.TemporaryCert(t)
 	chainFile, serverCertFile, serverKeyFile := tlsmock.TemporaryCertInChain(t)

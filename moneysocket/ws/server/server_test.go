@@ -10,7 +10,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// TODO test stuff in here
+// TODO test stuff in here.
 func TestListenUnsecure(t *testing.T) {
 	g, _ := errgroup.WithContext(context.Background())
 

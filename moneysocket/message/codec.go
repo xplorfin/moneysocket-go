@@ -10,13 +10,13 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 )
 
-// IsCypherText checks if string is cipher (in actuality, this method checks whether a string is not json)
+// IsCypherText checks if string is cipher (in actuality, this method checks whether a string is not json).
 func IsCypherText(text []byte) bool {
 	var js map[string]interface{}
 	return json.Unmarshal(text, &js) != nil
 }
 
-// WireEncode encodes a message, encrypt if shared seed is present
+// WireEncode encodes a message, encrypt if shared seed is present.
 func WireEncode(msg base.MoneysocketMessage, ss *beacon.SharedSeed) ([]byte, error) {
 	encoded, err := msg.ToJSON()
 	if err != nil {
@@ -30,7 +30,7 @@ func WireEncode(msg base.MoneysocketMessage, ss *beacon.SharedSeed) ([]byte, err
 	return encryptedString, err
 }
 
-// WireDecode decodes a message from a moneysocket message
+// WireDecode decodes a message from a moneysocket message.
 func WireDecode(msgBytes []byte, sharedSeed *beacon.SharedSeed) (msg base.MoneysocketMessage, msgType base.MessageType, err error) {
 	isCypherText := IsCypherText(msgBytes)
 
@@ -66,7 +66,7 @@ func WireDecode(msgBytes []byte, sharedSeed *beacon.SharedSeed) (msg base.Moneys
 	}
 }
 
-// LocalEncode encodes a message
+// LocalEncode encodes a message.
 func LocalEncode(msg base.MoneysocketMessage, sharedSeed *beacon.SharedSeed) (encoded bool, msgBytes []byte) {
 	msgBytes, err := msg.ToJSON()
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
-// TransactLayer handles transactions
+// TransactLayer handles transactions.
 type TransactLayer struct {
 	layer.BaseLayer
 	handleInvoiceRequest      compat.HandleInvoiceRequest
@@ -20,33 +20,33 @@ type TransactLayer struct {
 	NexusBySharedSeed compat.NexusBySharedSeed
 }
 
-// HandleProviderInfoRequest handles info requests
+// HandleProviderInfoRequest handles info requests.
 func (p *TransactLayer) HandleProviderInfoRequest(seed beacon.SharedSeed) account.DB {
 	return p.handleProviderInfoRequest(seed)
 }
 
-// HandlePayRequest handles payment requests
+// HandlePayRequest handles payment requests.
 func (p *TransactLayer) HandlePayRequest(nexus nexus.Nexus, bolt11, requestUUID string) {
 	p.handlePayRequest(nexus, bolt11, requestUUID)
 }
 
-// HandleInvoiceRequest gets an invoice
+// HandleInvoiceRequest gets an invoice.
 func (p *TransactLayer) HandleInvoiceRequest(nexus nexus.Nexus, msats int64, requestUUID string) {
 	p.handleInvoiceRequest(nexus, msats, requestUUID)
 }
 
-// SetHandleInvoiceRequest sets an invoice request
+// SetHandleInvoiceRequest sets an invoice request.
 func (p *TransactLayer) SetHandleInvoiceRequest(request compat.HandleInvoiceRequest) {
 	p.handleInvoiceRequest = request
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (p *TransactLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(p.AnnounceNexus)
 	belowLayer.SetOnRevoke(p.OnRevoke)
 }
 
-// NewProviderTransactLayer creates a TransactLayer
+// NewProviderTransactLayer creates a TransactLayer.
 func NewProviderTransactLayer() *TransactLayer {
 	return &TransactLayer{
 		BaseLayer:         layer.NewBaseLayer(),
@@ -54,7 +54,7 @@ func NewProviderTransactLayer() *TransactLayer {
 	}
 }
 
-// AnnounceNexus announces a nexus
+// AnnounceNexus announces a nexus.
 func (p *TransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	// setup the transaction nexus
 	providerTransactNexus := p.setupTransactNexus(belowNexus)
@@ -72,7 +72,7 @@ func (p *TransactLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	p.NexusBySharedSeed[sharedSeed.ToString()] = append(p.NexusBySharedSeed[sharedSeed.ToString()], providerTransactNexus)
 }
 
-// create a transact nexus
+// create a transact nexus.
 func (p *TransactLayer) setupTransactNexus(belowNexus nexus.Nexus) *provider.TransactNexus {
 	providerTransactNexus := provider.NewProviderTransactNexus(belowNexus, p)
 	providerTransactNexus.HandleInvoiceRequest = p.handleInvoiceRequest
@@ -80,7 +80,7 @@ func (p *TransactLayer) setupTransactNexus(belowNexus nexus.Nexus) *provider.Tra
 	return providerTransactNexus
 }
 
-// RevokeNexus revokes a nexus
+// RevokeNexus revokes a nexus.
 func (p *TransactLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	belowUUID, _ := p.NexusByBelow.Get(belowNexus.UUID())
 	providerTransactNexus, _ := p.Nexuses.Get(belowUUID)
@@ -95,7 +95,7 @@ func (p *TransactLayer) RevokeNexus(belowNexus nexus.Nexus) {
 	p.NexusBySharedSeed[sharedSeed.ToString()] = append(p.NexusBySharedSeed[sharedSeed.ToString()][:nexusIndex], p.NexusBySharedSeed[sharedSeed.ToString()][nexusIndex:]...)
 }
 
-// FulfilRequestInvoice pays a request invoice
+// FulfilRequestInvoice pays a request invoice.
 func (p *TransactLayer) FulfilRequestInvoice(nexusUUID, bolt11, requestReferenceUUID string) error {
 	nexusID, _ := uuid.FromBytes([]byte(nexusUUID))
 	if nx, ok := p.Nexuses.Get(nexusID); ok {
@@ -105,7 +105,7 @@ func (p *TransactLayer) FulfilRequestInvoice(nexusUUID, bolt11, requestReference
 	return nil
 }
 
-// NotifyPreImage notifies a preimage
+// NotifyPreImage notifies a preimage.
 func (p *TransactLayer) NotifyPreImage(sharedSeeds []beacon.SharedSeed, preimage, requestReferenceUUID string) {
 	for _, sharedSeed := range sharedSeeds {
 		if _, ok := p.NexusBySharedSeed[sharedSeed.ToString()]; ok {
@@ -118,7 +118,7 @@ func (p *TransactLayer) NotifyPreImage(sharedSeeds []beacon.SharedSeed, preimage
 	}
 }
 
-// NotifyProviderInfo notifies a provider info
+// NotifyProviderInfo notifies a provider info.
 func (p *TransactLayer) NotifyProviderInfo(sharedSeeds []beacon.SharedSeed) {
 	for _, sharedSeed := range sharedSeeds {
 		if _, ok := p.NexusBySharedSeed[sharedSeed.ToString()]; ok {
@@ -133,5 +133,5 @@ func (p *TransactLayer) NotifyProviderInfo(sharedSeeds []beacon.SharedSeed) {
 
 var _ layer.Base = &TransactLayer{}
 
-// use an interface to call methods in the nexus
+// use an interface to call methods in the nexus.
 var _ compat.ProviderTransactLayerInterface = &TransactLayer{}

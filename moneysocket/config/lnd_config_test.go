@@ -13,7 +13,7 @@ import (
 	mock "github.com/xplorfin/lndmock"
 )
 
-// Copy copies the LndConfig for testing
+// Copy copies the LndConfig for testing.
 func (l LndConfig) Copy(t *testing.T) LndConfig {
 	var newConfig LndConfig
 	err := copier.Copy(&newConfig, &l)

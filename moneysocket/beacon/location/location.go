@@ -2,7 +2,7 @@ package location
 
 import "github.com/lightningnetwork/lnd/tlv"
 
-// Location defines an interface for various Location types
+// Location defines an interface for various Location types.
 type Location interface {
 	// Type gets the tlv.Type for a given location
 	Type() tlv.Type

@@ -6,7 +6,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 )
 
-// FromText generates a moneysocket message from a layer
+// FromText generates a moneysocket message from a layer.
 func FromText(payload []byte) (base.MoneysocketMessage, base.MessageType, error) {
 	class, err := jsonparser.GetString(payload, MessageClass)
 	if err != nil {

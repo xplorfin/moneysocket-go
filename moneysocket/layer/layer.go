@@ -5,16 +5,16 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-// OnLayerEventFn is a function downstream layers call on an event
+// OnLayerEventFn is a function downstream layers call on an event.
 type OnLayerEventFn = func(layerName string, nexus nexusHelper.Nexus, event string)
 
-// OnAnnounceFn is the announce function for the nexus
+// OnAnnounceFn is the announce function for the nexus.
 type OnAnnounceFn = func(nexus nexusHelper.Nexus)
 
-// OnRevokeFn is the revoke function for the nexus
+// OnRevokeFn is the revoke function for the nexus.
 type OnRevokeFn = func(nexus nexusHelper.Nexus)
 
-// Base is the base class for all layers
+// Base is the base class for all layers.
 type Base interface {
 	// SetOnLayerEvent set on layer event
 	SetOnLayerEvent(o OnLayerEventFn)
@@ -42,7 +42,7 @@ type Base interface {
 	RevokeNexus(belowNexus nexusHelper.Nexus)
 }
 
-// BaseLayer is used as a superclass for layers
+// BaseLayer is used as a superclass for layers.
 type BaseLayer struct {
 	// LayerName is the name of the current layer this is
 	// a string rather than a method call to make debugging easier
@@ -66,28 +66,28 @@ type BaseLayer struct {
 	BelowByNexus NexusUUIDMap
 }
 
-// SetOnLayerEvent sets the layer event
+// SetOnLayerEvent sets the layer event.
 func (l *BaseLayer) SetOnLayerEvent(o OnLayerEventFn) {
 	l.OnLayerEvent = o
 }
 
-// SetOnAnnounce sets an on announce function
+// SetOnAnnounce sets an on announce function.
 func (l *BaseLayer) SetOnAnnounce(o OnAnnounceFn) {
 	l.OnAnnounce = o
 }
 
-// SetOnRevoke sets the revoke callback
+// SetOnRevoke sets the revoke callback.
 func (l *BaseLayer) SetOnRevoke(o OnRevokeFn) {
 	l.OnRevoke = o
 }
 
-// RegisterLayerEvent registers the layer event
+// RegisterLayerEvent registers the layer event.
 func (l *BaseLayer) RegisterLayerEvent(fn OnLayerEventFn, layerName string) {
 	l.LayerName = layerName
 	l.OnLayerEvent = fn
 }
 
-// TrackNexus trackers the nexus
+// TrackNexus trackers the nexus.
 func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
 	l.Nexuses.Store(nexus.UUID(), nexus)
 	l.BelowNexuses.Store(belowNexus.UUID(), belowNexus)
@@ -96,7 +96,7 @@ func (l *BaseLayer) TrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.N
 	l.SendLayerEvent(nexus, message.NexusCreated)
 }
 
-// UntrackNexus untracks the nexus
+// UntrackNexus untracks the nexus.
 func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper.Nexus) {
 	l.Nexuses.Delete(nexus.UUID())
 	l.BelowByNexus.Delete(belowNexus.UUID())
@@ -105,12 +105,12 @@ func (l *BaseLayer) UntrackNexus(nexus nexusHelper.Nexus, belowNexus nexusHelper
 	l.SendLayerEvent(nexus, message.NexusDestroyed)
 }
 
-// TrackNexusAnnounced tracks the nexus
+// TrackNexusAnnounced tracks the nexus.
 func (l *BaseLayer) TrackNexusAnnounced(nexus nexusHelper.Nexus) {
 	l.Announced.Store(nexus.UUID(), nexus)
 }
 
-// IsNexusAnnounced determines wether or not a given nexus has been announced
+// IsNexusAnnounced determines wether or not a given nexus has been announced.
 func (l *BaseLayer) IsNexusAnnounced(nexus nexusHelper.Nexus) bool {
 	if _, ok := l.Announced.Get(nexus.UUID()); ok {
 		return true
@@ -118,21 +118,21 @@ func (l *BaseLayer) IsNexusAnnounced(nexus nexusHelper.Nexus) bool {
 	return false
 }
 
-// SendLayerEvent sends an event up the chain
+// SendLayerEvent sends an event up the chain.
 func (l *BaseLayer) SendLayerEvent(nexus nexusHelper.Nexus, status string) {
 	if l.OnLayerEvent != nil {
 		l.OnLayerEvent(l.LayerName, nexus, status)
 	}
 }
 
-// TrackNexusRevoked tracks that a nexus has been revoked
+// TrackNexusRevoked tracks that a nexus has been revoked.
 func (l *BaseLayer) TrackNexusRevoked(nexus nexusHelper.Nexus) {
 	if l.IsNexusAnnounced(nexus) {
 		l.Announced.Delete(nexus.UUID())
 	}
 }
 
-// RevokeNexus removes the nexus from directories/layers
+// RevokeNexus removes the nexus from directories/layers.
 func (l *BaseLayer) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	belowUUID, _ := l.NexusByBelow.Get(belowNexus.UUID())
 	nexus, _ := l.Nexuses.Get(belowUUID)
@@ -146,7 +146,7 @@ func (l *BaseLayer) RevokeNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
-// NewBaseLayer creates a new base layer, note you still have to call register_above nexus
+// NewBaseLayer creates a new base layer, note you still have to call register_above nexus.
 func NewBaseLayer() BaseLayer {
 	return BaseLayer{
 		Nexuses:      NexusMap{},

@@ -13,7 +13,7 @@ import (
 // TLV is used for encoding/decoding values to/from TLV (Type-Length-Value) byte strings
 // as defined in: https://git.io/JmwOl
 // note: I tried to use the golang implementation, but didn't quite get the streaming encodes/decodes to work.
-// this can be fixed in a future version
+// this can be fixed in a future version.
 type TLV struct {
 	// t represents the type
 	t tlvHelper.Type
@@ -23,23 +23,23 @@ type TLV struct {
 	v []byte
 }
 
-// Type get tlv.type
+// Type get tlv.type.
 func (tlv TLV) Type() tlvHelper.Type {
 	return tlv.t
 }
 
-// Length gets l of tlv.t
+// Length gets l of tlv.t.
 func (tlv TLV) Length() int {
 	return tlv.l
 }
 
-// Value gets value of tlv
+// Value gets value of tlv.
 func (tlv TLV) Value() []byte {
 	return tlv.v
 }
 
 // TLVPop returns the first TLV from a byteString and returns the remainder
-// returns error if this cannot be done
+// returns error if this cannot be done.
 func TLVPop(byteString []byte) (tlv TLV, remainder []byte, err error) {
 	t, byteString, err := bigsize.GetTLVType(byteString)
 	if err != nil {

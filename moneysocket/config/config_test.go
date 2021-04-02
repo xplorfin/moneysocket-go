@@ -10,7 +10,7 @@ import (
 	tlsmock "github.com/xplorfin/tlsutils/mock"
 )
 
-// TestGetters tests the getter methods for the config files
+// TestGetters tests the getter methods for the config files.
 func TestGetters(t *testing.T) {
 	chainFile, serverCertFile, serverKeyFile := tlsmock.TemporaryCertInChain(t)
 	accountDir := filet.TmpDir(t, "")

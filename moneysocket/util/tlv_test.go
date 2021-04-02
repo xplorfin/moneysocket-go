@@ -10,7 +10,7 @@ import (
 	"github.com/lightningnetwork/lnd/tlv"
 )
 
-// asserts tlv encoder that produces bytes works correctly
+// asserts tlv encoder that produces bytes works correctly.
 func TestTlvRecordToBytes(t *testing.T) {
 	gofakeit.Seed(0)
 	if !PrngIsAvailable() {

@@ -1,6 +1,6 @@
 package wad
 
-// CryptoCurrency is a list of supported currencies
+// CryptoCurrency is a list of supported currencies.
 var CryptoCurrency = CurrencyMap{
 	"LTC": {
 		Code: "LTC",

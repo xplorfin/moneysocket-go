@@ -8,7 +8,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/local"
 )
 
-// OutgoingLocalLayer handles websocket connections
+// OutgoingLocalLayer handles websocket connections.
 type OutgoingLocalLayer struct {
 	layer.BaseLayer
 	// IncomingLocalLayer processes incoming websockets
@@ -19,7 +19,7 @@ type OutgoingLocalLayer struct {
 	IncomingBySharedSeed map[string]nexus.Nexus
 }
 
-// NewOutgoingLocalLayer creates a new OutgoingLocalLayer
+// NewOutgoingLocalLayer creates a new OutgoingLocalLayer.
 func NewOutgoingLocalLayer() OutgoingLocalLayer {
 	return OutgoingLocalLayer{
 		BaseLayer:            layer.NewBaseLayer(),
@@ -28,13 +28,13 @@ func NewOutgoingLocalLayer() OutgoingLocalLayer {
 	}
 }
 
-// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
+// RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer.
 func (o *OutgoingLocalLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
 
-// AnnounceNexus creates a new local.LocalNexus and registers it
+// AnnounceNexus creates a new local.LocalNexus and registers it.
 func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	localNexus := local.NewLocalNexus(belowNexus, o)
 
@@ -46,12 +46,12 @@ func (o *OutgoingLocalLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 	}
 }
 
-// SetIncomingLayer sets the incoming layer to pass messages to
+// SetIncomingLayer sets the incoming layer to pass messages to.
 func (o *OutgoingLocalLayer) SetIncomingLayer(incomingLayer layer.Base) {
 	o.IncomingLocalLayer = incomingLayer
 }
 
-// Connect connects an incoming and outgoing nexus
+// Connect connects an incoming and outgoing nexus.
 func (o *OutgoingLocalLayer) Connect(sharedSeed beacon.SharedSeed) {
 	joinedNexus := local.NewJoinedLocalNexus()
 	outgoingNexus := local.NewOutgoingLocalNexus(joinedNexus, o, sharedSeed)
@@ -65,7 +65,7 @@ func (o *OutgoingLocalLayer) Connect(sharedSeed beacon.SharedSeed) {
 	o.AnnounceNexus(outgoingNexus)
 }
 
-// Disconnect revokes incoming/outgoing connection
+// Disconnect revokes incoming/outgoing connection.
 func (o *OutgoingLocalLayer) Disconnect(sharedSeed beacon.SharedSeed) {
 	outgoingNexus := o.OutgoingBySharedSeed[sharedSeed.ToString()]
 	incomingNexus := o.IncomingBySharedSeed[sharedSeed.ToString()]
@@ -75,5 +75,5 @@ func (o *OutgoingLocalLayer) Disconnect(sharedSeed beacon.SharedSeed) {
 	o.RevokeNexus(outgoingNexus)
 }
 
-// statically assert outgoing layer matches layer interface
+// statically assert outgoing layer matches layer interface.
 var _ layer.Base = &OutgoingLocalLayer{}

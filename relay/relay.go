@@ -13,7 +13,7 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-// Relay relays messages to/from terminus
+// Relay relays messages to/from terminus.
 type Relay struct {
 	// config is the terminus config used for starting the relay.
 	// technically, we could use config.RelayConfig here, as nothing else is (should be) used
@@ -26,7 +26,7 @@ type Relay struct {
 	relayLayer *relay.Layer
 }
 
-// NewRelay creates a new relay from a config and starts a looping info call
+// NewRelay creates a new relay from a config and starts a looping info call.
 func NewRelay(config *config.Config) Relay {
 	r := Relay{}
 	r.config = config
@@ -37,12 +37,12 @@ func NewRelay(config *config.Config) Relay {
 	return r
 }
 
-// OnStackEvent is used for any events that bubble up to Relay
+// OnStackEvent is used for any events that bubble up to Relay.
 func (r *Relay) OnStackEvent(layerName string, nexus nexusHelper.Nexus, event string) {
 	// do nothing for now
 }
 
-// OutputInfo gets nexus count on a relay
+// OutputInfo gets nexus count on a relay.
 func (r *Relay) OutputInfo() {
 	for {
 		<-time.After(2 * time.Second)
@@ -50,14 +50,14 @@ func (r *Relay) OutputInfo() {
 	}
 }
 
-// SetupWebsocketLayer sets up a websocket.WebsocketLayer and registers it
+// SetupWebsocketLayer sets up a websocket.WebsocketLayer and registers it.
 func (r *Relay) SetupWebsocketLayer() *Relay {
 	r.websocketLayer = websocket.NewIncomingWebsocketLayer(r.config)
 	r.websocketLayer.RegisterLayerEvent(r.OnStackEvent, message.IncomingWebsocket)
 	return r
 }
 
-// SetupRendezvousLayer sets up a rendezvous.Rendezvous layer and registers it
+// SetupRendezvousLayer sets up a rendezvous.Rendezvous layer and registers it.
 func (r *Relay) SetupRendezvousLayer(belowLayer layer.Base) *Relay {
 	r.rendezvousLayer = rendezvous.NewIncomingRendezvousLayer()
 	r.rendezvousLayer.RegisterAboveLayer(belowLayer)
@@ -65,7 +65,7 @@ func (r *Relay) SetupRendezvousLayer(belowLayer layer.Base) *Relay {
 	return r
 }
 
-// SetupRelayLayer sets up a relay.RelayLayer and registers it
+// SetupRelayLayer sets up a relay.RelayLayer and registers it.
 func (r *Relay) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLayer) *Relay {
 	r.relayLayer = relay.NewRelayLayer(rendezvousLayer)
 	r.relayLayer.SetOnAnnounce(rendezvousLayer.OnAnnounce)
@@ -73,7 +73,7 @@ func (r *Relay) SetupRelayLayer(rendezvousLayer *rendezvous.IncomingRendezvousLa
 	return r
 }
 
-// RunApp listens on the relay url
+// RunApp listens on the relay url.
 func (r *Relay) RunApp() error {
 	return r.websocketLayer.Listen(r.config.GetRelayURL(), nil)
 }

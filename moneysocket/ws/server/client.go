@@ -44,9 +44,9 @@ func (c *Client) readPump() error {
 		_ = c.conn.Close()
 		(*c.protocol).OnClose(true, 0, "")
 	}()
-	//c.conn.SetReadLimit(maxMessageSize)
-	//c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	//c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	// c.conn.SetReadLimit(maxMessageSize)
+	// c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	// c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	for {
 		mt, message, err := c.conn.ReadMessage()
@@ -108,12 +108,12 @@ func (c *Client) writePump() error {
 	}
 }
 
-// WebsocketClientRoute handles http request
+// WebsocketClientRoute handles http request.
 func WebsocketClientRoute(host string, w http.ResponseWriter, r *http.Request) {
 	_ = WebsocketTemplate.Execute(w, host)
 }
 
-// WebsocketTemplate is a template for a websocket
+// WebsocketTemplate is a template for a websocket.
 var WebsocketTemplate = template.Must(template.New("").Parse(`
 <!DOCTYPE html>
 <html>

@@ -11,7 +11,7 @@ import (
 	"gopkg.in/macaroon.v2"
 )
 
-// LndTestNode is a test node in lnd
+// LndTestNode is a test node in lnd.
 type LndTestNode struct {
 	mock.LndContainer
 	// t is a pointer to the tessting object

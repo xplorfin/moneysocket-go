@@ -16,7 +16,7 @@ import (
 	"gopkg.in/macaroon.v2"
 )
 
-// LndConfig defines the lnd config (if lnd is in use)
+// LndConfig defines the lnd config (if lnd is in use).
 type LndConfig struct {
 	// LndDir is the lnd settings directory
 	LndDir string
@@ -29,11 +29,11 @@ type LndConfig struct {
 	Network string
 	// GrpcHost is the grpc host of the lnd node
 	GrpcHost string
-	//GrpcPort is the grpc port of the lnd node
+	// GrpcPort is the grpc port of the lnd node
 	GrpcPort int
 }
 
-// Validate validates the LndConfig is valid
+// Validate validates the LndConfig is valid.
 func (l LndConfig) Validate() (err error) {
 	err = validation.ValidateStruct(&l,
 		// validate lnd dir exists
@@ -75,12 +75,12 @@ func (l LndConfig) Validate() (err error) {
 	return err
 }
 
-// HasLndConfig is whether or not the lnd config exists
+// HasLndConfig is whether or not the lnd config exists.
 func (l LndConfig) HasLndConfig() bool {
 	return l.LndDir != "" || l.MacaroonPath != "" || l.TLSCertPath != "" || l.GrpcHost != "" || l.GrpcPort != 0
 }
 
-// GetTLSCert fetches the tls cert from an LndConfig
+// GetTLSCert fetches the tls cert from an LndConfig.
 func (l LndConfig) GetTLSCert() (cert *tls.Config, err error) {
 	tlsCert, err := ioutil.ReadFile(l.TLSCertPath)
 	if err != nil {
@@ -97,7 +97,7 @@ func (l LndConfig) GetTLSCert() (cert *tls.Config, err error) {
 	return cert, nil
 }
 
-// GetMacaroon fetches the encoded macaroon object from LndConfig
+// GetMacaroon fetches the encoded macaroon object from LndConfig.
 func (l LndConfig) GetMacaroon() (mac *macaroon.Macaroon, err error) {
 	rawMac, err := ioutil.ReadFile(l.MacaroonPath)
 	if err != nil {
@@ -113,12 +113,12 @@ func (l LndConfig) GetMacaroon() (mac *macaroon.Macaroon, err error) {
 	return mac, err
 }
 
-// LndHost gets the lnd hostname/port
+// LndHost gets the lnd hostname/port.
 func (l LndConfig) LndHost() string {
 	return fmt.Sprintf("%s:%d", l.GrpcHost, l.GrpcPort)
 }
 
-// GRPCConnection returns the grpc connection object
+// GRPCConnection returns the grpc connection object.
 func (l LndConfig) GRPCConnection(ctx context.Context) (conn *grpc.ClientConn, err error) {
 	cert, err := l.GetTLSCert()
 	if err != nil {
@@ -136,7 +136,7 @@ func (l LndConfig) GRPCConnection(ctx context.Context) (conn *grpc.ClientConn, e
 		grpc.WithPerRPCCredentials(macaroons.NewMacaroonCredential(mac)))
 }
 
-// RPCClient generates an lnd rpc client from an LndConfig
+// RPCClient generates an lnd rpc client from an LndConfig.
 func (l LndConfig) RPCClient(ctx context.Context) (rpcClient lnrpc.LightningClient, err error) {
 	grpcConn, err := l.GRPCConnection(ctx)
 	if err != nil {

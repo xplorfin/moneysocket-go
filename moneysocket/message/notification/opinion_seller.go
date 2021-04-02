@@ -7,7 +7,7 @@ import (
 	msg "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
-// Item is an item from the seller
+// Item is an item from the seller.
 type Item struct {
 	// ItemID is the items id
 	ItemID string `json:"item_id"`
@@ -17,14 +17,14 @@ type Item struct {
 	Msats int `json:"msats"`
 }
 
-// NotifyOpinionSeller is a message notifying an item from the seller
+// NotifyOpinionSeller is a message notifying an item from the seller.
 type NotifyOpinionSeller struct {
 	BaseMoneySocketNotification
 	sellerUUID string
 	items      []Item
 }
 
-// NewNotifyOpinionSeller creates an opinion seller message
+// NewNotifyOpinionSeller creates an opinion seller message.
 func NewNotifyOpinionSeller(sellerUUID string, items []Item, requestReferenceUUID string) NotifyOpinionSeller {
 	return NotifyOpinionSeller{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(msg.NotifyOpinionSeller, requestReferenceUUID),
@@ -38,7 +38,7 @@ const (
 	itemsKey      = "items"
 )
 
-// ToJSON encodes a NotifyOpinionSeller message to a json payload
+// ToJSON encodes a NotifyOpinionSeller message to a json payload.
 func (o NotifyOpinionSeller) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneySocketNotification(o, m)
@@ -50,7 +50,7 @@ func (o NotifyOpinionSeller) ToJSON() ([]byte, error) {
 	return json.Marshal(&m)
 }
 
-// DecodeNotifyOpinionSeller converts a json payload to a NotifyOpinionSeller message
+// DecodeNotifyOpinionSeller converts a json payload to a NotifyOpinionSeller message.
 func DecodeNotifyOpinionSeller(payload []byte) (NotifyOpinionSeller, error) {
 	notification, err := DecodeRequest(payload)
 	if err != nil {

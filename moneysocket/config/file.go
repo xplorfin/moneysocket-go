@@ -6,13 +6,13 @@ import (
 	"github.com/mvo5/goconfigparser"
 )
 
-// Section defines a section of the config
+// Section defines a section of the config.
 type Section struct {
 	sectionName string
 	config      *goconfigparser.ConfigParser
 }
 
-// NewSection create a new section object that reads from a a section of the config
+// NewSection create a new section object that reads from a a section of the config.
 func NewSection(name string, cfg *goconfigparser.ConfigParser) Section {
 	return Section{
 		sectionName: name,
@@ -21,7 +21,7 @@ func NewSection(name string, cfg *goconfigparser.ConfigParser) Section {
 }
 
 // GetString gets a string from the config section
-// handles python None types
+// handles python None types.
 func (s Section) GetString(option string) string {
 	res, _ := s.config.Get(s.sectionName, option)
 	if res == "None" {
@@ -31,21 +31,21 @@ func (s Section) GetString(option string) string {
 }
 
 // GetInt gets an int from the config section
-// handles python None types
+// handles python None types.
 func (s Section) GetInt(option string) int {
 	res, _ := s.config.Getint(s.sectionName, option)
 	return res
 }
 
 // GetBool gets an bool from the config section
-// handles python None types (returning false)
+// handles python None types (returning false).
 func (s Section) GetBool(option string) bool {
 	res, _ := s.config.Getbool(s.sectionName, option)
 	return res
 }
 
 // ParseConfig parses a Config from the file contents
-// returns an error if parsing fails. Validation can be done on the Config object
+// returns an error if parsing fails. Validation can be done on the Config object.
 func ParseConfig(fileContents string) (config Config, err error) {
 	cfg := goconfigparser.New()
 	err = cfg.ReadString(fileContents)
@@ -98,7 +98,7 @@ func ParseConfig(fileContents string) (config Config, err error) {
 }
 
 // ParseConfigFromFile is a wrapper around ParseConfig that also reads from the file
-// returns an error if parsing fails. Validation can be done on the Config object
+// returns an error if parsing fails. Validation can be done on the Config object.
 func ParseConfigFromFile(filePath string) (conf Config, err error) {
 	contents, err := ioutil.ReadFile(filePath)
 	if err != nil {

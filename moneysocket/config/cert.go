@@ -6,7 +6,7 @@ import (
 	"github.com/xplorfin/tlsutils"
 )
 
-// certConfig contains a config which can produce a tls cert object
+// certConfig contains a config which can produce a tls cert object.
 type certConfig interface {
 	// certFile is the path to the cert file
 	certPath() string
@@ -16,7 +16,7 @@ type certConfig interface {
 
 // getCertificate gets the certificate
 // Note: this function makes no guarantees about files being present
-// this should be verified separately. Reads certificates from filesystem
+// this should be verified separately. Reads certificates from filesystem.
 func getCertificate(c certConfig) tlsutils.TlsCert {
 	pub, _ := ioutil.ReadFile(c.certPath())
 

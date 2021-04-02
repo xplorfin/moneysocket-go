@@ -4,21 +4,20 @@ import (
 	"log"
 	"time"
 
-	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
-
 	base2 "github.com/xplorfin/moneysocket-go/moneysocket/message/base"
+	"github.com/xplorfin/moneysocket-go/moneysocket/message/notification"
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/request"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/base"
 )
 
-// OnPingFn is a function to trigger a ping on an given interval announcing to a passed in nexus
+// OnPingFn is a function to trigger a ping on an given interval announcing to a passed in nexus.
 type OnPingFn func(nexus nexus.Nexus, msecs int)
 
-// FinishedCb is a callback for when the Nexus finishes
+// FinishedCb is a callback for when the Nexus finishes.
 type FinishedCb func(consumerNexus Nexus)
 
-// Nexus is a consumer nexus to manage websockets as a consumer of the protocol
+// Nexus is a consumer nexus to manage websockets as a consumer of the protocol.
 type Nexus struct {
 	*base.NexusBase
 	// handshakeFinished is whether or not the handshake has completed
@@ -37,10 +36,10 @@ type Nexus struct {
 	donePinging chan bool
 }
 
-// NexusName is the name of the consumer nexus
+// NexusName is the name of the consumer nexus.
 const NexusName = "ConsumerNexus"
 
-// NewConsumerNexus creates a new consumer nexus
+// NewConsumerNexus creates a new consumer nexus.
 func NewConsumerNexus(belowNexus nexus.Nexus) *Nexus {
 	consumerNexus := Nexus{
 		NexusBase:    base.NewBaseNexus(NexusName),
@@ -52,7 +51,7 @@ func NewConsumerNexus(belowNexus nexus.Nexus) *Nexus {
 	return &consumerNexus
 }
 
-// IsLayerMessage determines whether or not a message should be processed by this layer
+// IsLayerMessage determines whether or not a message should be processed by this layer.
 func (c *Nexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
 	if message.MessageClass() != base2.Notification {
 		return false
@@ -61,24 +60,24 @@ func (c *Nexus) IsLayerMessage(message base2.MoneysocketMessage) bool {
 	return notif.MessageClass() == base2.NotifyProvider || notif.MessageClass() == base2.NotifyProviderNotReady || notif.MessageClass() == base2.NotifyPong
 }
 
-// ConsumerFinishedCb is wether or not the consumer callback is finished
+// ConsumerFinishedCb is wether or not the consumer callback is finished.
 func (c *Nexus) ConsumerFinishedCb() {
 	// TODO
 }
 
-// SetOnPing sets the ping function
+// SetOnPing sets the ping function.
 func (c *Nexus) SetOnPing(fn OnPingFn) {
 	c.onPing = fn
 }
 
-// OnPing calls the onPing method passed to the Nexus
+// OnPing calls the onPing method passed to the Nexus.
 func (c *Nexus) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
 	if c.onPing != nil {
 		c.onPing(consumerNexus, milliseconds)
 	}
 }
 
-// OnMessage processes a passed message
+// OnMessage processes a passed message.
 func (c *Nexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) {
 	log.Print("consumer nexus got msg")
 	if !c.IsLayerMessage(msg) {
@@ -111,25 +110,25 @@ func (c *Nexus) OnMessage(belowNexus nexus.Nexus, msg base2.MoneysocketMessage) 
 	}
 }
 
-// OnBinMessage processes a binary message
+// OnBinMessage processes a binary message.
 func (c *Nexus) OnBinMessage(belowNexus nexus.Nexus, msg []byte) {
 	c.NexusBase.OnBinMessage(belowNexus, msg)
 }
 
-// StartHandshake starts a handshake/sets a finished callback
+// StartHandshake starts a handshake/sets a finished callback.
 func (c *Nexus) StartHandshake(cb FinishedCb) {
 	c.consumerFinishedCb = cb
 	_ = c.Send(request.NewRequestProvider())
 }
 
-// SendPing sends a ping up the nexus chain
+// SendPing sends a ping up the nexus chain.
 func (c *Nexus) SendPing() {
 	currentTime := time.Now()
 	c.pingStartTime = &currentTime
 	_ = c.Send(request.NewPingRequest())
 }
 
-// StartPinging on a set interval
+// StartPinging on a set interval.
 func (c *Nexus) StartPinging() {
 	ticker := time.NewTicker(3 * time.Second)
 	c.isPinging = true
@@ -148,7 +147,7 @@ func (c *Nexus) StartPinging() {
 	}
 }
 
-// StopPinging stops the consumer from pinging
+// StopPinging stops the consumer from pinging.
 func (c *Nexus) StopPinging() {
 	if c.isPinging {
 		<-c.donePinging

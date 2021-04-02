@@ -1,9 +1,9 @@
 package lightning
 
-// PaidCallback is a function for when ln image is paid
+// PaidCallback is a function for when ln image is paid.
 type PaidCallback func(preimage string, msats int)
 
-// Lightning is an implementable interface for interacting with different lightning clients
+// Lightning is an implementable interface for interacting with different lightning clients.
 type Lightning interface {
 	// RegisterPaidRecvCb registers a PaidCallback for when an invoice is paid
 	RegisterPaidRecvCb(callback PaidCallback)

@@ -8,7 +8,7 @@ import (
 	nexusHelper "github.com/xplorfin/moneysocket-go/moneysocket/nexus"
 )
 
-// Directory stores nexus peering data
+// Directory stores nexus peering data.
 type Directory struct {
 	// todo switch to sync maps with individual mutexes
 	// this can probably be removed rn
@@ -25,7 +25,7 @@ type Directory struct {
 	RIDSPeered []string
 }
 
-// NewRendezvousDirectory creates a new RendezvousDirectory
+// NewRendezvousDirectory creates a new RendezvousDirectory.
 func NewRendezvousDirectory() *Directory {
 	return &Directory{
 		NexusesByUUID:      make(map[string]nexusHelper.Nexus),
@@ -36,7 +36,7 @@ func NewRendezvousDirectory() *Directory {
 	}
 }
 
-// ToString gets the number of nexuses/peered/unpeered
+// ToString gets the number of nexuses/peered/unpeered.
 func (r *Directory) ToString() string {
 	nexuses := len(r.NexusesByUUID)
 	unpeered := len(r.UnpeeredUUIDsByRid)
@@ -44,7 +44,7 @@ func (r *Directory) ToString() string {
 	return fmt.Sprintf("nexuses/unpeered/peered %d/%d/%d", nexuses, unpeered, peered)
 }
 
-// GetPeerNexus get matching peer of a given nexus (1:1 mapping)
+// GetPeerNexus get matching peer of a given nexus (1:1 mapping).
 func (r *Directory) GetPeerNexus(nexusID uuid.UUID) *nexusHelper.Nexus {
 	if peer, ok := r.UUIDPeers[nexusID.String()]; ok {
 		matchingN := r.NexusesByUUID[peer]
@@ -53,7 +53,7 @@ func (r *Directory) GetPeerNexus(nexusID uuid.UUID) *nexusHelper.Nexus {
 	return nil
 }
 
-// IsNexusInDirectory determines wether or not nexus is indexed in directory
+// IsNexusInDirectory determines wether or not nexus is indexed in directory.
 func (r *Directory) IsNexusInDirectory(nexus nexusHelper.Nexus) bool {
 	if _, ok := r.NexusesByUUID[nexus.UUID().String()]; ok {
 		return true
@@ -61,7 +61,7 @@ func (r *Directory) IsNexusInDirectory(nexus nexusHelper.Nexus) bool {
 	return false
 }
 
-// IsRidPeered checks if a rendezvous id currently has a peer
+// IsRidPeered checks if a rendezvous id currently has a peer.
 func (r *Directory) IsRidPeered(rendezvousID string) bool {
 	for _, rid := range r.RIDSPeered {
 		if rid == rendezvousID {
@@ -71,7 +71,7 @@ func (r *Directory) IsRidPeered(rendezvousID string) bool {
 	return false
 }
 
-// AddNexus adds and indexes a nexus
+// AddNexus adds and indexes a nexus.
 func (r *Directory) AddNexus(nexus nexusHelper.Nexus, rendezvousID string) {
 	r.mux.Lock()
 	fmt.Print(nexus.UUID().String())
@@ -88,7 +88,7 @@ func (r *Directory) AddNexus(nexus nexusHelper.Nexus, rendezvousID string) {
 	r.mux.Unlock()
 }
 
-// RemoveNexus removes a nexus from the directory
+// RemoveNexus removes a nexus from the directory.
 func (r *Directory) RemoveNexus(nexus nexusHelper.Nexus) {
 	if !r.IsNexusInDirectory(nexus) {
 		return

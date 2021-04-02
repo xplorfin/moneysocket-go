@@ -1,6 +1,6 @@
 package compat
 
-// ConsumeNexusInterface is an interface that allows for requesting/paying invoices
+// ConsumeNexusInterface is an interface that allows for requesting/paying invoices.
 type ConsumeNexusInterface interface {
 	// RequestInvoice gets an invoice from the lightning driver from msats
 	RequestInvoice(msats int64, overrideRequestUUID, description string)

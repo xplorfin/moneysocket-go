@@ -9,10 +9,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// UnknownStatusCode is sent to this when code is unknown
+// UnknownStatusCode is sent to this when code is unknown.
 const UnknownStatusCode = -1
 
-// NewWsClient creates a websocket client
+// NewWsClient creates a websocket client.
 func NewWsClient(p WebsocketClientProtocol, wsURL string) {
 	p.OnConnecting()
 

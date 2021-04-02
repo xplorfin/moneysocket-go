@@ -15,19 +15,19 @@ const (
 	// will increment by 2 for new types https://git.io/JLCRc
 	TLVTypeStart = TLVMinimum + 443
 
-	// BeaconTLVType is the tlv type for a beacon
+	// BeaconTLVType is the tlv type for a beacon.
 	BeaconTLVType tlv.Type = TLVTypeStart
 
-	// SharedSeedTLVType is the tlv type for a shared type
+	// SharedSeedTLVType is the tlv type for a shared type.
 	SharedSeedTLVType tlv.Type = TLVTypeStart + 2
 
-	// LocationCountTLVType is the tlv type for a location count
+	// LocationCountTLVType is the tlv type for a location count.
 	LocationCountTLVType tlv.Type = TLVTypeStart + 4
 
-	// LocationListTLVType is the tkv type that prefixes a list of tlv locations
+	// LocationListTLVType is the tkv type that prefixes a list of tlv locations.
 	LocationListTLVType tlv.Type = TLVTypeStart + 6
 
-	// WebsocketLocationTLVType is the tlv type used for websockets
+	// WebsocketLocationTLVType is the tlv type used for websockets.
 	WebsocketLocationTLVType tlv.Type = TLVTypeStart + 8
 
 	// WebRTCLocationTLVType is the tlv type of a web rtc location
@@ -43,5 +43,5 @@ const (
 	NFCLocationTLVType tlv.Type = TLVTypeStart + 14
 )
 
-// TLVTypes is a list of all custom implemented tlv types in the package
+// TLVTypes is a list of all custom implemented tlv types in the package.
 var TLVTypes = []tlv.Type{BeaconTLVType, SharedSeedTLVType, LocationCountTLVType, LocationListTLVType, WebsocketLocationTLVType, WebRTCLocationTLVType, BluetoothLocationTLVType, NFCLocationTLVType}

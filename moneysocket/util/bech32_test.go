@@ -7,7 +7,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 )
 
-// make sure bech32 encodes
+// make sure bech32 encodes.
 func TestBech32BidrectionalEncoding(t *testing.T) {
 	gofakeit.Seed(0)
 	for i := 0; i < 10000; i++ {
@@ -31,11 +31,11 @@ func TestBech32BidrectionalEncoding(t *testing.T) {
 	}
 }
 
-// test data that cannot be a bech32
+// test data that cannot be a bech32.
 func TestUndecodable(t *testing.T) {
 	gofakeit.Seed(0)
 	for i := 0; i < 10000; i++ {
-		//without a rawHrp these should fail
+		// without a rawHrp these should fail
 		encodeTest := gofakeit.BitcoinAddress()
 		// assert arbitrary word lengths don't break the decoding mechanics
 		decodedHrp, decodedKey, err := Bech32DecodeBytes(encodeTest)

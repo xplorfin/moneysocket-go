@@ -18,7 +18,7 @@ type WebsocketTestCase struct {
 
 // tested against python. Approximately:
 // testCase = WebsocketLocation(host="relay.socket", use_tls=True, port=50)
-// print(testCase.encode_tlv().hex())
+// print(testCase.encode_tlv().hex()).
 var testPort = 50
 
 var websocketTestCases = []WebsocketTestCase{

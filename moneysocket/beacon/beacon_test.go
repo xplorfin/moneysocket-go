@@ -5,11 +5,10 @@ import (
 	"encoding/hex"
 	"testing"
 
-	util2 "github.com/xplorfin/moneysocket-go/moneysocket/util"
-
 	"github.com/lightningnetwork/lnd/tlv"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/location"
 	"github.com/xplorfin/moneysocket-go/moneysocket/beacon/util"
+	util2 "github.com/xplorfin/moneysocket-go/moneysocket/util"
 )
 
 type BeaconTestCases struct {
@@ -21,7 +20,7 @@ type BeaconTestCases struct {
 	Locations []location.Location
 }
 
-// TestCases defines a list of test-cases to ensure python parity
+// TestCases defines a list of test-cases to ensure python parity.
 var TestCases = []BeaconTestCases{
 	{
 		Seed:         []byte("hello from light"),
@@ -40,7 +39,7 @@ var TestCases = []BeaconTestCases{
 }
 
 // TestBeaconParity tests a generated bech32 string against python
-// TODO this can be automated with a python (or js) harness
+// TODO this can be automated with a python (or js) harness.
 func TestBeaconParity(t *testing.T) {
 	for _, testCase := range TestCases {
 		ss, err := BytesToSharedSeed(testCase.Seed)
@@ -68,7 +67,7 @@ func TestBeaconParity(t *testing.T) {
 	}
 }
 
-// TestRecord tests tlv encoding
+// TestRecord tests tlv encoding.
 func TestRecord(t *testing.T) {
 	ss, err := BytesToSharedSeed([]byte("hello from light"))
 	if err != nil {
