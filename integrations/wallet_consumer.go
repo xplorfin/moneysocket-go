@@ -10,7 +10,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/stack"
 )
 
-//  WalletConsumer emulates wallet consumer from bs-demo
+// WalletConsumer emulates wallet consumer from bs-demo
 type WalletConsumer struct {
 	*stack.OutgoingConsumerStack
 	ConsumerBeacon beacon.Beacon

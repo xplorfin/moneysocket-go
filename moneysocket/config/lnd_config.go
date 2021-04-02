@@ -75,7 +75,7 @@ func (l LndConfig) Validate() (err error) {
 	return err
 }
 
-// wether or not the lnd config exists
+// HasLndConfig is whether or not the lnd config exists
 func (l LndConfig) HasLndConfig() bool {
 	return l.LndDir != "" || l.MacaroonPath != "" || l.TLSCertPath != "" || l.GrpcHost != "" || l.GrpcPort != 0
 }

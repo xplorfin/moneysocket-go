@@ -9,19 +9,23 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/server"
 )
 
+// IncomingWebsocketLayer is handles websockets
 type IncomingWebsocketLayer struct {
 	layer.BaseLayer
-	Config         *config.Config
+	Config *config.Config
+	// IncomingSocket is a simulated socket
 	IncomingSocket *websocket.IncomingSocket
+	// WebsocketNexus handles the socket
 	WebsocketNexus *websocket.Nexus
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (i *IncomingWebsocketLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(i.OnAnnounce)
 	belowLayer.SetOnRevoke(i.OnRevoke)
 }
 
+// NewIncomingWebsocketLayer creates a new incoming websocket layer
 func NewIncomingWebsocketLayer(config *config.Config) *IncomingWebsocketLayer {
 	wn := websocket.NewIncomingSocket()
 	is := IncomingWebsocketLayer{
@@ -47,13 +51,15 @@ func (i *IncomingWebsocketLayer) AnnounceNexus(belowNexus nexusHelper.Nexus) {
 	}
 }
 
+// StopListening stops listening on the incoming websocket layer
 func (i *IncomingWebsocketLayer) StopListening() {
 	panic("method not yet implemented")
 }
 
+// Listen listens at a given wsUrl
 func (i *IncomingWebsocketLayer) Listen(wsURL string, tlsInfo *server.TLSInfo) (err error) {
 	i.IncomingSocket.FactoryMsProtocolLayer = i
 	return server.Listen(wsURL, tlsInfo, i.IncomingSocket.ServeHTTP)
 }
 
-var _ layer.LayerBase = &IncomingWebsocketLayer{}
+var _ layer.Base = &IncomingWebsocketLayer{}

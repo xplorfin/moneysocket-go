@@ -1,17 +1,25 @@
 package wad
 
+// Currency is a currency type
 type Currency struct {
-	Code      string `json:"code"`
+	// Code is the currency code (e.g. usd)
+	Code string `json:"code"`
+	// Countries  is csv list of countries
 	Countries string `json:"countries"`
-	Decimals  int    `json:"decimals"`
-	// negative if null
-	IsoNum int    `json:"iso_num"`
-	Name   string `json:"name"`
+	// Decimals is the number of decimals in currency
+	Decimals int `json:"decimals"`
+	// IsoNum is the iso code of the country. Negative if null
+	IsoNum int `json:"iso_num"`
+	// Name is the name of the Currency
+	Name string `json:"name"`
+	// Symbol is the currency symbol
 	Symbol string `json:"symbol"`
 }
 
+// CurrencyMap of code->currency
 type CurrencyMap = map[string]Currency
 
+// Fiat is a list of fiat currencies
 var Fiat = CurrencyMap{
 	"AED": {
 		Code:      "AED",

@@ -10,7 +10,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/terminus/account"
 )
 
-// ProviderLayer handles app waiting
+// Layer handles app waiting
 // TODO this needs to be fully implemented
 type Layer struct {
 	layer.BaseLayer
@@ -19,7 +19,7 @@ type Layer struct {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (o *Layer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -39,6 +39,7 @@ func (o *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	providerNexus.WaitForConsumer(o.ProviderFinishedCb)
 }
 
+// RevokeNexus revokes a nexus from the layer
 func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	res, _ := o.NexusByBelow.Get(belowNexus.UUID())
 	providerNexus, _ := o.Nexuses.Get(res)
@@ -47,18 +48,22 @@ func (o *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	delete(o.WaitingForApp, ss.ToString())
 }
 
+// nolint
 func (o *Layer) HandlerProvideInfoRequest(seed beacon.SharedSeed) account.DB {
 	return o.handlerProvideInfoRequest(seed)
 }
 
+// nolint
 func (o *Layer) SetHandlerProvideInfoRequest(hpir compat.HandleProviderInfoRequest) {
 	o.handlerProvideInfoRequest = hpir
 }
 
+// NexusWaitingForApp sets the for the shared seed
 func (o *Layer) NexusWaitingForApp(ss beacon.SharedSeed, providerNexus nexus.Nexus) {
 	o.WaitingForApp[ss.ToString()] = providerNexus
 }
 
+// nolint
 func (o *Layer) ProviderNowReadyFromApp() {
 	for sharedSeed, _ := range o.WaitingForApp { // nolint
 		providerNexus := o.WaitingForApp[sharedSeed]
@@ -67,6 +72,7 @@ func (o *Layer) ProviderNowReadyFromApp() {
 	}
 }
 
+// NewProviderLayer creates a new provider layer
 func NewProviderLayer() *Layer {
 	return &Layer{
 		BaseLayer:     layer.NewBaseLayer(),
@@ -74,4 +80,4 @@ func NewProviderLayer() *Layer {
 	}
 }
 
-var _ layer.LayerBase = &Layer{}
+var _ layer.Base = &Layer{}

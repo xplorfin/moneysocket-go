@@ -21,7 +21,7 @@ type HandleOpinionInvoiceRequest func(nx nexus.Nexus, itemId string, requestUUID
 
 // ProviderTransactLayerInterface is a provider for handling provider requests
 type ProviderTransactLayerInterface interface {
-	layer.LayerBase
+	layer.Base
 	// HandleProviderInfoRequest processes an info request with a seed
 	HandleProviderInfoRequest(seed beacon.SharedSeed) account.DB
 	// HandlePayRequest processes a payment request

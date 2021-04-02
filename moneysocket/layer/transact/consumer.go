@@ -11,6 +11,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/transact"
 )
 
+// ConsumerTransactLayer handles transaction
 type ConsumerTransactLayer struct {
 	layer.BaseLayer
 
@@ -33,7 +34,7 @@ func NewConsumerTransactLayer() *ConsumerTransactLayer {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (c *ConsumerTransactLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.OnRevoke)
 }
@@ -90,10 +91,12 @@ func (c *ConsumerTransactLayer) OnProviderInfo(consumerTransactNexus nexus.Nexus
 	}
 }
 
+// SetOnProviderInfo sets a provider info
 func (c *ConsumerTransactLayer) SetOnProviderInfo(info transact.OnProviderInfo) {
 	c.onProviderInfo = info
 }
 
+// RequestPay requests payment for an invoice
 func (c *ConsumerTransactLayer) RequestPay(nexusUUID uuid.UUID, bolt11 string) (requestUUID uuid.UUID, err error) {
 	if val, ok := c.Nexuses.Get(nexusUUID); !ok {
 		consumerNexus := val.(*transact.ConsumerTrackNexus)
@@ -104,6 +107,7 @@ func (c *ConsumerTransactLayer) RequestPay(nexusUUID uuid.UUID, bolt11 string) (
 	return requestUUID, fmt.Errorf("nexus %s not online", nexusUUID)
 }
 
+// RequestInvoice requests an invoice
 func (c *ConsumerTransactLayer) RequestInvoice(nexusUUID uuid.UUID, msats int64, description string) (requestUUID uuid.UUID, err error) {
 	if val, ok := c.Nexuses.Get(nexusUUID); !ok {
 		consumerNexus := val.(*transact.ConsumerTrackNexus)

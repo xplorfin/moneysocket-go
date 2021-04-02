@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// this is probably one of the worst ways to handle json in go
+// MoneysocketMessage is probably one of the worst ways to handle json in go
 // but I wanted to make sure the first vresion was as close to moneysocket as possible
 // architecturally so I could safely refactor with test cases in place
 type MoneysocketMessage interface {

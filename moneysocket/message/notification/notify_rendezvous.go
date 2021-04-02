@@ -21,7 +21,7 @@ func NewNotifyRendezvous(rid, requestUUID string) Rendezvous {
 	}
 }
 
-// MustBeClear text denotes a Rendezvous can be clear text
+// MustBeClearText text denotes a Rendezvous can be clear text
 func (r Rendezvous) MustBeClearText() bool {
 	return true
 }

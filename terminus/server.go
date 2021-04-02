@@ -62,6 +62,7 @@ func (t *Terminus) OnAnnounce(nexus nexus.Nexus) {
 	// by stack
 }
 
+// OnRevoke handles a nexus revoke attempt. Does nothing in terminus
 func (t *Terminus) OnRevoke(nexus nexus.Nexus) {
 	// do nothing
 }

@@ -6,12 +6,16 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message/base"
 )
 
+// MoneysocketNotification is a notification for a message
 type MoneysocketNotification interface {
 	base.MoneysocketMessage
-	// get the notification uuid
+	// NotificationUUID gets the notification uuid
 	NotificationUUID() string
+	// RequestReferenceUUID gets the request reference uuid
 	RequestReferenceUUID() string
+	// NotificationName gets the notification name
 	NotificationName() string
+	// RequestType gets the request type
 	RequestType() base.MessageType
 }
 

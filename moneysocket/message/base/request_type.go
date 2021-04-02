@@ -4,56 +4,89 @@ package base
 type MessageType int
 
 const (
-	// requests
-	PingRequest           MessageType = 0
-	ProviderRequest       MessageType = iota
-	InvoiceRequest        MessageType = iota
-	PayRequest            MessageType = iota
-	RendezvousRequest     MessageType = iota
-	RequestOpinionSeller  MessageType = iota
+	// PingRequest is a ping request
+	PingRequest MessageType = 0
+	// ProviderRequest is a request for a provider
+	ProviderRequest MessageType = iota
+	// InvoiceRequest is a request for an invoice
+	InvoiceRequest MessageType = iota
+	// PayRequest is a request for payment
+	PayRequest MessageType = iota
+	// RendezvousRequest is a request for a provider
+	RendezvousRequest MessageType = iota
+	// RequestOpinionSeller requests items from an opinion seller
+	RequestOpinionSeller MessageType = iota
+	// RequestOpinionInvoice creates an invoice for an opinion
 	RequestOpinionInvoice MessageType = iota
 
-	// notifications
-	NotifyRendezvous                     = iota
-	NotifyRendezvousEndNotification      = iota
+	// NotifyRendezvous notifies a rendezvous is ready
+	NotifyRendezvous = iota
+	// NotifyRendezvousEndNotification notifies a rendezvous has ended
+	NotifyRendezvousEndNotification = iota
+	// NotifyRendezvousNotReadyNotification notifies a rendezvous is not ready
 	NotifyRendezvousNotReadyNotification = iota
-	NotifyInvoiceNotification            = iota
-	NotifyPreimage                       = iota
-	NotifyProvider                       = iota
-	NotifyOpinionSeller                  = iota
-	NotifyOpinionSellerNotReady          = iota
-	NotifyProviderNotReady               = iota
-	NotifyOpinionInvoice                 = iota
-	// TODO implement
+	// NotifyInvoiceNotification notifies a new invoice has come in
+	NotifyInvoiceNotification = iota
+	// NotifyPreimage notifies a preimage has come in
+	NotifyPreimage = iota
+	// NotifyProvider notifies a provider is ready
+	NotifyProvider = iota
+	// NotifyOpinionSeller notifies an opinion seller is ready
+	NotifyOpinionSeller = iota
+	// NotifyOpinionSellerNotReady notifies an opinion seller is ready
+	NotifyOpinionSellerNotReady = iota
+	// NotifyProviderNotReady notifies a provider is not ready
+	NotifyProviderNotReady = iota
+	// NotifyOpinionInvoice notify an opinion invoice
+	NotifyOpinionInvoice = iota
+	// NotifyPing notifies a ping
 	NotifyPing = iota
+	// NotifyPong notifies a pong response
 	NotifyPong = iota
 )
 
 // used for
 const (
-	// requests
-	RequestPingName           = "REQUEST_PING"
-	RequestProviderName       = "REQUEST_PROVIDER"
-	RequestInvoiceName        = "REQUEST_INVOICE"
-	RequestPayName            = "REQUEST_PAY"
-	RendezvousRequestName     = "REQUEST_RENDEZVOUS"
-	RequestOpinionSellerName  = "REQUEST_OPINION_SELLER"
+	// RequestPingName requests a ping message
+	RequestPingName = "REQUEST_PING"
+	// RequestProviderName requests a provider
+	RequestProviderName = "REQUEST_PROVIDER"
+	// RequestInvoiceName requests an invoice
+	RequestInvoiceName = "REQUEST_INVOICE"
+	// RequestPayName requests a payment
+	RequestPayName = "REQUEST_PAY"
+	// RendezvousRequestName requests a rendezvous
+	RendezvousRequestName = "REQUEST_RENDEZVOUS"
+	// RequestOpinionSellerName requests an opinion seller
+	RequestOpinionSellerName = "REQUEST_OPINION_SELLER"
+	// RequestOpinionInvoiceName requests an opinion invoice
 	RequestOpinionInvoiceName = "REQUEST_OPINION_INVOICE"
 
-	// notifications
-	NotifyNotifyRendezvousEndName   = "NOTIFY_RENDEZVOUS_END"
-	NotifyInvoiceName               = "NOTIFY_INVOICE"
-	NotifyPreimageName              = "NOTIFY_PREIMAGE"
-	NotifyProviderName              = "NOTIFY_PROVIDER"
-	NotifyOpinionSellerName         = "NOTIFY_OPINION_SELLER"
+	// NotifyNotifyRendezvousEndName notifies a rendezvous end
+	NotifyNotifyRendezvousEndName = "NOTIFY_RENDEZVOUS_END"
+	// NotifyInvoiceName notifies an invoice is ready
+	NotifyInvoiceName = "NOTIFY_INVOICE"
+	// NotifyPreimageName notifies a preimage
+	NotifyPreimageName = "NOTIFY_PREIMAGE"
+	// NotifyProviderName notifies a provider
+	NotifyProviderName = "NOTIFY_PROVIDER"
+	// NotifyOpinionSellerName notifies a seller is ready
+	NotifyOpinionSellerName = "NOTIFY_OPINION_SELLER"
+	// NotifyOpinionSellerNotReadyName notifies a seller is not ready
 	NotifyOpinionSellerNotReadyName = "NOTIFY_OPINION_SELLER_NOT_READY"
-	NotifyOpinionInvoiceName        = "NOTIFY_OPINION_INVOICE"
-	NotifyProviderNotReadyName      = "NOTIFY_PROVIDER_NOT_READY"
-	NotifyPongName                  = "NOTIFY_PONG"
-	NotifyRendezvousName            = "NOTIFY_RENDEZVOUS"
-	NotifyRendezvousNotReadyName    = "NOTIFY_RENDEZVOUS_NOT_READY"
+	// NotifyOpinionInvoiceName notifies an invoice
+	NotifyOpinionInvoiceName = "NOTIFY_OPINION_INVOICE"
+	// NotifyProviderNotReadyName notifies a provider is not ready
+	NotifyProviderNotReadyName = "NOTIFY_PROVIDER_NOT_READY"
+	// NotifyPongName notifies a pong reply
+	NotifyPongName = "NOTIFY_PONG"
+	// NotifyRendezvousName notifies a rendezvous is ready
+	NotifyRendezvousName = "NOTIFY_RENDEZVOUS"
+	// NotifyRendezvousNotReadyName notifies a rendezvous is not readt
+	NotifyRendezvousNotReadyName = "NOTIFY_RENDEZVOUS_NOT_READY"
 )
 
+// ToString converts a message to a string
 func (r MessageType) ToString() string {
 	switch r {
 	// requests
@@ -98,6 +131,7 @@ func (r MessageType) ToString() string {
 	panic("message not yet implemented")
 }
 
+// MessageTypeFromString converts a name to a MessageType
 func MessageTypeFromString(name string) MessageType {
 	switch name {
 	// requests

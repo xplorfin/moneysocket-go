@@ -7,12 +7,14 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/nexus/consumer"
 )
 
+// Layer is the ConsumerLayer
 type Layer struct {
 	layer.BaseLayer
 	onPing        consumer.OnPingFn
 	consumerNexus *consumer.Nexus
 }
 
+// NewConsumerLayer creates a new consumer layer
 func NewConsumerLayer() *Layer {
 	return &Layer{
 		layer.NewBaseLayer(),
@@ -28,22 +30,24 @@ func (c *Layer) AnnounceNexus(belowNexus nexus.Nexus) {
 	c.consumerNexus.StartHandshake(c.ConsumerFinishedCb)
 }
 
+// SetOnPing sets up the on ping function
 func (c *Layer) SetOnPing(fn consumer.OnPingFn) {
 	c.onPing = fn
 }
 
-// initialize consumer nexus and tie the onping event back to this layer
+// SetupConsumerNexus initializes consumer nexus and tie the onping event back to this layer
 func (c *Layer) SetupConsumerNexus(belowNexus nexus.Nexus) {
 	c.consumerNexus = consumer.NewConsumerNexus(belowNexus)
 	c.consumerNexus.SetOnPing(c.OnPing)
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (c *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (c *Layer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(c.AnnounceNexus)
 	belowLayer.SetOnRevoke(c.RevokeNexus)
 }
 
+// RevokeNexus is a revoked nexus
 func (c *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 	// TODO add error handling
 	belowUUID, _ := c.NexusByBelow.Get(belowNexus.UUID())
@@ -54,14 +58,14 @@ func (c *Layer) RevokeNexus(belowNexus nexus.Nexus) {
 
 }
 
-// event fired on ping
+// OnPing is an event fired on ping
 func (c *Layer) OnPing(consumerNexus nexus.Nexus, milliseconds int) {
 	if c.onPing != nil {
 		c.onPing(consumerNexus, milliseconds)
 	}
 }
 
-// consume finished
+// ConsumerFinishedCb is a call back for when a consumer is finished
 func (c *Layer) ConsumerFinishedCb(consumerNexus consumer.Nexus) {
 	c.TrackNexusAnnounced(&consumerNexus)
 	c.SendLayerEvent(&consumerNexus, message.NexusAnnounced)
@@ -71,4 +75,4 @@ func (c *Layer) ConsumerFinishedCb(consumerNexus consumer.Nexus) {
 	consumerNexus.StartPinging()
 }
 
-var _ layer.LayerBase = &Layer{}
+var _ layer.Base = &Layer{}

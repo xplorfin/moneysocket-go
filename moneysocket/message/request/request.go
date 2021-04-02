@@ -64,7 +64,7 @@ func EncodeMoneysocketRequest(msg MoneysocketRequest, toEncode map[string]interf
 	return nil
 }
 
-// generate a new base moneysocket request. Should only be used by other message classes
+// NewBaseMoneySocketRequest generates a new base moneysocket request. Should only be used by other message classes
 func NewBaseMoneySocketRequest(requestType base.MessageType) BaseMoneySocketRequest {
 	return BaseMoneySocketRequest{
 		base.NewBaseBaseMoneysocketMessage(base.Request),
@@ -73,6 +73,7 @@ func NewBaseMoneySocketRequest(requestType base.MessageType) BaseMoneySocketRequ
 	}
 }
 
+// DecodeRequest decodes a base moneysocket request
 func DecodeRequest(request []byte) (b BaseMoneySocketRequest, err error) {
 	baseMessage, err := base.DecodeBaseBaseMoneysocketMessage(request)
 	if err != nil {

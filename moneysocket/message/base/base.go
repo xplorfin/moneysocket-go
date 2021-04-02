@@ -7,8 +7,10 @@ import (
 )
 
 const (
+	// ProtocolName is the protocol name for money socket
 	ProtocolName = "Moneysocket"
-	Version      = "0.0.0"
+	// Version is the version of the protocol
+	Version = "0.0.0"
 )
 
 // MessageBase is the message

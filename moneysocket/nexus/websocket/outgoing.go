@@ -15,14 +15,16 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/ws/client"
 )
 
+// OutgoingSocketName is the name of the outgoing socket
 const OutgoingSocketName = "OutgoingSocket"
 
+// OutgoingSocket is the outgoing socket
 type OutgoingSocket struct {
 	client.WebsocketClientProtocol
 	wasAnnounced bool
-	// protocol layer coorespond to the socket interface
-	FactoryMsProtocolLayer layer.LayerBase
-	// add an outgoing shared seed modules
+	// FactoryMsProtocolLayer protocol layer coorespond to the socket interface
+	FactoryMsProtocolLayer layer.Base
+	// OutgoingSharedSeed adds an outgoing shared seed modules
 	OutgoingSharedSeed *beacon.SharedSeed
 	// name of the nexus (stored for debugging)
 	name string
@@ -34,7 +36,7 @@ type OutgoingSocket struct {
 	onBinMessage nexusHelper.OnBinMessage
 }
 
-// create a new incoming websocket nexus (accepts request)
+// NewOutgoingSocket creates a new incoming websocket nexus (accepts request)
 func NewOutgoingSocket() *OutgoingSocket {
 	return &OutgoingSocket{
 		WebsocketClientProtocol: client.NewBaseWebsocketClient(),
@@ -45,10 +47,12 @@ func NewOutgoingSocket() *OutgoingSocket {
 	}
 }
 
+// SharedSeed gets the shared seed of the outgoing socket
 func (i *OutgoingSocket) SharedSeed() *beacon.SharedSeed {
 	return i.OutgoingSharedSeed
 }
 
+// Send sends a message
 func (i *OutgoingSocket) Send(msg moneysocket_message.MoneysocketMessage) error {
 	log.Infof("encoding msg %s", msg)
 	ss := i.OutgoingSharedSeed
@@ -59,36 +63,41 @@ func (i *OutgoingSocket) Send(msg moneysocket_message.MoneysocketMessage) error 
 	return i.WebsocketClientProtocol.SendBin(msgBytes)
 }
 
+// SendBin sends a binary message
 func (i *OutgoingSocket) SendBin(msg []byte) error {
 	return i.WebsocketClientProtocol.SendBin(msg)
 }
 
+// OnConnecting is a connecting websocket event
 func (i OutgoingSocket) OnConnecting() {
 	log.Info("Websocket connecting")
 }
 
+// OnConnect manages a websocket connection
 func (i OutgoingSocket) OnConnect(conn *websocket.Conn, r *http.Response) {
 	i.WebsocketClientProtocol.OnConnect(conn, r)
 	log.Info("Client connecting")
 }
 
+// OnOpen opens a websocket connection
 func (i *OutgoingSocket) OnOpen() {
 	log.Info("websocket connection open")
 	i.FactoryMsProtocolLayer.AnnounceNexus(i)
 	i.wasAnnounced = true
 }
 
-// cooresponds to the nexus interface, handles a message
+// OnMessage corresponds to the nexus interface, handles a message
 func (i *OutgoingSocket) OnMessage(belowNexus nexusHelper.Nexus, msg moneysocket_message.MoneysocketMessage) {
 	log.Info("websocket nexus got message")
 	i.onMessage(belowNexus, msg)
 }
 
-// cooresponds to the nexus interface, handles a binary message
+// OnBinMessage corresponds to the nexus interface, handles a binary message
 func (i *OutgoingSocket) OnBinMessage(belowNexus nexusHelper.Nexus, msg []byte) {
 	i.onBinMessage(belowNexus, msg)
 }
 
+// OnWsMessage processes a websocket message
 func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
 	log.Info("outgoing message")
 	if isBinary {
@@ -107,34 +116,42 @@ func (i *OutgoingSocket) OnWsMessage(payload []byte, isBinary bool) {
 	}
 }
 
+// nolint
 func (i *OutgoingSocket) UUID() uuid.UUID {
 	return i.uuid
 }
 
+// nolint
 func (i *OutgoingSocket) IsEqual(n nexusHelper.Nexus) bool {
 	panic("implement me")
 }
 
+// nolint
 func (i *OutgoingSocket) GetDownwardNexusList() []nexusHelper.Nexus {
 	panic("implement me")
 }
 
+// nolint
 func (i *OutgoingSocket) InitiateClose() {
 	panic("implement me")
 }
 
+// nolint
 func (i *OutgoingSocket) Name() string {
 	return i.name
 }
 
+// nolint
 func (i *OutgoingSocket) SetOnMessage(messageFunc nexusHelper.OnMessage) {
 	i.onMessage = messageFunc
 }
 
+// nolint
 func (i *OutgoingSocket) SetOnBinMessage(messageBinFunc nexusHelper.OnBinMessage) {
 	i.onBinMessage = messageBinFunc
 }
 
+// nolint
 func (i *OutgoingSocket) OnClose(wasClean bool, code int, reason string) {
 	log.Infof("websocket connection closed: %s", reason)
 	if i.wasAnnounced {

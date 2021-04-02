@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// this class attempts to emulate the twisted socket interface
+// WebSocketServerProtocol attempts to emulate the twisted socket interface
 // for usabilities sake and calls events on downstream nexuses
 type WebSocketServerProtocol interface {
 	// Context gets the context.Context object

@@ -7,18 +7,20 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/wad"
 )
 
+// NotifyProvider notifies a provider is ready
 type NotifyProvider struct {
 	BaseMoneySocketNotification
-	// account uuid
+	// AccountUUID
 	AccountUUID string
-	// provider pay outgoing invoice
+	// Payer is the provider pay outgoing invoice
 	Payer bool
-	// provider generates invoices for incoming payments
+	// Payee is the provider generates invoices for incoming payments
 	Payee bool
-	// balance to advertize as being available
+	// Wad is the balance to advertise as being available
 	Wad wad.Wad
 }
 
+// NewNotifyProvider creates a NotifyProvider notification
 func NewNotifyProvider(accountUUID string, payer, payee bool, wad wad.Wad, requestUUID string) NotifyProvider {
 	return NotifyProvider{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(base.NotifyProvider, requestUUID),
@@ -29,6 +31,7 @@ func NewNotifyProvider(accountUUID string, payer, payee bool, wad wad.Wad, reque
 	}
 }
 
+// MustBeClearText is always false  for NotifyProvider messages
 func (n NotifyProvider) MustBeClearText() bool {
 	return false
 }
@@ -40,6 +43,7 @@ const (
 	wadKey         = "wad"
 )
 
+// ToJSON converts a message to a json payload
 func (n NotifyProvider) ToJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	err := EncodeMoneySocketNotification(n, m)

@@ -7,7 +7,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/wad"
 )
 
-// represents a terminus account
+// Account represents a terminus account
 type Account struct {
 	// AccountName is the name of the account
 	AccountName string `json:"account_name"`

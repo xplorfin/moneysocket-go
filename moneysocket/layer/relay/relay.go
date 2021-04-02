@@ -31,12 +31,12 @@ func (r *Layer) AnnounceNexus(rendezvousNexus nexusHelper.Nexus) {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (r *Layer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (r *Layer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(r.AnnounceNexus)
 	belowLayer.SetOnRevoke(r.RevokeNexus)
 }
 
-// RevokeNexus revokes a nexus from below. This method is simply used to conform to the layer.LayerBase here
+// RevokeNexus revokes a nexus from below. This method is simply used to conform to the layer.Base here
 func (r *Layer) RevokeNexus(rendezvousNexus nexusHelper.Nexus) {
 	log.Println("revoked from below")
 }
@@ -53,4 +53,4 @@ func (r *Layer) OnBinMessage(rendezvousNexus nexusHelper.Nexus, msg []byte) {
 	_ = (*peerNexus).SendBin(msg)
 }
 
-var _ layer.LayerBase = &Layer{}
+var _ layer.Base = &Layer{}

@@ -35,7 +35,7 @@ func (o *IncomingRendezvousLayer) AnnounceNexus(belowNexus nexus.Nexus) {
 }
 
 // RegisterAboveLayer registers the current nexuses announce/revoke nexuses to the below layer
-func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.LayerBase) {
+func (o *IncomingRendezvousLayer) RegisterAboveLayer(belowLayer layer.Base) {
 	belowLayer.SetOnAnnounce(o.AnnounceNexus)
 	belowLayer.SetOnRevoke(o.RevokeNexus)
 }
@@ -49,6 +49,7 @@ func (o *IncomingRendezvousLayer) RendezvousFinishedCb(rendezvousNexus nexus.Nex
 	}
 }
 
+// ToString converts a directory to a string
 func (o *IncomingRendezvousLayer) ToString() string {
 	return o.directory.ToString()
 }
@@ -71,4 +72,4 @@ func (o *IncomingRendezvousLayer) GetPeerNexus(rendezvousNexus nexus.Nexus) *nex
 	return o.directory.GetPeerNexus(rendezvousNexus.UUID())
 }
 
-var _ layer.LayerBase = &IncomingRendezvousLayer{}
+var _ layer.Base = &IncomingRendezvousLayer{}

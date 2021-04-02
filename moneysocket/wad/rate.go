@@ -5,13 +5,19 @@ import (
 	"time"
 )
 
+// Rate is the conversion rate
 type Rate struct {
-	BaseCode  string
+	// BaseCode is the rate we're converting from
+	BaseCode string
+	// QuoteCode is the rate we're converting to
 	QuoteCode string
+	// RateValue is the conversion rate
 	RateValue float64
+	// Timestamp is the timestamp of the conversion
 	Timestamp time.Time
 }
 
+// NewRate creates a rate from base quote->quote code (rate)
 func NewRate(baseCode string, quoteCode string, rate float64) Rate {
 	return Rate{
 		BaseCode:  baseCode,
@@ -21,6 +27,7 @@ func NewRate(baseCode string, quoteCode string, rate float64) Rate {
 	}
 }
 
+// ToString converts the rate to a string
 func (r Rate) ToString() string {
 	return fmt.Sprintf("%.8f %s%s", r.RateValue, r.BaseCode, r.QuoteCode)
 }

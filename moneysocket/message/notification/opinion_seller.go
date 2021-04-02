@@ -24,6 +24,7 @@ type NotifyOpinionSeller struct {
 	items      []Item
 }
 
+// NewNotifyOpinionSeller creates an opinion seller message
 func NewNotifyOpinionSeller(sellerUUID string, items []Item, requestReferenceUUID string) NotifyOpinionSeller {
 	return NotifyOpinionSeller{
 		BaseMoneySocketNotification: NewBaseMoneySocketNotification(msg.NotifyOpinionSeller, requestReferenceUUID),

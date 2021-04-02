@@ -58,7 +58,7 @@ func (r *Relay) SetupWebsocketLayer() *Relay {
 }
 
 // SetupRendezvousLayer sets up a rendezvous.Rendezvous layer and registers it
-func (r *Relay) SetupRendezvousLayer(belowLayer layer.LayerBase) *Relay {
+func (r *Relay) SetupRendezvousLayer(belowLayer layer.Base) *Relay {
 	r.rendezvousLayer = rendezvous.NewIncomingRendezvousLayer()
 	r.rendezvousLayer.RegisterAboveLayer(belowLayer)
 	r.rendezvousLayer.RegisterLayerEvent(r.OnStackEvent, message.IncomingRendezvous)

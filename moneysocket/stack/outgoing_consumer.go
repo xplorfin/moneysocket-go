@@ -13,7 +13,7 @@ import (
 	"github.com/xplorfin/moneysocket-go/moneysocket/message"
 )
 
-// outgoing consumer stack provides an interoperable interface to connect to a given beacon
+// OutgoingConsumerStack provides an interoperable interface to connect to a given beacon
 // currently it only supports the websocket layer
 type OutgoingConsumerStack struct {
 	*ConsumerStack
@@ -21,7 +21,7 @@ type OutgoingConsumerStack struct {
 	rendezvousLayer *rendezvous.OutgoingRendezvousLayer
 }
 
-// create and initialize an outgoing consumer stack
+// NewOutgoingConsumerStack creates and initialize an outgoing consumer stack
 func NewOutgoingConsumerStack() *OutgoingConsumerStack {
 	outgoingConsumerStack := OutgoingConsumerStack{
 		NewConsumerStack(),
@@ -36,18 +36,20 @@ func NewOutgoingConsumerStack() *OutgoingConsumerStack {
 	return &outgoingConsumerStack
 }
 
-func (o *OutgoingConsumerStack) SetupRendezvousLayer(belowLayer layer.LayerBase) {
+// SetupRendezvousLayer sets up the rendezvous layer
+func (o *OutgoingConsumerStack) SetupRendezvousLayer(belowLayer layer.Base) {
 	o.rendezvousLayer = rendezvous.NewOutgoingRendezvousLayer()
 	o.rendezvousLayer.RegisterAboveLayer(belowLayer)
 	o.rendezvousLayer.RegisterLayerEvent(o.sendStackEvent, message.OutgoingRendezvous)
 }
 
+// SetupWebsocketLayer sets up the websocket layer
 func (o *OutgoingConsumerStack) SetupWebsocketLayer() {
 	o.websocketLayer = websocket.NewOutgoingWebsocketLayer()
 	o.websocketLayer.RegisterLayerEvent(o.sendStackEvent, message.OutgoingWebsocket)
 }
 
-// connect to the given beacon
+// DoConnect connects to the given beacon
 func (o *OutgoingConsumerStack) DoConnect(connectBeacon beacon.Beacon) error {
 	log.Println("stack connect called")
 	loc := connectBeacon.Locations()[0]
