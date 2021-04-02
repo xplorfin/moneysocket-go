@@ -2,6 +2,7 @@ package lightning
 
 import (
 	"crypto/tls"
+	"github.com/lightningnetwork/lnd/lnrpc"
 	"testing"
 
 	. "github.com/stretchr/testify/assert"
