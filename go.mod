@@ -23,11 +23,11 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/xplorfin/filet v0.1.0
+	github.com/xplorfin/filet v0.3.0
 	github.com/xplorfin/lndmock v0.29.0
 	github.com/xplorfin/netutils v0.38.0
 	github.com/xplorfin/ozzo-validators v0.30.0
-	github.com/xplorfin/tlsutils v0.18.0
+	github.com/xplorfin/tlsutils v0.22.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210319071255-635bc2c9138d // indirect
