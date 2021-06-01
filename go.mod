@@ -24,7 +24,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/xplorfin/filet v0.3.0
-	github.com/xplorfin/lndmock v0.31.0
+	github.com/xplorfin/lndmock v0.32.0
 	github.com/xplorfin/netutils v0.43.0
 	github.com/xplorfin/ozzo-validators v0.33.0
 	github.com/xplorfin/tlsutils v0.23.0
