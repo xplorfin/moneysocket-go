@@ -26,7 +26,7 @@ require (
 	github.com/xplorfin/filet v0.3.0
 	github.com/xplorfin/lndmock v0.31.0
 	github.com/xplorfin/netutils v0.43.0
-	github.com/xplorfin/ozzo-validators v0.32.0
+	github.com/xplorfin/ozzo-validators v0.33.0
 	github.com/xplorfin/tlsutils v0.23.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/appengine v1.6.7 // indirect
