@@ -14,7 +14,7 @@ require (
 	github.com/jinzhu/copier v0.3.2
 	github.com/kr/pretty v0.2.1
 	github.com/kr/text v0.2.0 // indirect
-	github.com/lightningnetwork/lnd v0.11.1-beta.rc5
+	github.com/lightningnetwork/lnd v0.11.1-beta-rc5-branch
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
 	github.com/mvo5/goconfigparser v0.0.0-20201015074339-50f22f44deb5
