@@ -12,8 +12,7 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/copier v0.3.2
-	github.com/kr/pretty v0.2.1
-	github.com/kr/text v0.2.0 // indirect
+	github.com/kr/pretty v0.3.1
 	github.com/lightningnetwork/lnd v0.11.1-beta.rc5
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
