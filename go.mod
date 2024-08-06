@@ -31,7 +31,7 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb // indirect
-	google.golang.org/grpc v1.39.0
+	google.golang.org/grpc v1.56.3
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/macaroon.v2 v2.1.0
 	gopkg.in/yaml.v2 v2.4.0 // indirect
@@ -40,5 +40,5 @@ require (
 
 replace (
 	github.com/btcsuite/btcd v0.21.0-beta => github.com/xplorfin/btcd v0.21.0-hotfix
-	google.golang.org/grpc => google.golang.org/grpc v1.29.1
+	google.golang.org/grpc => google.golang.org/grpc v1.56.3
 )
