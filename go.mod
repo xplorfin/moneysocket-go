@@ -19,7 +19,7 @@ require (
 	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
 	github.com/mvo5/goconfigparser v0.0.0-20201015074339-50f22f44deb5
 	github.com/posener/wstest v1.2.0
-	github.com/prometheus/common v0.25.0
+	github.com/prometheus/common v0.60.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
