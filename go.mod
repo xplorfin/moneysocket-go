@@ -17,7 +17,7 @@ require (
 	github.com/lightningnetwork/lnd v0.11.1-beta.rc5
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
-	github.com/mvo5/goconfigparser v0.0.0-20201015074339-50f22f44deb5
+	github.com/mvo5/goconfigparser v0.0.0-20231016112547-05bd887f05e1
 	github.com/posener/wstest v1.2.0
 	github.com/prometheus/common v0.25.0
 	github.com/satori/go.uuid v1.2.0
@@ -32,7 +32,6 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb // indirect
 	google.golang.org/grpc v1.39.0
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/macaroon.v2 v2.1.0
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
