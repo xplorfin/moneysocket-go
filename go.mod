@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/brianvoe/gofakeit/v6 v6.5.0
 	github.com/btcsuite/btcutil v1.0.2
-	github.com/buger/jsonparser v1.1.1
+	github.com/buger/jsonparser v1.1.2
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dustin/go-humanize v1.0.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
